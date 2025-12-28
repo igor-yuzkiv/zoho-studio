@@ -6,8 +6,7 @@ function mapChromeTabToBrowserTab(t: chrome.tabs.Tab): BrowserTab | null {
     return {
         id: t.id,
         title: t.title || '',
-        url: t.url || '',
-        isActive: t.active,
+        url: t.url || ''
     }
 }
 
