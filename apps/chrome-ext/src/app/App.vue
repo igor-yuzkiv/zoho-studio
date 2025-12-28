@@ -6,12 +6,16 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import Toast from 'primevue/toast'
 
 const appState = useAppStateStore()
+const tabsStore = useBrowserTabsStore();
 
-useBrowserTabsStore().initialize()
+tabsStore.initialize()
 useAppThemeStore().initialize()
 </script>
 
 <template>
+    <pre>
+        {{tabsStore.tabsList}}
+    </pre>
     <router-view />
     <LoadingOverlay v-if="appState.loadingOverlay" />
     <Toast />

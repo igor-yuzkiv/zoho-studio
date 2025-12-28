@@ -20,6 +20,9 @@
         },
         {
             "path": "./providers/zoho-finance"
+        },
+        {
+            "path": "./packages/dev-mock-api"
         }
     ]
 }

@@ -27,10 +27,13 @@
     "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.vue"],
     "references": [
         {
+            "path": "../../packages/core/tsconfig.lib.json"
+        },
+        {
             "path": "../../packages/ui-kit/tsconfig.lib.json"
         },
         {
-            "path": "../../packages/core/tsconfig.lib.json"
+            "path": "../../packages/dev-mock-api/tsconfig.lib.json"
         }
     ]
 }

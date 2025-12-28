@@ -1,4 +1,5 @@
-import { BrowserTab, BrowserTabService, InjectedScript, BrowserTabChangeHandler } from '@zoho-studio/core'
+import { BrowserTab, BrowserTabChangeHandler, BrowserTabService, InjectedScript } from '@zoho-studio/core'
+import { isMockApiEnabled, MockChromeBrowserTabServiceImpl } from '@zoho-studio/dev-mock-api'
 
 function mapChromeTabToBrowserTab(t: chrome.tabs.Tab): BrowserTab | null {
     if (!t?.id) return null
@@ -6,7 +7,7 @@ function mapChromeTabToBrowserTab(t: chrome.tabs.Tab): BrowserTab | null {
     return {
         id: t.id,
         title: t.title || '',
-        url: t.url || ''
+        url: t.url || '',
     }
 }
 
@@ -68,4 +69,6 @@ export class ChromeBrowserTabServiceImpl implements BrowserTabService {
     }
 }
 
-export const chromeBrowserTabService = new ChromeBrowserTabServiceImpl()
+export const chromeBrowserTabService = isMockApiEnabled
+    ? new MockChromeBrowserTabServiceImpl()
+    : new ChromeBrowserTabServiceImpl()
