@@ -1,0 +1,16 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "files": [],
+    "include": ["vite.config.ts"],
+    "references": [
+        {
+            "path": "../../packages/ui-kit"
+        },
+        {
+            "path": "../../packages/core"
+        },
+        {
+            "path": "./tsconfig.app.json"
+        }
+    ]
+}

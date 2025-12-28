@@ -1,0 +1,55 @@
+:root {
+    --app-color-primary: #fff;
+    --app-color-secondary: #eaebf0;
+    --app-color-selection: #dfe1e5;
+    --theme-border: #e1e1e1;
+
+    --p-surface-0: #ffffff;
+    --p-surface-50: #f9fafb;
+    --p-surface-100: #f3f4f6;
+    --p-surface-200: #e5e7eb;
+    --p-surface-300: #d1d5db;
+    --p-surface-400: #9ca3af;
+    --p-surface-500: #6b7280;
+    --p-surface-600: #4b5563;
+    --p-surface-700: #374151;
+    --p-surface-800: #1f2937;
+    --p-surface-900: #111827;
+    --p-surface-950: #030712;
+
+    --p-orange-50: #fff6ed;
+    --p-orange-100: #ffecd5;
+    --p-orange-200: #ffd5a9;
+    --p-orange-300: #feb673;
+    --p-orange-400: #fd8d3a;
+    --p-orange-500: #fb6d14;
+    --p-orange-600: #ef520a;
+    --p-orange-700: #c43b0a;
+    --p-orange-800: #9b2f11;
+    --p-orange-900: #7d2a11;
+    --p-orange-950: #441206;
+}
+
+.dark,
+[data-theme='dark'] {
+    --app-color-primary: #232323;
+    --app-color-secondary: #3c3f41;
+    --app-color-selection: #2d2d30;
+    --theme-border: #515151;
+
+    /* PrimeVue tables */
+    --p-datatable-header-background: #212121;
+    --p-datatable-header-border-color: #515151;
+    --p-datatable-body-cell-border-color: #515151;
+    --p-datatable-header-cell-border-color: #515151;
+    --p-datatable-header-cell-background: #212121;
+    --p-datatable-row-background: #2d2d2d;
+    --p-datatable-row-striped-background: #212121;
+    --p-datatable-row-hover-background: #3c3f41;
+}
+
+@theme {
+    --color-primary: var(--app-color-primary);
+    --color-secondary: var(--app-color-secondary);
+    --color-selection: var(--app-color-selection);
+}

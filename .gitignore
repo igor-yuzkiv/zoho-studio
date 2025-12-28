@@ -1,0 +1,13 @@
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+.nx/cache
+.nx/workspace-data
+.github/instructions/nx.instructions.md
+dist/
+.idea/
+node_modules/
+.env
+.env.local
+.env.production
+.env.development
+.env.test

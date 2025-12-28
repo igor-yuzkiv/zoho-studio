@@ -1,0 +1,25 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compileOnSave": false,
+    "files": [],
+    "references": [
+        {
+            "path": "./apps/chrome-ext"
+        },
+        {
+            "path": "./packages/core"
+        },
+        {
+            "path": "./packages/ui-kit"
+        },
+        {
+            "path": "./packages/utils"
+        },
+        {
+            "path": "./providers/zoho-crm"
+        },
+        {
+            "path": "./providers/zoho-finance"
+        }
+    ]
+}

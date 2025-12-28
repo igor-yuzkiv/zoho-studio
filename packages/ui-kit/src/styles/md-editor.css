@@ -1,0 +1,27 @@
+@import 'md-editor-v3/lib/style.css';
+
+.md-editor-dark,
+.md-editor-modal-container[data-theme='dark'] {
+    --md-color: #fff;
+    --md-bk-color: #232323;
+}
+
+.md-editor-previewOnly {
+    background: transparent;
+}
+
+.md-editor-preview h1,
+.md-editor-preview h2,
+.md-editor-preview h3,
+.md-editor-preview h4,
+.md-editor-preview h5,
+.md-editor-preview h6 {
+    position: relative;
+    word-break: break-all;
+    margin: 0.5em 0 0.3em 0;
+    font-weight: bold;
+}
+
+.md-editor-preview .md-editor-code .md-editor-code-head {
+    z-index: 1;
+}

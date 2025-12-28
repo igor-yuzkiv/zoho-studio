@@ -1,0 +1,58 @@
+{
+    "manifest_version": 3,
+    "name": "ZohoStudioIDE V3",
+    "description": "ZohoStudioIDE V3",
+    "version": "3.0",
+    "permissions": ["scripting", "activeTab", "sidePanel", "cookies", "webRequest"],
+    "action": {
+        "default_title": "Click to open panel"
+    },
+    "icons": {
+        "16": "logo.png",
+        "48": "logo.png",
+        "128": "logo.png"
+    },
+    "devtools_page": "dist/index.html",
+    "side_panel": {
+        "default_path": "dist/index.html"
+    },
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "host_permissions": [
+        "*://*.zoho.eu/*",
+        "*://*.zoho.com/*",
+        "*://*.zoho.in/*",
+        "*://*.zoho.jp/*",
+        "*://*.zoho.com.au/*",
+        "*://*.zoho.com.cn/*",
+        "*://*.igor-work.site/*",
+        "*://127.0.0.1/*"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["injection.js"],
+            "matches": [
+                "*://*.zoho.eu/*",
+                "*://*.zoho.com/*",
+                "*://*.zoho.in/*",
+                "*://*.zoho.jp/*",
+                "*://*.zoho.com.au/*",
+                "*://*.zoho.com.cn/*"
+            ]
+        }
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.zoho.eu/*",
+                "*://*.zoho.com/*",
+                "*://*.zoho.in/*",
+                "*://*.zoho.jp/*",
+                "*://*.zoho.com.au/*",
+                "*://*.zoho.com.cn/*"
+            ],
+            "js": ["content.js"]
+        }
+    ]
+}
