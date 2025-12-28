@@ -12,5 +12,13 @@
         "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
     },
     "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
-    "exclude": ["eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"]
+    "exclude": ["eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"],
+    "references": [
+        {
+            "path": "../../packages/utils/tsconfig.lib.json"
+        },
+        {
+            "path": "../../packages/core/tsconfig.lib.json"
+        }
+    ]
 }
