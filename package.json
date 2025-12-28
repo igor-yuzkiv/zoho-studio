@@ -5,7 +5,7 @@
     "workspaces": [
         "apps/*",
         "packages/*",
-        "providers/*"
+        "integrations/*"
     ],
     "devDependencies": {
         "@eslint/js": "^9.8.0",

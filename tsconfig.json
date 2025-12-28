@@ -16,10 +16,10 @@
             "path": "./packages/utils"
         },
         {
-            "path": "./providers/zoho-crm"
+            "path": "./integrations/zoho-crm"
         },
         {
-            "path": "./providers/zoho-finance"
+            "path": "./integrations/zoho-finance"
         },
         {
             "path": "./packages/dev-mock-api"

@@ -6,7 +6,7 @@ import dts from 'vite-plugin-dts'
 
 export default defineConfig(() => ({
     root: __dirname,
-    cacheDir: '../../node_modules/.vite/providers/zoho-finance',
+    cacheDir: '../../node_modules/.vite/integrations/zoho-finance',
     plugins: [vue(), dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
     // Uncomment this if you are using workers.
     // worker: {

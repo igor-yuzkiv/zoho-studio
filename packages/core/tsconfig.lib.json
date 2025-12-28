@@ -13,9 +13,5 @@
     },
     "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
     "exclude": ["eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"],
-    "references": [
-        {
-            "path": "../utils/tsconfig.lib.json"
-        }
-    ]
+    "references": []
 }
