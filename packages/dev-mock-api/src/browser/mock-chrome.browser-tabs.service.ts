@@ -1,5 +1,11 @@
-import { BrowserTab, BrowserTabChangeHandler, BrowserTabService, InjectedScript } from '@zoho-studio/core'
 import { mockApiClient } from '../mock-api.client.ts'
+import type {
+    BrowserTab,
+    BrowserTabChangeHandler,
+    BrowserTabService,
+    RequestOptions,
+    RequestResponse,
+} from '@zoho-studio/core'
 
 export class MockChromeBrowserTabServiceImpl implements BrowserTabService {
     async listTabs(): Promise<BrowserTab[]> {
@@ -26,11 +32,17 @@ export class MockChromeBrowserTabServiceImpl implements BrowserTabService {
         return () => {}
     }
 
-    async executeScript<TResponse, TArgs extends unknown[] = unknown[]>(
-        tab: BrowserTab,
-        args: TArgs,
-        injectionScript: InjectedScript<TResponse, TArgs>
-    ): Promise<TResponse> {
-        throw new Error('Method not implemented.')
+    async getCookies(tab: BrowserTab): Promise<Record<string, string>> {
+        console.warn('MockChromeBrowserTabServiceImpl.getCookies is not implemented.')
+        return {}
+    }
+
+    async httpRequest<T>(tab: BrowserTab, options: RequestOptions): Promise<RequestResponse<T>> {
+        console.warn('MockChromeBrowserTabServiceImpl.httpRequest is not implemented.', {
+            tab,
+            options,
+        })
+
+        return Promise.reject('Not implemented')
     }
 }

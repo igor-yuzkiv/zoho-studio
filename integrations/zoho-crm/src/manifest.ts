@@ -3,13 +3,16 @@ import {
     makeZohoCrmServiceProviderTitle,
     resolveCrmServiceProviderMetadataFromUrl,
 } from './utils'
-import { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
-import { Result } from '@zoho-studio/utils'
+import type { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
+import type { Result } from '@zoho-studio/utils'
+
+import { CrmFunctionsDescriptor } from './capabilities/functions'
 
 export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
     serviceProviderType: 'zoho-crm',
     displayName: 'Zoho CRM',
     icon: 'arcticons:zoho-crm',
+
     resolveFromBrowserTab(browserTab: BrowserTab): Result<ServiceProvider> {
         if (!browserTab.url) {
             return {
@@ -38,4 +41,8 @@ export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
             },
         }
     },
+
+    capabilities: [
+        CrmFunctionsDescriptor
+    ]
 }

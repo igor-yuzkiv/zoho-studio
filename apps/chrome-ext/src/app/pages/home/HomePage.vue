@@ -1,13 +1,54 @@
 <script setup lang="ts">
+import { chromeBrowserTabService } from '../../../browser'
 import { integrationsRegistry } from '../../../integrations'
-import { useProvidersRuntimeStore } from '../../../store'
+import { useBrowserTabsStore, useProvidersRuntimeStore } from '../../../store'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
+import { ServiceProviderId } from '@zoho-studio/core'
 import { storeToRefs } from 'pinia'
+import { Button } from 'primevue'
 import { computed } from 'vue'
 
 const providersStore = useProvidersRuntimeStore()
-const { providersList } = storeToRefs(providersStore)
+const tabsStore = useBrowserTabsStore()
+
+const { providersList, providersMap } = storeToRefs(providersStore)
+const { tabsMap } = storeToRefs(tabsStore)
+
+function test(providerId: ServiceProviderId) {
+    console.log('test', providerId)
+    if (!providersMap.value.has(providerId)) {
+        return
+    }
+
+    const provider = providersMap.value.get(providerId)
+    if (!provider || !provider.browserTabId || !tabsMap.value.has(provider.browserTabId)) {
+        return
+    }
+
+    const caps = integrationsRegistry.getCapabilitiesByType(provider.type)
+    if (!caps?.length) {
+        return
+    }
+
+    const tab = tabsMap.value.get(provider.browserTabId)
+    if (!tab) {
+        return
+    }
+
+    const cap = caps[0]
+    const adapter = new cap.adapter(provider, {
+        tab: tab,
+        browser: chromeBrowserTabService,
+    })
+
+    console.log('adapter', adapter)
+
+    adapter.list({
+        page: 1,
+        per_page: 50,
+    })
+}
 
 const itemsForDisplay = computed(() => {
     return providersList.value.map((provider) => {
@@ -54,6 +95,8 @@ const itemsForDisplay = computed(() => {
                                 <Icon :icon="provider.icon" class="w-5 h-5" />
                                 <div>{{ provider.title }}</div>
                             </router-link>
+
+                            <Button @click="test(provider.id)">Test: {{ provider.id }}</Button>
                         </div>
                     </div>
                 </div>

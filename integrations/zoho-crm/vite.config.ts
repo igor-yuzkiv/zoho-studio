@@ -3,11 +3,12 @@ import vue from '@vitejs/plugin-vue'
 import * as path from 'path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 
 export default defineConfig(() => ({
     root: __dirname,
     cacheDir: '../../node_modules/.vite/integrations/zoho-crm',
-    plugins: [vue(), dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
+    plugins: [vue(), nxViteTsPaths(), dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
     // Uncomment this if you are using workers.
     // worker: {
     //  plugins: [],

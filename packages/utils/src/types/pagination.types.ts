@@ -13,7 +13,7 @@ export type PagingResponseMeta = {
 }
 
 export type PagingResponse<T> = {
-    data: T
+    data: T[]
     meta: PagingResponseMeta
 }
 

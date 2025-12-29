@@ -1,5 +1,5 @@
 import type { ServiceProviderType } from '../provider'
-import type { IIntegrationManifest } from './integration-manifest.ts'
+import type { IIntegrationManifest } from './integration.manifest.ts'
 import type { Maybe } from '@zoho-studio/utils'
 
 export interface IIntegrationsRegistry {
@@ -8,6 +8,8 @@ export interface IIntegrationsRegistry {
     list(): IIntegrationManifest[]
 
     getByType(type: ServiceProviderType): Maybe<IIntegrationManifest>
+
+    getCapabilitiesByType(type: ServiceProviderType): IIntegrationManifest['capabilities']
 }
 
 export class IntegrationsRegistryImpl implements IIntegrationsRegistry {
@@ -27,5 +29,11 @@ export class IntegrationsRegistryImpl implements IIntegrationsRegistry {
 
     getByType(type: ServiceProviderType): Maybe<IIntegrationManifest> {
         return this.manifests.get(type)
+    }
+
+    getCapabilitiesByType(type: ServiceProviderType): IIntegrationManifest['capabilities'] {
+        const manifest = this.manifests.get(type)
+
+        return manifest ? manifest.capabilities : []
     }
 }
