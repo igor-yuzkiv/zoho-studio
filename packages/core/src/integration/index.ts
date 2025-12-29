@@ -1,2 +1,2 @@
-export * from './integration-manifest.ts'
-export * from './integrations-registry.ts'
+export * from './integration.manifest.ts'
+export * from './integration.registry.ts'
