@@ -1,20 +1,31 @@
 <script setup lang="ts">
-import { useBrowserTabsStore } from '../store/use.browser-tabs.store.ts'
-import { useProvidersRuntimeStore } from '../store/use.providers-runtime.store.ts'
-import { useAppStateStore } from './store/useAppStateStore.ts'
+import { useBrowserTabsStore, useProvidersRuntimeStore } from '../store'
+import { useAppStateStore } from '../store'
+import { AppLayoutComponentMap } from './layouts'
 import { LoadingOverlay, useAppThemeStore } from '@zoho-studio/ui-kit'
 import { storeToRefs } from 'pinia'
 import ConfirmDialog from 'primevue/confirmdialog'
 import Toast from 'primevue/toast'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const appState = useAppStateStore()
 const tabsStore = useBrowserTabsStore()
 const providersStore = useProvidersRuntimeStore()
 
 const { tabsList } = storeToRefs(tabsStore)
-const { providersList } = storeToRefs(providersStore)
 
+const layoutComponent = computed(() => {
+    const layoutName = route.meta?.layout
+    if (layoutName && layoutName in AppLayoutComponentMap) {
+        return AppLayoutComponentMap[layoutName]
+    }
+
+    return AppLayoutComponentMap.default
+})
+
+providersStore.initialize()
 tabsStore.initialize()
 useAppThemeStore().initialize()
 
@@ -22,10 +33,7 @@ watch(tabsList, (newData) => providersStore.resolveFromBrowserTabs(newData), { i
 </script>
 
 <template>
-    <pre>
-        {{ providersList }}
-    </pre>
-    <router-view />
+    <component :is="layoutComponent" />
     <LoadingOverlay v-if="appState.loadingOverlay" />
     <Toast />
     <ConfirmDialog />

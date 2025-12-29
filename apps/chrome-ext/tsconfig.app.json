@@ -30,6 +30,9 @@
             "path": "../../integrations/zoho-crm/tsconfig.lib.json"
         },
         {
+            "path": "../../packages/utils/tsconfig.lib.json"
+        },
+        {
             "path": "../../packages/dev-mock-api/tsconfig.lib.json"
         },
         {

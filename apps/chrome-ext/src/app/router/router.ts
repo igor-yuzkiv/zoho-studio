@@ -1,12 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { AppRouteName } from './app-route-name.ts'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 export const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: () => import('../pages/HomeView.vue'),
+            name: AppRouteName.home,
+            component: () => import('../pages/home/HomePage.vue'),
+            meta: { hideSidebarMenu: true, layout: 'default' },
+        },
+
+        {
+            name: AppRouteName.workspaceIndex,
+            path: '/workspace/:providerId',
+            meta: { hideSidebarMenu: true, layout: 'workspace' },
+            component: () => import('../pages/workspace/WorkspaceIndexPage.vue'),
         },
     ],
 })
