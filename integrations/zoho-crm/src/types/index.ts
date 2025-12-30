@@ -1,1 +1,2 @@
-export * from './zoho-crm.provider.ts'
+export * from './crm.provider.types.ts'
+export * from './crm.functions.types.ts'
