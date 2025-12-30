@@ -11,14 +11,14 @@ export type ArtifactPayloadMap = {
     fields: FieldArtifactPayload
 }
 
-export interface IArtifact<TCapabilityType extends CapabilityType, TOrigin extends IEntity = IEntity> extends IEntity {
+export interface IArtifact<TCapabilityType extends CapabilityType = CapabilityType, TOrigin extends IEntity = IEntity> extends IEntity {
     id: ArtifactId
     source_id: string
     capability_type: TCapabilityType
     parent_id?: Maybe<ArtifactId>
     provider_id: ServiceProviderId
     display_name: string
-    api_name?: string
+    api_name?: Maybe<string>
     payload: ArtifactPayloadMap[TCapabilityType]
     origin: TOrigin
 }

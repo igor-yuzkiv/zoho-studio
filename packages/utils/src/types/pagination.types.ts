@@ -20,3 +20,5 @@ export type PagingResponse<T> = {
 export type SuccessPaginatedResult<T> = PagingResponse<T> & { ok: true }
 
 export type PaginatedResult<T, E = string> = SuccessPaginatedResult<T> | Error<E>
+
+export type PromisePaginatedResult<T, E = string> = Promise<PaginatedResult<T, E>>
