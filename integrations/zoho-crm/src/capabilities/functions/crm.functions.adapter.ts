@@ -1,9 +1,11 @@
-import { CrmServiceProviderMetadata } from '../../types'
+import { CrmServiceProviderMetadata, ZohoCrmFunction } from '../../types'
 import type { IArtifact, RequestOptions } from '@zoho-studio/core'
 import { BaseCapabilityAdapter } from '@zoho-studio/core'
 import type { Maybe, PaginatedResult, PaginationParams } from '@zoho-studio/utils'
 
-export class CrmFunctionsAdapter extends BaseCapabilityAdapter {
+type ListResult = PaginatedResult<IArtifact<'functions', ZohoCrmFunction>>
+
+export class CrmFunctionsAdapter extends BaseCapabilityAdapter<'functions', ZohoCrmFunction> {
     private getCrmMetadata(): Maybe<CrmServiceProviderMetadata> {
         return this.provider.metadata && this.provider?.metadata?.orgId
             ? (this.provider.metadata as CrmServiceProviderMetadata)
@@ -32,7 +34,7 @@ export class CrmFunctionsAdapter extends BaseCapabilityAdapter {
         }
     }
 
-    async list(pagination: PaginationParams): Promise<PaginatedResult<IArtifact>> {
+    async list(pagination: PaginationParams): Promise<ListResult> {
         const requestOptions = await this.buildCrmRequestOptions({
             url: `/crm/v2/settings/functions?type=org&start=${pagination.page}&limit=${pagination.per_page}`,
             method: 'GET',

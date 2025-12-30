@@ -1,6 +1,6 @@
 import type { CapabilityAdapterConstructor } from './capability.adapter.ts'
 
-export type CapabilityType = 'functions' | 'workflows' | 'modules' | 'fields' | 'variables' | 'webhooks'
+export type CapabilityType = 'functions' | 'workflows' | 'modules' | 'fields'
 
 export interface CapabilityDescriptor {
     type: CapabilityType
