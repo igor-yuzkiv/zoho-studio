@@ -53,8 +53,21 @@ export class CrmApiService {
             method: 'GET',
         })
 
-        console.log('listFunctions response:', response)
+        if (!response.data || !Array.isArray(response.data.functions)) {
+            return { ok: false, error: 'Invalid response format' }
+        }
 
-        return { ok: false, error: 'Method not implemented.' }
+        const functions = response.data.functions
+
+        return {
+            ok: true,
+            data: functions,
+            meta: {
+                total: functions.length,
+                page: pagination.page,
+                per_page: pagination.per_page,
+                has_more: functions.length >= pagination.per_page,
+            },
+        }
     }
 }

@@ -1,1 +1,1 @@
-export { chromeBrowserService } from './chrome-browser.service.ts'
+export * from './chrome-browser.service.ts'

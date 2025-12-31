@@ -1,3 +1,4 @@
+import { mapManyCrmFunctionsToArtifact } from '../../mappers'
 import { CrmApiService } from '../../services/crm-api.service.ts'
 import { CapabilityAdapterContext, IArtifact } from '@zoho-studio/core'
 import { BaseCapabilityAdapter } from '@zoho-studio/core'
@@ -12,11 +13,15 @@ export class CrmFunctionsAdapter extends BaseCapabilityAdapter {
     }
 
     async list(pagination: PaginationParams): PromisePaginatedResult<IArtifact> {
-        const crmFunctions = this.crmApiService.listFunctions(pagination)
-        console.log('CRM Functions:', crmFunctions)
+        const response = await this.crmApiService.listFunctions(pagination)
+        if (!response.ok) {
+            return response
+        }
+
         return {
-            ok: false,
-            error: 'Method not implemented.',
+            ok: true,
+            data: mapManyCrmFunctionsToArtifact(response.data, this.ctx.provider.id),
+            meta: response.meta,
         }
     }
 }

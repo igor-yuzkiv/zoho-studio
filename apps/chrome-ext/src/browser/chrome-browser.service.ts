@@ -1,12 +1,11 @@
 import { mapChromeTabToBrowserTab, mapManyChromeTabsToBrowserTabs } from './chrome.utils.ts'
-import type {
+import  {
     BrowserTab,
     BrowserTabChangeHandler,
-    IBrowserService,
+    IBrowserService, RequestError,
     RequestOptions,
     RequestResponse,
 } from '@zoho-studio/core'
-import { isMockApiEnabled, MockBrowserServiceImpl } from '@zoho-studio/dev-mock-api'
 import {injectable} from 'tsyringe'
 
 type InjectionResult<T> = chrome.scripting.InjectionResult<RequestResponse<T>>[]
@@ -86,10 +85,11 @@ export class ChromeBrowserServiceImpl implements IBrowserService {
             throw new Error('Failed to get a valid response from the injected script.')
         }
 
+        const result = response[0].result
+        if (result.status >= 400) {
+            throw new RequestError(result.status, result.message)
+        }
+
         return response[0].result
     }
 }
-
-export const chromeBrowserService = isMockApiEnabled
-    ? new MockBrowserServiceImpl()
-    : new ChromeBrowserServiceImpl()

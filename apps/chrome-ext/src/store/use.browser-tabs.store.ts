@@ -6,11 +6,10 @@ import { container } from 'tsyringe'
 
 let stopWatchingTabs: (() => void) | null = null
 
-const chromeBrowserService = container.resolve<IBrowserService>(BrowserServiceToken)
-
 export const useBrowserTabsStore = defineStore('browser.tabs', () => {
     const tabsMap = ref<Map<BrowserTabId, BrowserTab>>(new Map())
     const tabsList = computed(() => Array.from(tabsMap.value.values()))
+    const chromeBrowserService = container.resolve<IBrowserService>(BrowserServiceToken)
 
     async function loadTabs() {
         const tabs = await chromeBrowserService.listTabs()

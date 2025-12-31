@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { chromeBrowserService } from '../../../browser'
 import { integrationsRegistry } from '../../../integrations'
 import { useBrowserTabsStore, useProvidersRuntimeStore } from '../../../store'
 import { AppRouteName } from '../../router'
@@ -41,10 +40,12 @@ function test(providerId: ServiceProviderId) {
 
     console.log('adapter', adapter)
 
-    adapter.list({
+    const response = adapter.list({
         page: 1,
         per_page: 50,
     })
+
+    console.log(response);
 }
 
 const itemsForDisplay = computed(() => {
