@@ -2,22 +2,22 @@ import { mapChromeTabToBrowserTab, mapManyChromeTabsToBrowserTabs } from './chro
 import type {
     BrowserTab,
     BrowserTabChangeHandler,
-    BrowserTabService,
+    BrowserService,
     RequestOptions,
     RequestResponse,
 } from '@zoho-studio/core'
-import { isMockApiEnabled, MockChromeBrowserTabServiceImpl } from '@zoho-studio/dev-mock-api'
+import { isMockApiEnabled, MockBrowserServiceImpl } from '@zoho-studio/dev-mock-api'
 
 type InjectionResult<T> = chrome.scripting.InjectionResult<RequestResponse<T>>[]
 
-export class ChromeBrowserTabServiceImpl implements BrowserTabService {
+export class ChromeBrowserServiceImpl implements BrowserService {
     /** Lists all browser tabs. */
     async listTabs(): Promise<BrowserTab[]> {
         const chromeTabs = await chrome.tabs.query({})
         return mapManyChromeTabsToBrowserTabs(chromeTabs)
     }
 
-    startWatching(handler: BrowserTabChangeHandler): () => void {
+    startWatchingTabs(handler: BrowserTabChangeHandler): () => void {
         const updateHandler = (tabId: number, changeInfo: chrome.tabs.OnUpdatedInfo, tab: chrome.tabs.Tab) => {
             const browserTab = mapChromeTabToBrowserTab(tab)
             if (browserTab && changeInfo?.status === 'complete') {
@@ -88,6 +88,6 @@ export class ChromeBrowserTabServiceImpl implements BrowserTabService {
     }
 }
 
-export const chromeBrowserTabService = isMockApiEnabled
-    ? new MockChromeBrowserTabServiceImpl()
-    : new ChromeBrowserTabServiceImpl()
+export const chromeBrowserService = isMockApiEnabled
+    ? new MockBrowserServiceImpl()
+    : new ChromeBrowserServiceImpl()

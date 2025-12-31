@@ -2,12 +2,12 @@ import { mockApiClient } from '../mock-api.client.ts'
 import type {
     BrowserTab,
     BrowserTabChangeHandler,
-    BrowserTabService,
+    BrowserService,
     RequestOptions,
     RequestResponse,
 } from '@zoho-studio/core'
 
-export class MockChromeBrowserTabServiceImpl implements BrowserTabService {
+export class MockBrowserServiceImpl implements BrowserService {
     async listTabs(): Promise<BrowserTab[]> {
         return mockApiClient.get<chrome.tabs.Tab[]>('chrome-tabs.json').then((response) => {
             const { data } = response
@@ -26,7 +26,7 @@ export class MockChromeBrowserTabServiceImpl implements BrowserTabService {
         })
     }
 
-    startWatching(handler: BrowserTabChangeHandler): () => void {
+    startWatchingTabs(handler: BrowserTabChangeHandler): () => void {
         console.warn('MockChromeBrowserTabServiceImpl.startWatching is not implemented.')
 
         return () => {}

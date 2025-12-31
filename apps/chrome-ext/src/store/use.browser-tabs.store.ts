@@ -1,4 +1,4 @@
-import { chromeBrowserTabService } from '../browser'
+import { chromeBrowserService } from '../browser'
 import { BrowserTab, BrowserTabId, BrowserTabRemoveEvent, BrowserTabUpdateEvent } from '@zoho-studio/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -11,7 +11,7 @@ export const useBrowserTabsStore = defineStore('browser.tabs', () => {
     const tabsList = computed(() => Array.from(tabsMap.value.values()))
 
     async function loadTabs() {
-        const tabs = await chromeBrowserTabService.listTabs()
+        const tabs = await chromeBrowserService.listTabs()
         tabsMap.value = new Map(tabs.map((tab) => [tab.id, tab]))
     }
 
@@ -35,7 +35,7 @@ export const useBrowserTabsStore = defineStore('browser.tabs', () => {
         await loadTabs()
 
         if (!stopWatchingTabs) {
-            stopWatchingTabs = chromeBrowserTabService.startWatching((event) => {
+            stopWatchingTabs = chromeBrowserService.startWatchingTabs((event) => {
                 if (event.type === 'updated') {
                     handleTabUpdated(event)
                 } else if (event.type === 'removed') {

@@ -4,15 +4,12 @@ import { RequestOptions, RequestResponse } from '../request'
 export type BrowserTabUpdateEvent = { type: 'updated'; tab: BrowserTab }
 export type BrowserTabRemoveEvent = { type: 'removed'; tabId: BrowserTabId }
 export type BrowserTabChangeEvent = BrowserTabUpdateEvent | BrowserTabRemoveEvent
-
 export type BrowserTabChangeHandler = (event: BrowserTabChangeEvent) => void
 
-export type InjectedScript<TResponse, TArgs extends unknown[] = unknown[]> = (...args: TArgs) => Promise<TResponse>
-
-export interface BrowserTabService {
+export interface BrowserService {
     listTabs(): Promise<BrowserTab[]>
 
-    startWatching(handler: BrowserTabChangeHandler): () => void
+    startWatchingTabs(handler: BrowserTabChangeHandler): () => void
 
     getCookies(tab: BrowserTab): Promise<Record<string, string>>
 

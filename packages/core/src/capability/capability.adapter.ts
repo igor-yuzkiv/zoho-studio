@@ -1,11 +1,11 @@
 import type { IArtifact } from '../artifact'
-import type { BrowserTab, BrowserTabService } from '../browser'
+import type { BrowserTab, BrowserService } from '../browser'
 import type { ServiceProvider } from '../provider'
 import type { PromisePaginatedResult, PaginationParams } from '@zoho-studio/utils'
 
 export type CapabilityAdapterContext = {
     tab: BrowserTab
-    browser: BrowserTabService
+    browser: BrowserService
 }
 
 export interface ICapabilityAdapter {

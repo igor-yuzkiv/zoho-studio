@@ -1,1 +1,1 @@
-export { chromeBrowserTabService } from './chromeBrowserTabService.ts'
+export { chromeBrowserService } from './chrome-browser.service.ts'

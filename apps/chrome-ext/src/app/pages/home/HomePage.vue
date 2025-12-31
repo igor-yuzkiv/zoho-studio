@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { chromeBrowserTabService } from '../../../browser'
+import { chromeBrowserService } from '../../../browser'
 import { integrationsRegistry } from '../../../integrations'
 import { useBrowserTabsStore, useProvidersRuntimeStore } from '../../../store'
 import { AppRouteName } from '../../router'
@@ -39,7 +39,7 @@ function test(providerId: ServiceProviderId) {
     const cap = caps[0]
     const adapter = new cap.adapter(provider, {
         tab: tab,
-        browser: chromeBrowserTabService,
+        browser: chromeBrowserService,
     })
 
     console.log('adapter', adapter)

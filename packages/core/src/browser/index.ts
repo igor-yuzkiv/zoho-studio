@@ -1,2 +1,2 @@
 export * from './browser-tab.ts';
-export * from './browser-tab.service.ts';
+export * from './browser.service.ts';

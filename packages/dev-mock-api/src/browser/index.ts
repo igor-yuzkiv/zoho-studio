@@ -1,1 +1,1 @@
-export * from './mock-chrome.browser-tabs.service.ts'
+export * from './mock-browser.service.ts'
