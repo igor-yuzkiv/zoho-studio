@@ -1,4 +1,4 @@
-import { CrmServiceProviderMetadata, ZohoCrmFunction } from '../types'
+import { CrmServiceProviderMetadata } from '../types'
 import { assertZohoCrmServiceProviderMetadata } from '../utils'
 import {
     BrowserServiceToken,
@@ -7,15 +7,15 @@ import {
     type RequestOptions,
     type RequestResponse,
 } from '@zoho-studio/core'
-import { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
+
 import { container } from 'tsyringe'
 
-export class CrmApiService {
-    private ctx: CapabilityAdapterContext
+export abstract class CrmApiService {
+    protected ctx: CapabilityAdapterContext
 
-    private browserService: IBrowserService
+    protected browserService: IBrowserService
 
-    private metadata: CrmServiceProviderMetadata
+    protected metadata: CrmServiceProviderMetadata
 
     constructor(adapterContext: CapabilityAdapterContext) {
         this.ctx = adapterContext
@@ -43,31 +43,5 @@ export class CrmApiService {
     async httpRequest<T>(requestOptions: RequestOptions): Promise<RequestResponse<T>> {
         const signedRequestOptions = await this.signCrmRequest(requestOptions)
         return this.browserService.httpRequest<T>(this.ctx.tab, signedRequestOptions)
-    }
-
-    async listFunctions(pagination: PaginationParams): PromisePaginatedResult<ZohoCrmFunction> {
-        const start = pagination.page <= 1 ? 0 : (pagination.page - 1) * pagination.per_page
-        const limit = pagination.per_page
-        const response = await this.httpRequest<{ functions: ZohoCrmFunction[] }>({
-            url: `/crm/v2/settings/functions?type=org&start=${start}&limit=${limit}`,
-            method: 'GET',
-        })
-
-        if (!response.data || !Array.isArray(response.data.functions)) {
-            return { ok: false, error: 'Invalid response format' }
-        }
-
-        const functions = response.data.functions
-
-        return {
-            ok: true,
-            data: functions,
-            meta: {
-                total: functions.length,
-                page: pagination.page,
-                per_page: pagination.per_page,
-                has_more: functions.length >= pagination.per_page,
-            },
-        }
     }
 }
