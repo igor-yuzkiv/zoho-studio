@@ -6,13 +6,13 @@ import {
 import type { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
 import type { Result } from '@zoho-studio/utils'
 
-import { CrmFunctionsDescriptor } from './capabilities/functions'
+import { CrmFunctionsDescriptor, CrmWorkflowsDescriptor } from './capabilities'
 
 export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
     serviceProviderType: 'zoho-crm',
     displayName: 'Zoho CRM',
     icon: 'arcticons:zoho-crm',
-
+    capabilities: [CrmFunctionsDescriptor, CrmWorkflowsDescriptor],
     resolveFromBrowserTab(browserTab: BrowserTab): Result<ServiceProvider> {
         if (!browserTab.url) {
             return {
@@ -41,8 +41,4 @@ export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
             },
         }
     },
-
-    capabilities: [
-        CrmFunctionsDescriptor
-    ]
 }

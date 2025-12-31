@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import './di'
+import './di-container.ts'
 
 import AppComponent from './app/App.vue'
 import { registerAppPlugins } from './app/plugins'

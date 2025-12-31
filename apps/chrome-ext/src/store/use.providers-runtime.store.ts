@@ -1,4 +1,4 @@
-import { integrationsRegistry } from '../integrations'
+import { integrationsRegistry } from '../integrations.registry.ts'
 import { type Serializer, useStorage } from '@vueuse/core'
 import type { BrowserTab, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import { defineStore } from 'pinia'

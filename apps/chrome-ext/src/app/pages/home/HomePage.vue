@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { integrationsRegistry } from '../../../integrations'
+import { integrationsRegistry } from '../../../integrations.registry.ts'
 import { useBrowserTabsStore, useProvidersRuntimeStore } from '../../../store'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
@@ -26,7 +26,7 @@ async function test(providerId: ServiceProviderId) {
     }
 
     const caps = integrationsRegistry.getCapabilitiesByType(provider.type)
-    if (!caps?.length) {
+    if (!caps?.length && caps[1]) {
         return
     }
 
@@ -35,7 +35,7 @@ async function test(providerId: ServiceProviderId) {
         return
     }
 
-    const cap = caps[0]
+    const cap = caps[1]
     const adapter = new cap.adapter({ provider, tab })
 
     console.log('adapter', adapter)
@@ -45,7 +45,7 @@ async function test(providerId: ServiceProviderId) {
         per_page: 50,
     })
 
-    console.log(response);
+    console.log(response)
 }
 
 const itemsForDisplay = computed(() => {
@@ -62,8 +62,8 @@ const itemsForDisplay = computed(() => {
 
 <template>
     <div class="flex h-full w-full items-center justify-center overflow-hidden">
-        <div class="flex w-full h-full items-center justify-center app-card">
-            <div class="flex flex-col p-3 h-3/4">
+        <div class="app-card flex h-full w-full items-center justify-center">
+            <div class="flex h-3/4 flex-col p-3">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-x-2 text-4xl">
                         <Icon icon="logos:zoho" />
@@ -74,23 +74,23 @@ const itemsForDisplay = computed(() => {
                     </h3>
                 </div>
 
-                <div class="flex flex-col mt-14">
+                <div class="mt-14 flex flex-col">
                     <h3 class="text-2xl font-medium">Services</h3>
                     <div class="flex items-center gap-x-2 text-gray-700 dark:text-gray-400">
                         <Icon icon="material-symbols:info-outline" />
                         To make a service appear in the list, simply open any Zoho service in a neighboring browser tab.
                     </div>
 
-                    <div class="grid grid-cols-2 mt-3">
+                    <div class="mt-3 grid grid-cols-2">
                         <div v-for="provider in itemsForDisplay" :key="provider.id">
                             <router-link
                                 :to="{ name: AppRouteName.workspaceIndex, params: { providerId: provider.id } }"
-                                class="flex items-center gap-x-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer px-2"
+                                class="flex cursor-pointer items-center gap-x-2 rounded px-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                                 :class="{
                                     'text-gray-500': !provider.isOnline,
                                 }"
                             >
-                                <Icon :icon="provider.icon" class="w-5 h-5" />
+                                <Icon :icon="provider.icon" class="h-5 w-5" />
                                 <div>{{ provider.title }}</div>
                             </router-link>
 

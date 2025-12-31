@@ -1,5 +1,5 @@
-import { ZOHO_CRM_REGULAR_URL_REGEX, ZOHO_CRM_SANDBOX_URL_REGEX } from '../constants'
-import type { CrmServiceProviderMetadata } from '../types'
+import { ZOHO_CRM_REGULAR_URL_REGEX, ZOHO_CRM_SANDBOX_URL_REGEX } from './constants'
+import type { CrmServiceProviderMetadata } from './types'
 import { ServiceProvider } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 

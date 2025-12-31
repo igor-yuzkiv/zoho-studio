@@ -1,8 +1,8 @@
-import { CrmApiService } from './crm-api.service.ts'
+import { CrmApiService } from '../../services'
 import { PaginationParams, PromisePaginatedResult, Result } from '@zoho-studio/utils'
-import { ZohoCrmFunction } from '../types'
+import { ZohoCrmFunction } from '../../types'
 
-export class FunctionsApiService extends CrmApiService {
+export class CrmFunctionsApiService extends CrmApiService {
     async listFunctions(pagination: PaginationParams): PromisePaginatedResult<ZohoCrmFunction> {
         const start = pagination.page <= 1 ? 0 : (pagination.page - 1) * pagination.per_page
         const limit = pagination.per_page

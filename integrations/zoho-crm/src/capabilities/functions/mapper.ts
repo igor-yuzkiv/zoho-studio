@@ -1,4 +1,4 @@
-import { ZohoCrmFunction } from '../types'
+import { ZohoCrmFunction } from '../../types'
 import type { IArtifact, ServiceProviderId, FunctionType } from '@zoho-studio/core'
 import { FunctionTypeMetadataMap } from '@zoho-studio/core'
 import { makeArtifactId } from '@zoho-studio/core'
@@ -28,25 +28,28 @@ function mapFunctionCategoryToType(category?: string): FunctionType {
     )
 }
 
-export function mapCrmFunctionToArtifact(fx: ZohoCrmFunction, providerId: ServiceProviderId): IArtifact<'functions', ZohoCrmFunction> {
+export function mapCrmFunctionToArtifact(
+    data: ZohoCrmFunction,
+    providerId: ServiceProviderId
+): IArtifact<'functions', ZohoCrmFunction> {
     return {
-        id: makeArtifactId(providerId, 'functions', fx.id),
-        source_id: fx.id,
+        id: makeArtifactId(providerId, 'functions', data.id),
+        source_id: data.id,
         capability_type: 'functions',
         provider_id: providerId,
-        display_name: normalizeCrmFunctionName(fx),
-        api_name: fx?.api_name || fx?.name,
+        display_name: normalizeCrmFunctionName(data),
+        api_name: data?.api_name || data?.name,
         payload: {
-            type: mapFunctionCategoryToType(fx?.category),
-            script: fx?.script,
+            type: mapFunctionCategoryToType(data?.category),
+            script: data?.script,
         },
-        origin: fx,
+        origin: data,
     }
 }
 
 export function mapManyCrmFunctionsToArtifact(
     functions: ZohoCrmFunction[],
-    providerId: ServiceProviderId,
+    providerId: ServiceProviderId
 ): IArtifact<'functions', ZohoCrmFunction>[] {
     return functions.map((i) => mapCrmFunctionToArtifact(i, providerId))
 }
