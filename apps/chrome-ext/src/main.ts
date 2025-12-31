@@ -1,7 +1,5 @@
-
-import "reflect-metadata";
-import { registerDependencies  } from "./di";
-await registerDependencies();
+import 'reflect-metadata'
+import './di'
 
 import AppComponent from './app/App.vue'
 import { registerAppPlugins } from './app/plugins'
@@ -11,7 +9,6 @@ import '@vue-flow/core/dist/theme-default.css'
 import { registerUiKitPlugins } from '@zoho-studio/ui-kit'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
-
 
 const app = createApp(AppComponent)
 const pinia = createPinia()

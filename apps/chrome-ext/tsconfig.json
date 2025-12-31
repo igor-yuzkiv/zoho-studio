@@ -7,10 +7,10 @@
             "path": "../../integrations/zoho-crm"
         },
         {
-            "path": "../../packages/utils"
+            "path": "../../packages/dev-mock-api"
         },
         {
-            "path": "../../packages/dev-mock-api"
+            "path": "../../packages/utils"
         },
         {
             "path": "../../packages/core"

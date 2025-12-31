@@ -14,7 +14,7 @@ const tabsStore = useBrowserTabsStore()
 const { providersList, providersMap } = storeToRefs(providersStore)
 const { tabsMap } = storeToRefs(tabsStore)
 
-function test(providerId: ServiceProviderId) {
+async function test(providerId: ServiceProviderId) {
     console.log('test', providerId)
     if (!providersMap.value.has(providerId)) {
         return
@@ -40,7 +40,7 @@ function test(providerId: ServiceProviderId) {
 
     console.log('adapter', adapter)
 
-    const response = adapter.list({
+    const response = await adapter.list({
         page: 1,
         per_page: 50,
     })
