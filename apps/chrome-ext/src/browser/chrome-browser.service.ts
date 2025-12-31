@@ -12,7 +12,6 @@ type InjectionResult<T> = chrome.scripting.InjectionResult<RequestResponse<T>>[]
 
 @injectable()
 export class ChromeBrowserServiceImpl implements IBrowserService {
-    /** Lists all browser tabs. */
     async listTabs(): Promise<BrowserTab[]> {
         const chromeTabs = await chrome.tabs.query({})
         return mapManyChromeTabsToBrowserTabs(chromeTabs)
