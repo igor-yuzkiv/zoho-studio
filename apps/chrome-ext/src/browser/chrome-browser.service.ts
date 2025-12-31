@@ -2,15 +2,17 @@ import { mapChromeTabToBrowserTab, mapManyChromeTabsToBrowserTabs } from './chro
 import type {
     BrowserTab,
     BrowserTabChangeHandler,
-    BrowserService,
+    IBrowserService,
     RequestOptions,
     RequestResponse,
 } from '@zoho-studio/core'
 import { isMockApiEnabled, MockBrowserServiceImpl } from '@zoho-studio/dev-mock-api'
+import {injectable} from 'tsyringe'
 
 type InjectionResult<T> = chrome.scripting.InjectionResult<RequestResponse<T>>[]
 
-export class ChromeBrowserServiceImpl implements BrowserService {
+@injectable()
+export class ChromeBrowserServiceImpl implements IBrowserService {
     /** Lists all browser tabs. */
     async listTabs(): Promise<BrowserTab[]> {
         const chromeTabs = await chrome.tabs.query({})

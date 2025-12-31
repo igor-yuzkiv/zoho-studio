@@ -1,5 +1,6 @@
 import { ZOHO_CRM_REGULAR_URL_REGEX, ZOHO_CRM_SANDBOX_URL_REGEX } from '../constants'
 import type { CrmServiceProviderMetadata } from '../types'
+import { ServiceProvider } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 
 export function resolveCrmServiceProviderMetadataFromUrl(url: string): Maybe<CrmServiceProviderMetadata> {
@@ -29,4 +30,11 @@ export function makeZohoCrmServiceProviderId(metadata: CrmServiceProviderMetadat
 
 export function makeZohoCrmServiceProviderTitle(metadata: CrmServiceProviderMetadata) {
     return `Zoho CRM${metadata.isSandbox ? ' Sandbox' : ''} (${metadata.orgId})`
+}
+
+export function assertZohoCrmServiceProviderMetadata(provider: ServiceProvider): CrmServiceProviderMetadata {
+    if (!provider?.metadata || !provider?.metadata?.orgId) {
+        throw new Error('Invalid provider metadata')
+    }
+    return provider.metadata as CrmServiceProviderMetadata
 }

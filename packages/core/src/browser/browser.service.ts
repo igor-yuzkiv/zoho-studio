@@ -6,7 +6,7 @@ export type BrowserTabRemoveEvent = { type: 'removed'; tabId: BrowserTabId }
 export type BrowserTabChangeEvent = BrowserTabUpdateEvent | BrowserTabRemoveEvent
 export type BrowserTabChangeHandler = (event: BrowserTabChangeEvent) => void
 
-export interface BrowserService {
+export interface IBrowserService {
     listTabs(): Promise<BrowserTab[]>
 
     startWatchingTabs(handler: BrowserTabChangeHandler): () => void
@@ -15,3 +15,5 @@ export interface BrowserService {
 
     httpRequest<T>(tab: BrowserTab, options: RequestOptions): Promise<RequestResponse<T>>
 }
+
+export const BrowserServiceToken = Symbol('IBrowserService')

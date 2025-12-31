@@ -1,10 +1,12 @@
-import { chromeBrowserService } from '../browser'
-import { BrowserTab, BrowserTabId, BrowserTabRemoveEvent, BrowserTabUpdateEvent } from '@zoho-studio/core'
+import { BrowserServiceToken, IBrowserService, BrowserTab, BrowserTabId, BrowserTabRemoveEvent, BrowserTabUpdateEvent } from '@zoho-studio/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { onBeforeUnmount } from 'vue'
+import { container } from 'tsyringe'
 
 let stopWatchingTabs: (() => void) | null = null
+
+const chromeBrowserService = container.resolve<IBrowserService>(BrowserServiceToken)
 
 export const useBrowserTabsStore = defineStore('browser.tabs', () => {
     const tabsMap = ref<Map<BrowserTabId, BrowserTab>>(new Map())

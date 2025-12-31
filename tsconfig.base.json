@@ -20,6 +20,8 @@
         "strict": true,
         "customConditions": ["zoho-studio"],
         "allowImportingTsExtensions": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "paths": {
             "@zoho-studio/chrome-ext": ["apps/chrome-ext/src/index.ts"],
             "@zoho-studio/core": ["packages/core/src/index.ts"],

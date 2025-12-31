@@ -37,10 +37,7 @@ function test(providerId: ServiceProviderId) {
     }
 
     const cap = caps[0]
-    const adapter = new cap.adapter(provider, {
-        tab: tab,
-        browser: chromeBrowserService,
-    })
+    const adapter = new cap.adapter({ provider, tab })
 
     console.log('adapter', adapter)
 

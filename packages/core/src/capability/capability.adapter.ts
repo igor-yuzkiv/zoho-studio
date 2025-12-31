@@ -1,31 +1,26 @@
 import type { IArtifact } from '../artifact'
-import type { BrowserTab, BrowserService } from '../browser'
+import type { BrowserTab } from '../browser'
 import type { ServiceProvider } from '../provider'
-import type { PromisePaginatedResult, PaginationParams } from '@zoho-studio/utils'
+import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
 
 export type CapabilityAdapterContext = {
+    provider: ServiceProvider
     tab: BrowserTab
-    browser: BrowserService
 }
 
 export interface ICapabilityAdapter {
     readonly ctx: CapabilityAdapterContext
 
-    readonly provider: ServiceProvider
-
     list(pagination: PaginationParams): PromisePaginatedResult<IArtifact>
 }
 
-export type CapabilityAdapterConstructor = new (provider: ServiceProvider, context: CapabilityAdapterContext) => ICapabilityAdapter
+export type CapabilityAdapterConstructor = new (context: CapabilityAdapterContext) => ICapabilityAdapter
 
 export abstract class BaseCapabilityAdapter implements ICapabilityAdapter {
-    readonly provider: ServiceProvider
-
     readonly ctx: CapabilityAdapterContext
 
-    constructor(provider: ServiceProvider, capability: CapabilityAdapterContext) {
-        this.provider = provider
-        this.ctx = capability
+    constructor(ctx: CapabilityAdapterContext) {
+        this.ctx = ctx
     }
 
     abstract list(pagination: PaginationParams): PromisePaginatedResult<IArtifact>

@@ -2,12 +2,14 @@ import { mockApiClient } from '../mock-api.client.ts'
 import type {
     BrowserTab,
     BrowserTabChangeHandler,
-    BrowserService,
+    IBrowserService,
     RequestOptions,
     RequestResponse,
 } from '@zoho-studio/core'
+import { injectable } from 'tsyringe'
 
-export class MockBrowserServiceImpl implements BrowserService {
+@injectable()
+export class MockBrowserServiceImpl implements IBrowserService {
     async listTabs(): Promise<BrowserTab[]> {
         return mockApiClient.get<chrome.tabs.Tab[]>('chrome-tabs.json').then((response) => {
             const { data } = response
