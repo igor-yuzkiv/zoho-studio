@@ -1,13 +1,10 @@
 {
     "extends": "../../tsconfig.base.json",
     "files": [],
-    "include": ["vite.config.ts"],
+    "include": ["vite.config.ts", "manifest.config.ts"],
     "references": [
         {
             "path": "../../integrations/zoho-crm"
-        },
-        {
-            "path": "../../packages/dev-mock-api"
         },
         {
             "path": "../../packages/utils"

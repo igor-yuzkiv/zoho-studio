@@ -27,7 +27,6 @@
             "@zoho-studio/core": ["packages/core/src/index.ts"],
             "@zoho-studio/ui-kit": ["packages/ui-kit/src/index.ts"],
             "@zoho-studio/utils": ["packages/utils/src/index.ts"],
-            "@zoho-studio/dev-mock-api": ["packages/dev-mock-api/src/index.ts"],
             "@zoho-studio/integrations/zoho-crm": ["integrations/zoho-crm/src/index.ts"],
             "@zoho-studio/integrations/zoho-finance": ["integrations/zoho-finance/src/index.ts"]
         }

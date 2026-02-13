@@ -4,6 +4,8 @@ import { defineConfig, loadEnv } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import { crx } from '@crxjs/vite-plugin'
+import manifest from './manifest.config.ts'
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
@@ -28,13 +30,14 @@ export default defineConfig(({ mode }) => {
             port: 4300,
             host: 'localhost',
         },
-        plugins: [vue({}), tailwindcss(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
+        plugins: [vue({}), tailwindcss(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md']), crx({ manifest })],
         // Uncomment this if you are using workers.
         // worker: {
         //  plugins: [],
         // },
         build: {
-            outDir: './build/dist',
+            // outDir: './build/dist',
+            outDir: './dist',
             emptyOutDir: true,
             reportCompressedSize: true,
             commonjsOptions: {
