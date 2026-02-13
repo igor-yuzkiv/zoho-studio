@@ -9,6 +9,10 @@ export type BrowserTabChangeHandler = (event: BrowserTabChangeEvent) => void
 export interface IBrowserService {
     listTabs(): Promise<BrowserTab[]>
 
+    findTabById(tabId: BrowserTabId): Promise<BrowserTab | null>
+
+    findTabBuIdOrFail(tabId: BrowserTabId): Promise<BrowserTab>
+
     startWatchingTabs(handler: BrowserTabChangeHandler): () => void
 
     getCookies(tab: BrowserTab): Promise<Record<string, string>>

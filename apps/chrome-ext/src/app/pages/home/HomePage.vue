@@ -36,7 +36,7 @@ async function test(providerId: ServiceProviderId) {
     }
 
     const cap = caps[1]
-    const adapter = new cap.adapter({ provider, tab })
+    const adapter = new cap.adapter(provider)
 
     console.log('adapter', adapter)
 

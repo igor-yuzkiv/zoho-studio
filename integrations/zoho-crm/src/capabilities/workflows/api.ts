@@ -1,4 +1,4 @@
-import { CrmApiService } from '../../services'
+import { BaseCrmApiService } from '../../base-crm-api.service.ts'
 import { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
 import { ZohoCrmWorkflow } from '../../types'
 
@@ -12,7 +12,7 @@ type WorkflowListResponse = {
     workflow_rules: ZohoCrmWorkflow[]
 }
 
-export class CrmWorkflowsApiService extends CrmApiService {
+export class CrmWorkflowsApiService extends BaseCrmApiService {
     async listWorkflows(pagination: PaginationParams): PromisePaginatedResult<ZohoCrmWorkflow> {
         const response = await this.httpRequest<WorkflowListResponse>({
             url: `/crm/v8/settings/automation/workflow_rules?page=${pagination.page}&per_page=${pagination.per_page}`,

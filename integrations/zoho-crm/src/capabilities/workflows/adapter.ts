@@ -1,4 +1,4 @@
-import { BaseCapabilityAdapter, CapabilityAdapterContext, IArtifact } from '@zoho-studio/core'
+import { BaseCapabilityAdapter, IArtifact, ServiceProvider } from '@zoho-studio/core'
 import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
 import { CrmWorkflowsApiService } from './api.ts'
 import { mapManyCrmWorkflowsToArtifact } from './mapper.ts'
@@ -6,9 +6,9 @@ import { mapManyCrmWorkflowsToArtifact } from './mapper.ts'
 export class CrmWorkflowsAdapter extends BaseCapabilityAdapter {
     private api: CrmWorkflowsApiService
 
-    constructor(ctx: CapabilityAdapterContext) {
-        super(ctx)
-        this.api = new CrmWorkflowsApiService(ctx)
+    constructor(provider: ServiceProvider) {
+        super(provider)
+        this.api = new CrmWorkflowsApiService(provider)
     }
 
     async list(pagination: PaginationParams): PromisePaginatedResult<IArtifact> {
@@ -19,7 +19,7 @@ export class CrmWorkflowsAdapter extends BaseCapabilityAdapter {
 
         return {
             ok: true,
-            data: mapManyCrmWorkflowsToArtifact(response.data, this.ctx.provider.id),
+            data: mapManyCrmWorkflowsToArtifact(response.data, this.serviceProvider.id),
             meta: response.meta,
         }
     }

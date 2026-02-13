@@ -17,6 +17,20 @@ export class ChromeBrowserServiceImpl implements IBrowserService {
         return mapManyChromeTabsToBrowserTabs(chromeTabs)
     }
 
+    async findTabById(tabId: number): Promise<BrowserTab | null> {
+        const chromeTab = await chrome.tabs.get(tabId)
+        return mapChromeTabToBrowserTab(chromeTab)
+    }
+
+    async findTabBuIdOrFail(tabId: number): Promise<BrowserTab> {
+        const tab = await this.findTabById(tabId)
+        if (!tab) {
+            throw new Error(`Tab with ID ${tabId} not found`)
+        }
+
+        return tab
+    }
+
     startWatchingTabs(handler: BrowserTabChangeHandler): () => void {
         const updateHandler = (tabId: number, changeInfo: chrome.tabs.OnUpdatedInfo, tab: chrome.tabs.Tab) => {
             const browserTab = mapChromeTabToBrowserTab(tab)
