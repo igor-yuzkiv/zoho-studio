@@ -25,7 +25,7 @@ async function test(providerId: ServiceProviderId) {
         return
     }
 
-    const caps = integrationsRegistry.getCapabilitiesByType(provider.type)
+    const caps = integrationsRegistry.getCapabilitiesByServiceProviderType(provider.type)
     if (!caps?.length && caps[1]) {
         return
     }
