@@ -31,7 +31,7 @@ export class MockBrowserServiceImpl implements IBrowserService {
     startWatchingTabs(handler: BrowserTabChangeHandler): () => void {
         console.warn('MockChromeBrowserTabServiceImpl.startWatching is not implemented.')
 
-        return () => {}
+        return () => { /* empty */ }
     }
 
     async getCookies(tab: BrowserTab): Promise<Record<string, string>> {

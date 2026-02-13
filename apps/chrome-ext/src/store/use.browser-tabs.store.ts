@@ -22,6 +22,8 @@ export const useBrowserTabsStore = defineStore('browser.tabs', () => {
         const nextTabsMap = new Map(tabsMap.value)
         nextTabsMap.set(event.tab.id, event.tab)
         tabsMap.value = nextTabsMap
+
+        console.log(tabsList.value);
     }
 
     function handleTabRemoved(event: BrowserTabRemoveEvent) {
@@ -30,6 +32,8 @@ export const useBrowserTabsStore = defineStore('browser.tabs', () => {
         const nextTabsMap = new Map(tabsMap.value)
         nextTabsMap.delete(event.tabId)
         tabsMap.value = nextTabsMap
+
+        console.log(tabsList.value);
     }
 
     async function initialize() {
