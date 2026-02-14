@@ -1,10 +1,11 @@
 <script setup lang="ts" generic="TCapabilityType extends CapabilityType = CapabilityType">
 import type { ArtifactId, CapabilityType, IArtifact } from '@zoho-studio/core'
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import type { ArtifactGroup, ArtifactGroupBy } from '../types.ts'
 import ArtifactExplorerMenuItem from './ArtifactExplorerMenuItem.vue'
 import { Icon } from '@iconify/vue'
 import { get } from 'lodash'
+import { onKeyStroke, useFocusWithin } from '@vueuse/core'
 
 const props = withDefaults(
     defineProps<{
@@ -28,6 +29,8 @@ defineSlots<{
 }>()
 
 const collapsedGroups = ref<Record<string, boolean>>({})
+const listContainer = useTemplateRef('list-container')
+const { focused: isFocused } = useFocusWithin(listContainer)
 
 function getGroupKey(artifact: IArtifact): string {
     if (typeof props.groupBy === 'function') {
@@ -75,10 +78,40 @@ function handleSelect(artifact: IArtifact<TCapabilityType>) {
     emit('update:activeId', artifact.id)
     emit('select', artifact)
 }
+
+const visibleItems = computed<IArtifact<TCapabilityType>[]>(() => {
+    if (!groupedItems.value) {
+        return props.items
+    }
+
+    return groupedItems.value.flatMap((group) => {
+       if (!collapsedGroups.value[group.key]) {
+            return group.items
+        }
+
+        return []
+    })
+})
+
+const activeItemIndex = computed(() => visibleItems.value.findIndex((item) => item.id === props.activeId))
+
+onKeyStroke('ArrowDown', (e) => {
+    if (isFocused.value && activeItemIndex.value < visibleItems.value.length - 1) {
+        e.preventDefault()
+        handleSelect(visibleItems.value[activeItemIndex.value + 1])
+    }
+})
+
+onKeyStroke('ArrowUp', (e) => {
+    if (isFocused.value && activeItemIndex.value > 0) {
+        e.preventDefault()
+        handleSelect(visibleItems.value[activeItemIndex.value - 1])
+    }
+})
 </script>
 
 <template>
-    <div class="flex h-full w-full flex-col overflow-hidden">
+    <div ref="list-container" tabindex="0" class="flex h-full w-full flex-col overflow-hidden outline-none">
         <div v-if="groupedItems" class="flex flex-col gap-y-2 overflow-auto">
             <section v-for="group in groupedItems" :key="group.key" class="px-1">
                 <button
