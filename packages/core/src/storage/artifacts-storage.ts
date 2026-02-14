@@ -1,4 +1,4 @@
-import { IArtifact } from '@zoho-studio/core'
+import { IArtifact } from '../artifact'
 
 export interface IArtifactsStorage {
     bulkUpsert(artifacts: IArtifact[]): Promise<boolean>
