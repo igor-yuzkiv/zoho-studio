@@ -1,8 +1,13 @@
 import { IArtifact } from '../artifact'
+import type { CapabilityType } from '../capability'
 
 export interface IArtifactsStorage {
     bulkUpsert(artifacts: IArtifact[]): Promise<boolean>
+
+    findByProviderIdAndCapabilityType<TCapabilityType extends CapabilityType = CapabilityType>(
+        providerId: string,
+        capabilityType: string
+    ): Promise<IArtifact<TCapabilityType>[]>
 }
 
 export const ArtifactStorageToken = Symbol('IArtifactStorage')
-
