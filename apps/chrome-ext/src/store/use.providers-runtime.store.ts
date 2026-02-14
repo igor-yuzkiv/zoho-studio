@@ -58,10 +58,30 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         cachedProviders.value = Array.from(next.values())
     }
 
+    function updateProvider(id: ServiceProviderId, data: Partial<ServiceProvider>) {
+        const existing = providersMap.value.get(id)
+        if (!existing) {
+            console.warn(`Trying to update non-existing provider with id "${id}"`)
+            return
+        }
+
+        const updated = { ...existing, ...data }
+        const next = new Map(providersMap.value)
+        next.set(id, updated)
+        providersMap.value = next
+        cachedProviders.value = Array.from(next.values())
+    }
+
+    function updateProviderLastSyncedAt(providerId: ServiceProviderId, timestamp: number) {
+        updateProvider(providerId, { lastSyncedAt: timestamp })
+    }
+
     return {
         providersMap,
         providersList,
         initialize,
         resolveFromBrowserTabs,
+        updateProvider,
+        updateProviderLastSyncedAt,
     }
 })

@@ -19,4 +19,12 @@ export class DexieArtifactsStorage implements IArtifactsStorage {
 
         return result as IArtifact<TCapabilityType>[]
     }
+
+    async countByProviderId(providerId: string): Promise<number> {
+        return artifactsDexieDB.records.where('provider_id').equals(providerId).count()
+    }
+
+    async deleteByProviderId(providerId: string): Promise<number> {
+        return artifactsDexieDB.records.where('provider_id').equals(providerId).delete()
+    }
 }

@@ -1,16 +1,66 @@
 <script setup lang="ts">
 import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
-import { useRoute } from 'vue-router'
-import { useCurrentProvider } from '../../../composables'
+import { useRoute, useRouter } from 'vue-router'
+import { useCurrentProvider, useProviderCacheManager } from '../../../composables'
 import { ProviderCapabilitiesMenu } from '../../../components/provider-capabilities-menu'
 import { AppFooter } from '../../shell/app-footer'
 import { AppHeader } from '../../shell/app-header'
+import { computed, onMounted } from 'vue'
+import { AppRouteName } from '../../router'
+import { Icon } from '@iconify/vue'
+import { IconButton, useConfirm, useToast } from '@zoho-studio/ui-kit'
 
 const route = useRoute()
+const router = useRouter()
+const toast = useToast()
+const confirm = useConfirm()
+const { providerId, provider, providerCapabilities, lastSyncedAtFormatted, isOnline } = useCurrentProvider()
+const { ensureSyncArtifacts, refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
+const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
 
-const { providerId, providerCapabilities } = useCurrentProvider()
+async function handleRefreshProviderCache() {
+    if (!provider.value || isCachingInProgress.value) {
+        return
+    }
 
+    if (!isOnline.value) {
+        toast.error({ detail: 'Cannot refresh cache while provider is offline.' })
+        return
+    }
+
+    confirm.require({
+        header: 'Refresh Cache',
+        message: 'This will clear and re-sync all artifacts for this provider. Are you sure you want to continue?',
+        accept: async () => {
+            if (provider.value) {
+                refreshProviderCache(provider.value).catch((error) => {
+                    console.error('Failed to clear cache', error)
+                    toast.error({ detail: 'Failed to refresh provider cache. Please try again.' })
+                })
+            }
+        },
+    })
+}
+
+onMounted(() => {
+    if (!provider.value) {
+        router.push({
+            name: AppRouteName.error,
+            query: { code: 404, message: 'Something went wrong. Provider not found.' },
+        })
+        return
+    }
+
+    ensureSyncArtifacts(provider.value).catch((error) => {
+        console.error(error)
+
+        router.push({
+            name: AppRouteName.error,
+            query: { code: 500, message: 'Failed to sync provider artifacts. Please try again.' },
+        })
+    })
+})
 </script>
 
 <template>
@@ -47,7 +97,28 @@ const { providerId, providerCapabilities } = useCurrentProvider()
             </Splitter>
         </main>
 
-        <AppFooter />
+        <AppFooter>
+            <template #start>
+                <div v-if="isCachingInProgress" class="flex items-center gap-x-1 text-sm text-gray-500">
+                    <Icon icon="line-md:loading-loop" />
+                    <span>Caching...</span>
+                </div>
+                <div v-else class="text-sm text-gray-500">Last synced: {{ lastSyncedAtFormatted }}</div>
+            </template>
+
+            <template #end>
+                <IconButton
+                    class="p-0"
+                    text
+                    size="small"
+                    severity="secondary"
+                    icon="tdesign:clear-filled"
+                    :disabled="isCachingInProgress"
+                    @click="handleRefreshProviderCache"
+                    v-tooltip="{ value: 'Refresh Cache', placement: 'top' }"
+                />
+            </template>
+        </AppFooter>
     </div>
 </template>
 

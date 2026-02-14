@@ -47,5 +47,17 @@ export const router = createRouter({
                 menu: () => import('../../pages/workspace/modules/ModulesMenuPage.vue'),
             },
         },
+
+        {
+            name: AppRouteName.error,
+            path: '/error',
+            meta: { hideSidebarMenu: true, layout: 'default' },
+            component: () => import('../../pages/error/ErrorPage.vue'),
+        },
+
+        {
+            path: '/:pathMatch(.*)*',
+            redirect: { name: AppRouteName.error, query: { code: '404', message: 'Page not found' } },
+        },
     ],
 })

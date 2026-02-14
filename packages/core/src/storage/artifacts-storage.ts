@@ -8,6 +8,10 @@ export interface IArtifactsStorage {
         providerId: string,
         capabilityType: string
     ): Promise<IArtifact<TCapabilityType>[]>
+
+    countByProviderId(providerId: string): Promise<number>
+
+    deleteByProviderId(providerId: string): Promise<number>
 }
 
 export const ArtifactStorageToken = Symbol('IArtifactStorage')

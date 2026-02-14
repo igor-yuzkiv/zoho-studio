@@ -11,6 +11,7 @@ import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
 import { useCapabilitiesManager } from './use.capabilities.manager.ts'
 import { integrationsRegistry } from '../integrations.registry.ts'
+import {format} from 'date-fns'
 
 export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()
@@ -35,6 +36,14 @@ export function useCurrentProvider() {
 
     const isOnline = computed(() => Boolean(provider.value?.browserTabId))
 
+    const lastSyncedAtFormatted = computed(() => {
+        if (!provider.value?.lastSyncedAt) {
+            return 'Never'
+        }
+
+        return format(new Date(provider.value.lastSyncedAt), 'PPpp')
+    })
+
     const providerCapabilities = computed<CapabilityDescriptor[]>(() => {
         if (!provider.value) {
             return []
@@ -58,5 +67,6 @@ export function useCurrentProvider() {
         isOnline,
         providerCapabilities,
         findProviderCapability,
+        lastSyncedAtFormatted,
     }
 }
