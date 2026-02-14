@@ -2,12 +2,16 @@
 import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute } from 'vue-router'
+import { AppFooter } from '../../shell/app-footer'
+import { AppHeader } from '../../shell/app-header'
 
 const route = useRoute()
 </script>
 
 <template>
     <div class="relative bg-secondary flex h-screen w-full flex-col overflow-hidden">
+        <AppHeader />
+
         <main
             class="flex h-full w-full flex-col overflow-hidden px-2"
             :class="{
@@ -34,6 +38,8 @@ const route = useRoute()
                 </SplitterPanel>
             </Splitter>
         </main>
+
+        <AppFooter />
     </div>
 </template>
 

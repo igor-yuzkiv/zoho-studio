@@ -4,6 +4,8 @@ import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute } from 'vue-router'
 import { useCurrentProvider } from '../../../composables'
 import { ProviderCapabilitiesMenu } from '../../../widgets'
+import { AppFooter } from '../../shell/app-footer'
+import { AppHeader } from '../../shell/app-header'
 
 const route = useRoute()
 const { providerId, providerCapabilities } = useCurrentProvider()
@@ -11,6 +13,8 @@ const { providerId, providerCapabilities } = useCurrentProvider()
 
 <template>
     <div class="bg-secondary relative flex h-screen w-full flex-col overflow-hidden">
+        <AppHeader />
+
         <main
             class="flex h-full w-full overflow-hidden px-2"
             :class="{
@@ -34,11 +38,14 @@ const { providerId, providerCapabilities } = useCurrentProvider()
                         <router-view name="menu" />
                     </div>
                 </SplitterPanel>
+
                 <SplitterPanel class="flex h-full w-full flex-col overflow-hidden">
                     <router-view />
                 </SplitterPanel>
             </Splitter>
         </main>
+
+        <AppFooter />
     </div>
 </template>
 
