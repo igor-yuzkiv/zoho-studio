@@ -5,3 +5,4 @@ export interface IArtifactsStorage {
 }
 
 export const ArtifactStorageToken = Symbol('IArtifactStorage')
+

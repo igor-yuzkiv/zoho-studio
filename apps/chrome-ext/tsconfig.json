@@ -1,7 +1,9 @@
 {
     "extends": "../../tsconfig.base.json",
     "files": [],
-    "include": ["vite.config.ts", "manifest.config.ts"],
+    "include": ["vite.config.ts",
+      "chrome/manifest.config.ts"
+    ],
     "references": [
         {
             "path": "../../integrations/zoho-crm"

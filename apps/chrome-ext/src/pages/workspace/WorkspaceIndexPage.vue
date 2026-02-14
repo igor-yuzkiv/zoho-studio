@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
-import { useArtifactsFetcher, useCurrentProvider } from '../../composables'
+import { useCurrentProvider } from '../../composables'
+import { useArtifactsSync } from '../../composables/use.artfacts-sync.ts'
 
-const currentProvider = useCurrentProvider()
-const fetcher = useArtifactsFetcher()
+const { provider } = useCurrentProvider()
+const { syncProviderArtifacts } = useArtifactsSync()
 
 async function test() {
-    if (!currentProvider.provider.value) {
-        return
+    if (provider.value) {
+        await syncProviderArtifacts(provider.value)
     }
-
-    const artifactsPerCap = await fetcher.fetchProviderArtifacts(currentProvider.provider.value, currentProvider.providerCapabilities.value)
-    console.log(artifactsPerCap);
 }
 </script>
 

@@ -25,7 +25,7 @@ export function useCurrentProvider() {
             return []
         }
 
-        return capabilities.getProviderCapabilities(provider.value.type)
+        return capabilities.getProviderCapabilities(provider.value)
     })
 
     function findProviderCapability(capabilityType: CapabilityType): Maybe<CapabilityDescriptor> {
@@ -33,7 +33,7 @@ export function useCurrentProvider() {
             return
         }
 
-        return capabilities.findProviderCapability(provider.value.type, capabilityType)
+        return capabilities.findProviderCapability(provider.value, capabilityType)
     }
 
     return {

@@ -18,7 +18,7 @@ export default defineManifest({
         default_path: 'index.html',
     },
     background: {
-        service_worker: 'src/browser/service-worker.ts',
+        service_worker: 'chrome/service-worker.ts',
     },
     host_permissions: [
         '*://*.zoho.eu/*',
@@ -40,7 +40,7 @@ export default defineManifest({
                 '*://*.zoho.com.au/*',
                 '*://*.zoho.com.cn/*',
             ],
-            js: ['src/browser/content-script.ts'],
+            js: ['chrome/content-script.ts'],
         },
     ],
 })

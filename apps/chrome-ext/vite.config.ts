@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { crx } from '@crxjs/vite-plugin'
-import manifest from './manifest.config.ts'
+import manifest from './chrome/manifest.config.ts'
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')

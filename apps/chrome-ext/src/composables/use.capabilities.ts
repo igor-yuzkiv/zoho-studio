@@ -1,10 +1,10 @@
-import { CapabilityDescriptor, CapabilityType, ServiceProviderType } from '@zoho-studio/core'
+import { CapabilityDescriptor, CapabilityType, ServiceProvider } from '@zoho-studio/core'
 import { integrationsRegistry } from '../integrations.registry.ts'
 import { Maybe } from '@zoho-studio/utils'
 
 export function useCapabilities() {
-    function getProviderCapabilities(providerType: ServiceProviderType): CapabilityDescriptor[] {
-        const providerManifest = integrationsRegistry.getManifest(providerType)
+    function getProviderCapabilities(provider: ServiceProvider): CapabilityDescriptor[] {
+        const providerManifest = integrationsRegistry.getManifest(provider.type)
         if (!providerManifest) {
             return []
         }
@@ -13,10 +13,10 @@ export function useCapabilities() {
     }
 
     function findProviderCapability(
-        providerType: ServiceProviderType,
+        provider: ServiceProvider,
         capabilityType: CapabilityType
     ): Maybe<CapabilityDescriptor> {
-        const capabilities = getProviderCapabilities(providerType)
+        const capabilities = getProviderCapabilities(provider)
 
         return capabilities.find((cap) => cap.type === capabilityType)
     }
