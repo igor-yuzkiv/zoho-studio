@@ -1,4 +1,4 @@
-import type { CapabilityType, FieldArtifactPayload, FunctionArtifactPayload, WorkflowArtifactPayload } from '../capability'
+import type { CapabilityType, FieldArtifactPayload, FunctionArtifactPayload, ModuleArtifactPayload, WorkflowArtifactPayload } from '../capability'
 import type { ServiceProviderId } from '../provider'
 import type { IEntity, Maybe } from '@zoho-studio/utils'
 
@@ -7,7 +7,7 @@ export type ArtifactId = string
 export type ArtifactPayloadMap = {
     functions: FunctionArtifactPayload
     workflows: WorkflowArtifactPayload
-    modules: unknown
+    modules: ModuleArtifactPayload
     fields: FieldArtifactPayload
 }
 

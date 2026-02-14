@@ -51,7 +51,7 @@
 `integrations/zoho-crm/src/manifest.ts`:
 
 - `serviceProviderType: 'zoho-crm'`;
-- `capabilities: [CrmFunctionsDescriptor, CrmWorkflowsDescriptor]`;
+- `capabilities: [CrmFunctionsDescriptor, CrmWorkflowsDescriptor, CrmModulesDescriptor, CrmFieldsDescriptor]`;
 - `resolveFromBrowserTab(...)` парсить URL і формує `ServiceProvider`.
 
 ## 3. Capability
@@ -64,10 +64,12 @@ Capability - це опис функціонального домену, який
 
 - `type: CapabilityType`;
 - `title`, `icon`, `hideInMenu?`;
+- `dependsOn?: CapabilityType` — залежність від іншого capability (синхронізація виконується після нього);
 - `adapter: CapabilityAdapterConstructor`.
 
 `CapabilityType` у core: `'functions' | 'workflows' | 'modules' | 'fields'`.
 У поточному UI-маршрутингу активно використані `functions`, `workflows`, `modules`.
+`fields` має `hideInMenu: true` та `dependsOn: 'modules'` — не відображається у меню та синхронізується після modules.
 
 ### Зв'язок з provider
 
@@ -80,7 +82,9 @@ Capability - це опис функціонального домену, який
 
 - Реалізація descriptor:
   `integrations/zoho-crm/src/capabilities/functions/descriptor.ts`,
-  `integrations/zoho-crm/src/capabilities/workflows/descriptor.ts`.
+  `integrations/zoho-crm/src/capabilities/workflows/descriptor.ts`,
+  `integrations/zoho-crm/src/capabilities/modules/descriptor.ts`,
+  `integrations/zoho-crm/src/capabilities/fields/descriptor.ts`.
 - Використання у UI (без бізнес-логіки): формування меню і маршруту
   `/workspace/:providerId/capabilities/:type` у
   `apps/chrome-ext/src/components/provider-capabilities-menu/ui/ProviderCapabilitiesMenu.vue`.
@@ -116,6 +120,12 @@ Adapter ізолює домен `core` від зовнішнього API:
   `integrations/zoho-crm/src/capabilities/functions/adapter.ts`.
 - `CrmWorkflowsAdapter`:
   `integrations/zoho-crm/src/capabilities/workflows/adapter.ts`.
+- `CrmModulesAdapter`:
+  `integrations/zoho-crm/src/capabilities/modules/adapter.ts`.
+- `CrmFieldsAdapter`:
+  `integrations/zoho-crm/src/capabilities/fields/adapter.ts` —
+  читає modules зі storage через DI (`container.resolve<IArtifactsStorage>`),
+  фільтрує `api_supported`, потім завантажує поля для кожного модуля.
 - Зовнішній API шар:
   `integrations/zoho-crm/src/base-crm-api.service.ts`,
   `integrations/zoho-crm/src/capabilities/functions/api.ts`.
@@ -137,9 +147,10 @@ Adapter ізолює домен `core` від зовнішнього API:
 
 `ArtifactPayloadMap` мапить `capability_type` на тип payload:
 
-- `functions -> FunctionArtifactPayload`;
-- `fields -> FieldArtifactPayload`;
-- `workflows/modules -> unknown` (на рівні core).
+- `functions -> FunctionArtifactPayload` — `{ type, script?, params? }`;
+- `workflows -> WorkflowArtifactPayload` — `{ module_api_name, module_display_name }`;
+- `modules -> ModuleArtifactPayload` — `{ api_supported }`;
+- `fields -> FieldArtifactPayload` — `{ data_type, display_data_type }`.
 
 ### Формування ID
 
@@ -148,9 +159,14 @@ Adapter ізолює домен `core` від зовнішнього API:
 
 - результат: `providerId:capabilityType:...partials`.
 
-Приклад:
-`makeArtifactId(providerId, 'functions', data.id)` у
-`integrations/zoho-crm/src/capabilities/functions/mapper.ts`.
+Приклади:
+
+- Functions: `makeArtifactId(providerId, 'functions', data.id)` → `zoho-crm:us:functions:123`;
+- Modules: `makeArtifactId(providerId, 'modules', data.api_name)` → `zoho-crm:us:modules:Contacts`;
+- Fields: `makeArtifactId(providerId, 'fields', [module.api_name, field.api_name])` → `zoho-crm:us:fields:Contacts:Email`.
+
+Fields використовують `parent_id` для зв'язку з модулем:
+`parent_id: makeArtifactId(providerId, 'modules', module.api_name)`.
 
 ### Використання в routing
 
@@ -173,7 +189,9 @@ Storage у core - абстракція персистенсу artifact-дани�
 Контракт:
 
 - `bulkUpsert(artifacts: IArtifact[]): Promise<boolean>`;
-- `findByProviderIdAndCapabilityType(providerId, capabilityType)`.
+- `findByProviderIdAndCapabilityType(providerId, capabilityType)`;
+- `countByProviderId(providerId): Promise<number>`;
+- `deleteByProviderId(providerId): Promise<number>`.
 
 ### Для чого
 
@@ -202,9 +220,13 @@ Storage у core - абстракція персистенсу artifact-дани�
 
 1. Runtime резолвить `ServiceProvider` із вкладок браузера через `IIntegrationManifest.resolveFromBrowserTab`.
 2. Для provider береться список `CapabilityDescriptor` із manifest.
-3. Для кожного capability створюється `new capability.adapter(provider)`.
-4. Adapter викликає зовнішній API, мапить дані в `IArtifact[]`.
-5. `useArtifactsSync` зберігає результат через `IArtifactsStorage.bulkUpsert`.
+3. Capabilities розділяються на фази за `dependsOn`:
+   - Фаза 1: capabilities без залежностей (functions, workflows, modules) — завантажуються паралельно.
+   - Проміжний `bulkUpsert` — збереження результатів у storage.
+   - Фаза 2: capabilities із залежностями (fields з `dependsOn: 'modules'`) — завантажуються після збереження залежностей.
+4. Для кожного capability створюється `new capability.adapter(provider)`.
+5. Adapter викликає зовнішній API, мапить дані в `IArtifact[]`.
+6. `useArtifactsSync` зберігає результат через `IArtifactsStorage.bulkUpsert`.
 
 Код: `apps/chrome-ext/src/composables/use.artifacts.fetcher.ts`,
 `apps/chrome-ext/src/composables/use.artifacts.sync.ts`.

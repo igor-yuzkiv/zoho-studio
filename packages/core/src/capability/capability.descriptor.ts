@@ -7,5 +7,6 @@ export interface CapabilityDescriptor {
     title: string
     icon: string
     hideInMenu?: boolean
+    dependsOn?: CapabilityType
     adapter: CapabilityAdapterConstructor
 }
