@@ -1,9 +1,16 @@
 import { useProvidersRuntimeStore } from '../store'
 import { useRouteParams } from '@vueuse/router'
-import { CapabilityDescriptor, CapabilityType, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
+import {
+    CapabilityDescriptor,
+    CapabilityType,
+    type IIntegrationManifest,
+    ServiceProvider,
+    ServiceProviderId,
+} from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
 import { useCapabilitiesManager } from './use.capabilities.manager.ts'
+import { integrationsRegistry } from '../integrations.registry.ts'
 
 export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()
@@ -16,6 +23,14 @@ export function useCurrentProvider() {
         }
 
         return providersStore.providersMap.get(providerId.value)
+    })
+
+    const providerManifest = computed<Maybe<IIntegrationManifest>>(() => {
+        if (!provider.value) {
+            return
+        }
+
+        return integrationsRegistry.getManifest(provider.value.type)
     })
 
     const isOnline = computed(() => Boolean(provider.value?.browserTabId))
@@ -39,6 +54,7 @@ export function useCurrentProvider() {
     return {
         providerId,
         provider,
+        providerManifest,
         isOnline,
         providerCapabilities,
         findProviderCapability,
