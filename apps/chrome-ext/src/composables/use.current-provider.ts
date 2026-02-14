@@ -1,8 +1,9 @@
 import { useProvidersRuntimeStore } from '../store'
 import { useRouteParams } from '@vueuse/router'
-import type { ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
+import type { CapabilityDescriptor, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
+import { integrationsRegistry } from '../integrations.registry.ts'
 
 export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()
@@ -18,9 +19,18 @@ export function useCurrentProvider() {
 
     const isOnline = computed(() => Boolean(provider.value?.browserTabId))
 
+    const providerCapabilities = computed<CapabilityDescriptor[]>(() => {
+        if (!provider.value) {
+            return [];
+        }
+
+        return integrationsRegistry.getCapabilitiesByServiceProviderType(provider.value.type);
+    })
+
     return {
         providerId,
         provider,
         isOnline,
+        providerCapabilities
     }
 }
