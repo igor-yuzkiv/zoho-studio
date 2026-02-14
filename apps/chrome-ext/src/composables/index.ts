@@ -1,3 +1,3 @@
 export { useCurrentProvider } from './use.current-provider.ts'
-export { useCapabilities } from './use.capabilities.ts'
+export { useCapabilitiesManager } from './use.capabilities.manager.ts'
 export { useArtifactsFetcher } from './use.artifacts.fetcher.ts'

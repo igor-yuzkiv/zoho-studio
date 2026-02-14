@@ -2,12 +2,12 @@ import { container } from 'tsyringe'
 import { ArtifactStorageToken, IArtifactsStorage, ServiceProvider } from '@zoho-studio/core'
 import { useArtifactsFetcher } from './use.artifacts.fetcher.ts'
 import { ref } from 'vue'
-import { useCapabilities } from './use.capabilities.ts'
+import { useCapabilitiesManager } from './use.capabilities.manager.ts'
 
 const artifactsStorage = container.resolve<IArtifactsStorage>(ArtifactStorageToken)
 
 export function useArtifactsSync() {
-    const capabilities = useCapabilities()
+    const capabilities = useCapabilitiesManager()
     const fetcher = useArtifactsFetcher()
     const isSyncing = ref(false)
 

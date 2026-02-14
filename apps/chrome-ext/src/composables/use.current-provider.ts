@@ -3,12 +3,12 @@ import { useRouteParams } from '@vueuse/router'
 import { CapabilityDescriptor, CapabilityType, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
-import { useCapabilities } from './use.capabilities.ts'
+import { useCapabilitiesManager } from './use.capabilities.manager.ts'
 
 export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()
     const providerId = useRouteParams<ServiceProviderId>('providerId')
-    const capabilities = useCapabilities()
+    const capabilities = useCapabilitiesManager()
 
     const provider = computed<Maybe<ServiceProvider>>(() => {
         if (!providerId.value || !providersStore.providersMap.has(providerId.value)) {

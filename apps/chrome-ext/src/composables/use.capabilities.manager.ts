@@ -2,7 +2,7 @@ import { CapabilityDescriptor, CapabilityType, ServiceProvider } from '@zoho-stu
 import { integrationsRegistry } from '../integrations.registry.ts'
 import { Maybe } from '@zoho-studio/utils'
 
-export function useCapabilities() {
+export function useCapabilitiesManager() {
     function getProviderCapabilities(provider: ServiceProvider): CapabilityDescriptor[] {
         const providerManifest = integrationsRegistry.getManifest(provider.type)
         if (!providerManifest) {
