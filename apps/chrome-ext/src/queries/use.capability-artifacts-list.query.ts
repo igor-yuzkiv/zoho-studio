@@ -8,6 +8,7 @@ import {
 import { computed, MaybeRef, toValue } from 'vue'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import { container } from 'tsyringe'
+import { ArtifactsQueryKeys } from '../config/query-keys.config.ts'
 
 const artifactsStorage = container.resolve<IArtifactsStorage>(ArtifactStorageToken)
 
@@ -16,7 +17,7 @@ export function useCapabilityArtifactsListQuery<T extends CapabilityType = Capab
     capabilityType: MaybeRef<T>
 ) {
     const { isPending, data } = useQuery<IArtifact<T>[]>({
-        queryKey: ['capability-artifacts', toValue(providerId), toValue(capabilityType)],
+        queryKey: ArtifactsQueryKeys.byProviderIdAndType(providerId, capabilityType),
         placeholderData: keepPreviousData,
         queryFn: () => {
             return artifactsStorage.findByProviderIdAndCapabilityType<T>(toValue(providerId), toValue(capabilityType))

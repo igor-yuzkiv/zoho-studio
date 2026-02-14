@@ -24,5 +24,5 @@ export const FunctionTypeMetadataMap: Record<FunctionType, FunctionMetadata> = {
     dynamic: { type: 'dynamic', icon: 'material-symbols:extension' },
     automation: { type: 'automation', icon: 'mdi:workflow' },
     scheduler: { type: 'scheduler', icon: 'mingcute:time-fill' },
-    unknown: { type: 'scheduler', icon: 'f7:question' },
+    unknown: { type: 'unknown', icon: 'f7:question' },
 }
