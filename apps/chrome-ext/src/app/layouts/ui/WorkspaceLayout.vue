@@ -3,7 +3,7 @@ import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute } from 'vue-router'
 import { useCurrentProvider } from '../../../composables'
-import { ProviderCapabilitiesMenu } from '../../../widgets'
+import { ProviderCapabilitiesMenu } from '../../../components/provider-capabilities-menu'
 import { AppFooter } from '../../shell/app-footer'
 import { AppHeader } from '../../shell/app-header'
 
