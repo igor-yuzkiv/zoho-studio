@@ -14,7 +14,7 @@ const itemsForDisplay = computed(() => {
         return {
             id: provider.id,
             title: provider.title,
-            icon: integrationsRegistry.getByType(provider.type)?.icon || 'mdi:application',
+            icon: integrationsRegistry.getManifest(provider.type)?.icon || 'mdi:application',
             isOnline: Boolean(provider.browserTabId),
         }
     })

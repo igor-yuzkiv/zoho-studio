@@ -1,13 +1,14 @@
 import { useProvidersRuntimeStore } from '../store'
 import { useRouteParams } from '@vueuse/router'
-import type { CapabilityDescriptor, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
+import { CapabilityDescriptor, CapabilityType, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
-import { integrationsRegistry } from '../integrations.registry.ts'
+import { useCapabilities } from './use.capabilities.ts'
 
 export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()
     const providerId = useRouteParams<ServiceProviderId>('providerId')
+    const capabilities = useCapabilities()
 
     const provider = computed<Maybe<ServiceProvider>>(() => {
         if (!providerId.value || !providersStore.providersMap.has(providerId.value)) {
@@ -21,16 +22,25 @@ export function useCurrentProvider() {
 
     const providerCapabilities = computed<CapabilityDescriptor[]>(() => {
         if (!provider.value) {
-            return [];
+            return []
         }
 
-        return integrationsRegistry.getCapabilitiesByServiceProviderType(provider.value.type);
+        return capabilities.getProviderCapabilities(provider.value.type)
     })
+
+    function findProviderCapability(capabilityType: CapabilityType): Maybe<CapabilityDescriptor> {
+        if (!provider.value) {
+            return
+        }
+
+        return capabilities.findProviderCapability(provider.value.type, capabilityType)
+    }
 
     return {
         providerId,
         provider,
         isOnline,
-        providerCapabilities
+        providerCapabilities,
+        findProviderCapability,
     }
 }

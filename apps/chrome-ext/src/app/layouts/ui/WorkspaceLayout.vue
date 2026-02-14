@@ -8,7 +8,9 @@ import { AppFooter } from '../../shell/app-footer'
 import { AppHeader } from '../../shell/app-header'
 
 const route = useRoute()
+
 const { providerId, providerCapabilities } = useCurrentProvider()
+
 </script>
 
 <template>

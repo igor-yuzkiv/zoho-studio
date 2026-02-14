@@ -7,9 +7,7 @@ export interface IIntegrationsRegistry {
 
     list(): IIntegrationManifest[]
 
-    getByType(type: ServiceProviderType): Maybe<IIntegrationManifest>
-
-    getCapabilitiesByServiceProviderType(serviceProviderType: ServiceProviderType): IIntegrationManifest['capabilities']
+    getManifest(type: ServiceProviderType): Maybe<IIntegrationManifest>
 }
 
 export class IntegrationsRegistryImpl implements IIntegrationsRegistry {
@@ -27,13 +25,7 @@ export class IntegrationsRegistryImpl implements IIntegrationsRegistry {
         return Array.from(this.manifests.values())
     }
 
-    getByType(type: ServiceProviderType): Maybe<IIntegrationManifest> {
+    getManifest(type: ServiceProviderType): Maybe<IIntegrationManifest> {
         return this.manifests.get(type)
-    }
-
-    getCapabilitiesByServiceProviderType(serviceProviderType: ServiceProviderType): IIntegrationManifest['capabilities'] {
-        const manifest = this.manifests.get(serviceProviderType)
-
-        return manifest ? manifest.capabilities : []
     }
 }
