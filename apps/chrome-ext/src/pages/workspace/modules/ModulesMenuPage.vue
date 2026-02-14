@@ -23,7 +23,7 @@ function onSelect(artifact: IArtifact<'modules'>) {
     <ArtifactExplorerMenu
         :items="data"
         :active-id="route.params.artifactId as string"
-        :group-by="null"
+        icon="streamline-sharp:module"
         @select="onSelect"
     />
 </template>

@@ -7,17 +7,12 @@ import { Icon } from '@iconify/vue'
 import { get } from 'lodash'
 import { onKeyStroke, useFocusWithin } from '@vueuse/core'
 
-const props = withDefaults(
-    defineProps<{
-        items: IArtifact<TCapabilityType>[]
-        groupBy: ArtifactGroupBy
-        activeId?: ArtifactId
-        icon?: string
-    }>(),
-    {
-        groupBy: null,
-    }
-)
+const props = defineProps<{
+    items: IArtifact<TCapabilityType>[]
+    groupBy?: ArtifactGroupBy
+    activeId?: ArtifactId
+    icon?: string
+}>()
 
 const emit = defineEmits<{
     (e: 'update:activeId', value?: ArtifactId): void
@@ -33,6 +28,10 @@ const listContainer = useTemplateRef('list-container')
 const { focused: isFocused } = useFocusWithin(listContainer)
 
 function getGroupKey(artifact: IArtifact): string {
+    if (!props.groupBy) {
+        return 'Other'
+    }
+
     if (typeof props.groupBy === 'function') {
         return String(props.groupBy(artifact) ?? 'Other')
     } else if (typeof props.groupBy === 'string') {
@@ -85,7 +84,7 @@ const visibleItems = computed<IArtifact<TCapabilityType>[]>(() => {
     }
 
     return groupedItems.value.flatMap((group) => {
-       if (!collapsedGroups.value[group.key]) {
+        if (!collapsedGroups.value[group.key]) {
             return group.items
         }
 

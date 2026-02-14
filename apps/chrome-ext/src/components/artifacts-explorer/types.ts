@@ -1,6 +1,6 @@
 import type { CapabilityType, IArtifact } from '@zoho-studio/core'
 
-export type ArtifactGroupBy = string | ((artifact: IArtifact) => string) | null
+export type ArtifactGroupBy = ((artifact: IArtifact) => string) | string
 
 export type ArtifactGroup<TCapabilityType extends CapabilityType = CapabilityType> = {
     key: string
