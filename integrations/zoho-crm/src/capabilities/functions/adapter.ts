@@ -7,9 +7,9 @@ import { CrmFunctionsApiService } from './api.ts'
 export class CrmFunctionsAdapter extends BaseCapabilityAdapter {
     private api: CrmFunctionsApiService
 
-    constructor(provoder: ServiceProvider) {
-        super(provoder)
-        this.api = new CrmFunctionsApiService(provoder)
+    constructor(provider: ServiceProvider) {
+        super(provider)
+        this.api = new CrmFunctionsApiService(provider)
     }
 
     async list(pagination: PaginationParams): PromisePaginatedResult<IArtifact> {

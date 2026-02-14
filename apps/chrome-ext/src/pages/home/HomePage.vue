@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { integrationsRegistry } from '../../../integrations.registry.ts'
-import { useProvidersRuntimeStore } from '../../../store'
-import { AppRouteName } from '../../router'
+import { integrationsRegistry } from '../../integrations.registry.ts'
+import { useProvidersRuntimeStore } from '../../store'
+import { AppRouteName } from '../../app/router'
 import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'

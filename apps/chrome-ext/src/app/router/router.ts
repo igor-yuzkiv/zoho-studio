@@ -7,7 +7,7 @@ export const router = createRouter({
         {
             path: '/',
             name: AppRouteName.home,
-            component: () => import('../pages/home/HomePage.vue'),
+            component: () => import('../../pages/home/HomePage.vue'),
             meta: { hideSidebarMenu: true, layout: 'default' },
         },
 
@@ -15,7 +15,7 @@ export const router = createRouter({
             name: AppRouteName.workspaceIndex,
             path: '/workspace/:providerId',
             meta: { hideSidebarMenu: true, layout: 'workspace' },
-            component: () => import('../pages/workspace/WorkspaceIndexPage.vue'),
+            component: () => import('../../pages/workspace/WorkspaceIndexPage.vue'),
         },
     ],
 })
