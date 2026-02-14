@@ -4,7 +4,7 @@ import { IconButton, ToggleThemeButton, useAppThemeStore } from '@zoho-studio/ui
 const appTheme = useAppThemeStore()
 
 function fullScreen() {
-    chrome.tabs.create({ url: chrome.runtime.getURL('dist/index.html') })
+    chrome.tabs.create({ url: chrome.runtime.getURL('index.html') })
 }
 </script>
 
