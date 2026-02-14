@@ -55,6 +55,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         }
 
         providersMap.value = next
+        cachedProviders.value = Array.from(next.values())
     }
 
     return {

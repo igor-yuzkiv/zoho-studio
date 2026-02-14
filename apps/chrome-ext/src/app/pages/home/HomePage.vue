@@ -1,52 +1,13 @@
 <script setup lang="ts">
 import { integrationsRegistry } from '../../../integrations.registry.ts'
-import { useBrowserTabsStore, useProvidersRuntimeStore } from '../../../store'
+import { useProvidersRuntimeStore } from '../../../store'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
-import { ServiceProviderId } from '@zoho-studio/core'
 import { storeToRefs } from 'pinia'
-import { Button } from 'primevue'
 import { computed } from 'vue'
 
 const providersStore = useProvidersRuntimeStore()
-const tabsStore = useBrowserTabsStore()
-
-const { providersList, providersMap } = storeToRefs(providersStore)
-const { tabsMap } = storeToRefs(tabsStore)
-
-async function test(providerId: ServiceProviderId) {
-    console.log('test', providerId)
-    if (!providersMap.value.has(providerId)) {
-        return
-    }
-
-    const provider = providersMap.value.get(providerId)
-    if (!provider || !provider.browserTabId || !tabsMap.value.has(provider.browserTabId)) {
-        return
-    }
-
-    const caps = integrationsRegistry.getCapabilitiesByServiceProviderType(provider.type)
-    if (!caps?.length && caps[1]) {
-        return
-    }
-
-    const tab = tabsMap.value.get(provider.browserTabId)
-    if (!tab) {
-        return
-    }
-
-    const cap = caps[1]
-    const adapter = new cap.adapter(provider)
-
-    console.log('adapter', adapter)
-
-    const response = await adapter.list({
-        page: 1,
-        per_page: 50,
-    })
-
-    console.log(response)
-}
+const { providersList } = storeToRefs(providersStore)
 
 const itemsForDisplay = computed(() => {
     return providersList.value.map((provider) => {
@@ -93,8 +54,6 @@ const itemsForDisplay = computed(() => {
                                 <Icon :icon="provider.icon" class="h-5 w-5" />
                                 <div>{{ provider.title }}</div>
                             </router-link>
-
-                            <Button @click="test(provider.id)">Test: {{ provider.id }}</Button>
                         </div>
                     </div>
                 </div>
