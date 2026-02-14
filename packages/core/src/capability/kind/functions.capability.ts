@@ -18,6 +18,7 @@ export type FunctionArtifactPayload = {
     params?: Maybe<FunctionParams[]>
 }
 
+
 export const FunctionTypeMetadataMap: Record<FunctionType, FunctionMetadata> = {
     button: { type: 'button', icon: 'mdi:button-pointer' },
     standalone: { type: 'standalone', icon: 'ph:code-fill' },

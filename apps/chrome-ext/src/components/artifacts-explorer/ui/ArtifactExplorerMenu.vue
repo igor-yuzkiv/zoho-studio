@@ -78,8 +78,8 @@ function handleSelect(artifact: IArtifact<TCapabilityType>) {
 </script>
 
 <template>
-    <div class="flex h-full w-full flex-col">
-        <div v-if="groupedItems" class="flex flex-col gap-y-2">
+    <div class="flex h-full w-full flex-col overflow-hidden">
+        <div v-if="groupedItems" class="flex flex-col gap-y-2 overflow-auto">
             <section v-for="group in groupedItems" :key="group.key" class="px-1">
                 <button
                     type="button"
@@ -112,7 +112,7 @@ function handleSelect(artifact: IArtifact<TCapabilityType>) {
             </section>
         </div>
 
-        <div v-else class="flex flex-col">
+        <div v-else class="flex flex-col overflow-auto">
             <ArtifactExplorerMenuItem
                 v-for="artifact in items"
                 :key="artifact.id"

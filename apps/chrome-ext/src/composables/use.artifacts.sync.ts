@@ -17,6 +17,7 @@ export function useArtifactsSync() {
                 provider,
                 capabilities.getProviderCapabilities(provider)
             )
+
             await artifactsStorage.bulkUpsert(artifacts)
         } catch (error) {
             console.error(error)

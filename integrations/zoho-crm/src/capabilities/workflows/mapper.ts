@@ -12,7 +12,10 @@ export function mapCrmWorkflowToArtifact(
         provider_id: providerId,
         display_name: data.name,
         api_name: '',
-        payload: {},
+        payload: {
+            module_api_name: data.module?.api_name ?? null,
+            module_display_name: data.module?.api_name ?? null,
+        },
         origin: data,
     }
 }
