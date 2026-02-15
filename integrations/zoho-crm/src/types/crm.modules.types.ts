@@ -1,4 +1,4 @@
-import type { IEntity } from '@zoho-studio/utils'
+import type { IEntity, Maybe } from '@zoho-studio/utils'
 
 export type ZohoCrmModule = {
     id: string
@@ -7,6 +7,7 @@ export type ZohoCrmModule = {
     singular_label: string
     description: string
     api_supported: boolean
+    generated_type: Maybe<string>
 }
 
 export interface ZohoCrmModuleField extends IEntity {

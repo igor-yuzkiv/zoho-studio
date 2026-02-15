@@ -24,6 +24,7 @@ function onSelect(artifact: IArtifact<'modules'>) {
         :items="data"
         :active-id="route.params.artifactId as string"
         icon="streamline-sharp:module"
+        group-by="payload.module_type"
         @select="onSelect"
     />
 </template>

@@ -14,6 +14,7 @@ export function mapCrmModuleToArtifact(
         api_name: data.api_name,
         payload: {
             api_supported: data.api_supported,
+            module_type: data.generated_type,
         },
         origin: data,
     }
