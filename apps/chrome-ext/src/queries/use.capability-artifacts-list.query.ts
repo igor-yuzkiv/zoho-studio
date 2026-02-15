@@ -1,7 +1,7 @@
 import { CapabilityType, IArtifact, ServiceProviderId } from '@zoho-studio/core'
 import { computed, MaybeRef, toValue } from 'vue'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
-import { ArtifactsQueryKeys } from '../config/query-keys.config.ts'
+import { ArtifactsQueryKeys } from '../config.ts'
 import { useArtifactsStorage } from '../composables'
 
 export function useCapabilityArtifactsListQuery<T extends CapabilityType = CapabilityType>(

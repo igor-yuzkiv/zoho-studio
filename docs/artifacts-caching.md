@@ -43,7 +43,7 @@ WorkspaceLayout.onMounted()
 - В IndexedDB немає закешованих артефактів для цього провайдера (`count <= 0`)
 - TTL кешу минув (`Date.now() - lastSyncedAt > PROVIDER_CACHE_TTL_MS`)
 
-TTL налаштовується у `config/provider-cache.config.ts` (за замовчуванням: **2 години**).
+TTL налаштовується у `config.ts` (за замовчуванням: **2 години**).
 
 ### Ручне оновлення
 
@@ -124,7 +124,5 @@ useArtifactsSync
 | `composables/use.artifacts.storage.ts` | DI-резолвер для `IArtifactsStorage` |
 | `composables/use.capabilities.manager.ts` | Пошук capability-дескрипторів |
 | `shared/artifacts-storage/dexie.artifacts-storage.ts` | IndexedDB-реалізація `IArtifactsStorage` |
-| `config/provider-cache.config.ts` | Конфігурація TTL |
-| `config/query-keys.config.ts` | Ієрархія ключів vue-query |
 | `store/use.providers-runtime.store.ts` | Стан провайдера + збереження `lastSyncedAt` |
 | `layouts/ui/WorkspaceLayout.vue` | Точка входу: auto-sync при монтуванні, UI оновлення |

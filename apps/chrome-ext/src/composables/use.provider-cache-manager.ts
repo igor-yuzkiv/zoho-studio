@@ -1,9 +1,8 @@
 import { ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import { useArtifactsSync } from './use.artifacts.sync.ts'
-import { PROVIDER_CACHE_TTL_MS } from '../config/provider-cache.config.ts'
 import { useProvidersRuntimeStore } from '../store'
 import { useQueryClient } from '@tanstack/vue-query'
-import { ArtifactsQueryKeys } from '../config/query-keys.config.ts'
+import { ArtifactsQueryKeys, PROVIDER_CACHE_TTL_MS } from '../config.ts'
 import { ref } from 'vue'
 import { useArtifactsStorage } from './use.artifacts.storage.ts'
 
