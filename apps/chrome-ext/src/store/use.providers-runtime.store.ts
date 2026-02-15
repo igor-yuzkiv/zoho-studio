@@ -1,6 +1,6 @@
 import { integrationsRegistry } from '../integrations.registry.ts'
 import { type Serializer, useStorage } from '@vueuse/core'
-import type { BrowserTab, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
+import { BrowserTab, BrowserTabId, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
@@ -24,6 +24,27 @@ const LocalStorageSerializer: Serializer<ServiceProvider[]> = {
     },
 }
 
+function resolveFromBrowserTabs(
+    browserTabs: Array<BrowserTab>,
+    prev = new Map<ServiceProviderId, ServiceProvider>()
+): Map<ServiceProviderId, ServiceProvider> {
+    return integrationsRegistry.list().reduce<Map<ServiceProviderId, ServiceProvider>>((acc, manifest) => {
+        for (const tab of browserTabs) {
+            const result = manifest.resolveFromBrowserTab(tab)
+            if (!result.ok) {
+                continue
+            }
+
+            const instance = prev.get(result.value.id) || result.value
+
+            instance.browserTabId = tab.id
+            acc.set(instance.id, instance)
+        }
+
+        return acc
+    }, prev)
+}
+
 export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     const providersMap = ref<Map<ServiceProviderId, ServiceProvider>>(new Map())
     const providersList = computed(() => Array.from(providersMap.value.values()))
@@ -39,18 +60,13 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         )
     }
 
-    function resolveFromBrowserTabs(browserTabs: Array<BrowserTab>) {
-        const next = new Map<ServiceProviderId, ServiceProvider>()
-        for (const [id, provider] of providersMap.value.entries()) {
-            next.set(id, { ...provider, browserTabId: undefined })
-        }
+    function handleBrowserTabsChange(browserTabs: Map<BrowserTabId, BrowserTab>) {
+        const prev = new Map(providersMap.value)
+        const next = resolveFromBrowserTabs(Array.from(browserTabs.values()), prev)
 
-        for (const manifest of integrationsRegistry.list()) {
-            for (const tab of browserTabs) {
-                const instance = manifest.resolveFromBrowserTab(tab)
-                if (!instance.ok) continue
-
-                next.set(instance.value.id, instance.value)
+        for (const sp of next.values()) {
+            if (sp.browserTabId && !browserTabs.has(sp.browserTabId)) {
+                sp.browserTabId = undefined
             }
         }
 
@@ -80,7 +96,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         providersMap,
         providersList,
         initialize,
-        resolveFromBrowserTabs,
+        handleBrowserTabsChange,
         updateProvider,
         updateProviderLastSyncedAt,
     }

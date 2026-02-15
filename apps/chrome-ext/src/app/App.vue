@@ -14,7 +14,7 @@ const appState = useAppStateStore()
 const tabsStore = useBrowserTabsStore()
 const providersStore = useProvidersRuntimeStore()
 
-const { tabsList } = storeToRefs(tabsStore)
+const { tabsMap } = storeToRefs(tabsStore)
 
 const layoutComponent = computed(() => {
     const layoutName = route.meta?.layout
@@ -29,7 +29,7 @@ providersStore.initialize()
 tabsStore.initialize()
 useAppThemeStore().initialize()
 
-watch(tabsList, (newData) => providersStore.resolveFromBrowserTabs(newData), { immediate: true })
+watch(tabsMap, (newData) => providersStore.handleBrowserTabsChange(newData), { immediate: true })
 </script>
 
 <template>

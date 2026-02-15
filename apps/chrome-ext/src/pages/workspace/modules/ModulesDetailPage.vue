@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRouteParams } from '@vueuse/router'
+import { useArtifactByIdQuery, useArtifactsByParentIdQuery } from '../../../queries'
 
-const route = useRoute()
+const artifactId = useRouteParams<string>('artifactId')
+const { data: moduleDetails } = useArtifactByIdQuery<'modules'>(artifactId)
+const { data: fields } = useArtifactsByParentIdQuery<'fields'>(artifactId)
 </script>
 
 <template>
-    <div class="app-card flex h-full w-full items-center justify-center">
-        <template v-if="route.params.artifactId">
-            <span>Artifact ID: {{ route.params.artifactId }}</span>
-        </template>
-        <template v-else>
-            <span class="text-muted-color">Select a module</span>
-        </template>
+    <div class="app-card flex h-full w-full flex-col overflow-auto">
+        <h1 class="text-lg">{{ moduleDetails?.display_name }}</h1>
+        <pre>{{ fields }}</pre>
     </div>
 </template>

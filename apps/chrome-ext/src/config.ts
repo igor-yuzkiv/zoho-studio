@@ -15,6 +15,9 @@ export const ArtifactsQueryKeys = {
     byId: (id: MaybeRefOrGetter<string>) => {
         return [...ArtifactsQueryKeys.all, 'by-id', id] as const
     },
+    byParentId: (parentId: MaybeRefOrGetter<string>) => {
+        return [...ArtifactsQueryKeys.all, 'by-parent-id', parentId] as const
+    },
 }
 
 export const PROVIDER_CACHE_TTL_MS = 2 * 60 * 60 * 1000 // 2 hours

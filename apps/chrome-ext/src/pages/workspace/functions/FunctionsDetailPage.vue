@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRouteParams } from '@vueuse/router'
+import { useArtifactByIdQuery } from '../../../queries'
 
-const route = useRoute()
+const artifactId = useRouteParams<string>('artifactId')
+const { data } = useArtifactByIdQuery<'functions'>(artifactId)
 </script>
 
 <template>
-    <div class="app-card flex h-full w-full items-center justify-center">
-        <template v-if="route.params.artifactId">
-            <span>Artifact ID: {{ route.params.artifactId }}</span>
-        </template>
-        <template v-else>
-            <span class="text-muted-color">Select a function</span>
-        </template>
+    <div class="app-card flex h-full w-full flex-col overflow-auto">
+        <pre>{{ data }}</pre>
     </div>
 </template>

@@ -43,6 +43,7 @@ export function useProviderCacheManager() {
         }
 
         const isRequired = await isSyncRequired(provider)
+
         if (!isRequired) {
             console.info('Cache is fresh for provider', provider.id, ', skipping sync.')
             return

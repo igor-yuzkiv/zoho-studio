@@ -8,28 +8,32 @@ export class DexieArtifactsStorage implements IArtifactsStorage {
         return true
     }
 
-    async findById(id: string): Promise<IArtifact | null> {
+    async findById<T extends CapabilityType = CapabilityType>(id: string): Promise<IArtifact<T> | null> {
         const result = await artifactsDexieDB.records.get(id)
 
-        return result || null
+        if (!result) {
+            return null
+        }
+
+        return result as IArtifact<T>
     }
 
-    async findByParentId(parentId: string): Promise<IArtifact[]> {
+    async findByParentId<T extends CapabilityType = CapabilityType>(parentId: string): Promise<IArtifact<T>[]> {
         const result = await artifactsDexieDB.records.where('parent_id').equals(parentId).toArray()
 
-        return result as IArtifact[]
+        return result as IArtifact<T>[]
     }
 
-    async findByProviderIdAndCapabilityType<TCapabilityType extends CapabilityType = CapabilityType>(
+    async findByProviderIdAndCapabilityType<T extends CapabilityType = CapabilityType>(
         providerId: string,
         capabilityType: string
-    ): Promise<IArtifact<TCapabilityType>[]> {
+    ): Promise<IArtifact<T>[]> {
         const result = await artifactsDexieDB.records
             .where(['provider_id', 'capability_type'])
             .equals([providerId, capabilityType])
             .toArray()
 
-        return result as IArtifact<TCapabilityType>[]
+        return result as IArtifact<T>[]
     }
 
     async countByProviderId(providerId: string): Promise<number> {

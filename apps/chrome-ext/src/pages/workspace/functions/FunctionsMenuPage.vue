@@ -3,7 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCurrentProvider } from '../../../composables'
 import { useProviderCapabilityArtifactsQuery } from '../../../queries'
 import { ArtifactExplorerMenu } from '../../../components/artifacts-explorer'
-import { FunctionIcon } from '../../../components/function/function-icon'
+import { FunctionIcon } from '../../../components/function-icon'
 import { AppRouteName } from '../../../app/router'
 import type { IArtifact } from '@zoho-studio/core'
 

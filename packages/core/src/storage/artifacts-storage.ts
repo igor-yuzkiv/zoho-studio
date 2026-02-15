@@ -4,14 +4,14 @@ import type { CapabilityType } from '../capability'
 export interface IArtifactsStorage {
     bulkUpsert(artifacts: IArtifact[]): Promise<boolean>
 
-    findById(id: string): Promise<IArtifact | null>
+    findById<T extends CapabilityType = CapabilityType>(id: string): Promise<IArtifact<T> | null>
 
-    findByParentId(parentId: string): Promise<IArtifact[]>
+    findByParentId<T extends CapabilityType = CapabilityType>(parentId: string): Promise<IArtifact<T>[]>
 
-    findByProviderIdAndCapabilityType<TCapabilityType extends CapabilityType = CapabilityType>(
+    findByProviderIdAndCapabilityType<T extends CapabilityType = CapabilityType>(
         providerId: string,
         capabilityType: string
-    ): Promise<IArtifact<TCapabilityType>[]>
+    ): Promise<IArtifact<T>[]>
 
     countByProviderId(providerId: string): Promise<number>
 
