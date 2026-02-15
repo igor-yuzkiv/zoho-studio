@@ -33,6 +33,9 @@
             "path": "../../packages/utils/tsconfig.lib.json"
         },
         {
+            "path": "../../packages/export-zip/tsconfig.lib.json"
+        },
+        {
             "path": "../../packages/core/tsconfig.lib.json"
         },
         {

@@ -20,6 +20,9 @@
         },
         {
             "path": "./integrations/zoho-finance"
+        },
+        {
+            "path": "./packages/export-zip"
         }
     ]
 }

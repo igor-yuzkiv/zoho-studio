@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { useCurrentProvider } from '../../composables'
+import { useArtifactsZipExport, useCurrentProvider } from '../../composables'
 import { Icon } from '@iconify/vue'
+import { Button } from 'primevue'
 
-const { providerManifest } = useCurrentProvider()
+const { providerManifest, provider } = useCurrentProvider()
+const { exportProviderArtifacts } = useArtifactsZipExport()
+
+function handleExportArtifacts() {
+    if (!provider.value) {
+        return
+    }
+
+    exportProviderArtifacts(provider.value)
+}
 </script>
 
 <template>
@@ -14,6 +24,8 @@ const { providerManifest } = useCurrentProvider()
                     <Icon :icon="providerManifest.icon" />
                     <h1 class="font-bold">{{ providerManifest.displayName }}</h1>
                 </div>
+
+                <Button  class="mt-3" @click="handleExportArtifacts">Export ZIP</Button>
             </div>
         </div>
     </div>

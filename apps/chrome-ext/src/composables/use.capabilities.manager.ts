@@ -21,8 +21,27 @@ export function useCapabilitiesManager() {
         return capabilities.find((cap) => cap.type === capabilityType)
     }
 
+    function splitCapabilitiesByDependency(caps: CapabilityDescriptor[]): {
+        independent: CapabilityDescriptor[]
+        dependent: CapabilityDescriptor[]
+    } {
+        const independent: CapabilityDescriptor[] = []
+        const dependent: CapabilityDescriptor[] = []
+
+        for (const cap of caps) {
+            if (cap.dependsOn) {
+                dependent.push(cap)
+            } else {
+                independent.push(cap)
+            }
+        }
+
+        return { independent, dependent }
+    }
+
     return {
         getProviderCapabilities,
         findProviderCapability,
+        splitCapabilitiesByDependency,
     }
 }

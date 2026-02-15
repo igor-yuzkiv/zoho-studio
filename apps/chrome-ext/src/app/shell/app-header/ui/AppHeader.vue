@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { AppRouteName } from '../../../router'
+import { useCurrentProvider } from '../../../../composables'
+
+const { provider } = useCurrentProvider()
 </script>
 
 <template>
@@ -11,6 +14,15 @@ import { AppRouteName } from '../../../router'
                 active-class="app-list-item-active"
             >
                 Home
+            </router-link>
+
+            <router-link
+                v-if="provider"
+                :to="{ name: AppRouteName.workspaceIndex, params: { providerId: provider.id } }"
+                class="hover:bg-primary rounded-lg px-3 hover:underline"
+                active-class="app-list-item-active"
+            >
+                {{ provider.title }}
             </router-link>
         </div>
     </div>

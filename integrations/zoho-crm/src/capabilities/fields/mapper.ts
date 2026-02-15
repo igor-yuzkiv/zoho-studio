@@ -34,6 +34,7 @@ export function mapCrmFieldToArtifact(
         display_name: field.field_label,
         api_name: field.api_name,
         payload: {
+            parent_module_name: module.api_name,
             data_type: field.data_type,
             display_data_type: formatDisplayDataType(field),
         },
