@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import { ArtifactsQueryKeys } from '../config.ts'
 import { useArtifactsStorage } from '../composables'
 
-export function useCapabilityArtifactsListQuery<T extends CapabilityType = CapabilityType>(
+export function useProviderCapabilityArtifactsQuery<T extends CapabilityType = CapabilityType>(
     providerId: MaybeRef<ServiceProviderId>,
     capabilityType: MaybeRef<T>
 ) {

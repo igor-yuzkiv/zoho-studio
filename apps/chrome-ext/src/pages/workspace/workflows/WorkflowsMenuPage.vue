@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { useCurrentProvider } from '../../../composables'
-import { useCapabilityArtifactsListQuery } from '../../../queries'
+import { useProviderCapabilityArtifactsQuery } from '../../../queries'
 import { ArtifactExplorerMenu } from '../../../components/artifacts-explorer'
 import { AppRouteName } from '../../../app/router'
 import type { IArtifact } from '@zoho-studio/core'
@@ -9,7 +9,7 @@ import type { IArtifact } from '@zoho-studio/core'
 const route = useRoute()
 const router = useRouter()
 const { providerId } = useCurrentProvider()
-const { data } = useCapabilityArtifactsListQuery(providerId, 'workflows')
+const { data } = useProviderCapabilityArtifactsQuery(providerId, 'workflows')
 
 function onSelect(artifact: IArtifact<'workflows'>) {
     router.push({

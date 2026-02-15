@@ -1,1 +1,1 @@
-export { useCapabilityArtifactsListQuery } from './use.capability-artifacts-list.query.ts'
+export { useProviderCapabilityArtifactsQuery } from './use.provider-capability-artifacts.query.ts'

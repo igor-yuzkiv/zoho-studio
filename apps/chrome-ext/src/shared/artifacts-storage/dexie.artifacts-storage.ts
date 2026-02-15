@@ -8,6 +8,18 @@ export class DexieArtifactsStorage implements IArtifactsStorage {
         return true
     }
 
+    async findById(id: string): Promise<IArtifact | null> {
+        const result = await artifactsDexieDB.records.get(id)
+
+        return result || null
+    }
+
+    async findByParentId(parentId: string): Promise<IArtifact[]> {
+        const result = await artifactsDexieDB.records.where('parent_id').equals(parentId).toArray()
+
+        return result as IArtifact[]
+    }
+
     async findByProviderIdAndCapabilityType<TCapabilityType extends CapabilityType = CapabilityType>(
         providerId: string,
         capabilityType: string
