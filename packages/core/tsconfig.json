@@ -4,6 +4,9 @@
     "include": ["vite.config.ts"],
     "references": [
         {
+            "path": "../ui-kit"
+        },
+        {
             "path": "../export-zip"
         },
         {

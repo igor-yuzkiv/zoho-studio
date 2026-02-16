@@ -6,18 +6,17 @@ defineProps<{
 </script>
 
 <template>
-    <div class="flex items-center justify-between app-card p-2">
+    <div class="app-card flex items-center justify-between px-2">
         <slot>
             <div class="flex items-center gap-x-1">
                 <slot name="prepend" />
-                <div class="flex flex-col leading-6">
-                    <h1 class="font-bold text-lg">
+                <div class="flex flex-col">
+                    <h1 class="text-lg font-bold">
                         <slot name="title">{{ title }}</slot>
                     </h1>
+
                     <slot name="description">
-                        <p class="text-gray-500 text-xs">
-                            {{ description }}
-                        </p>
+                        <span class="text-xs text-gray-500">{{ description }}</span>
                     </slot>
                 </div>
             </div>

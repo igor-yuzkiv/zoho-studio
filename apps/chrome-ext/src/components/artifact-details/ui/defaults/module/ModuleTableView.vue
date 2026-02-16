@@ -5,19 +5,23 @@ import { computed, ref } from 'vue'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import InputText from 'primevue/inputtext'
+import { useArtifactsByParentIdQuery } from '../../../../../queries'
 
 const props = defineProps<{
-    module: IArtifact<'modules'>
-    fields: IArtifact<'fields'>[]
+    artifact: IArtifact<'modules'>
 }>()
+
+const artifactId = computed(() => props.artifact.id)
+const { data: fields } = useArtifactsByParentIdQuery<'fields'>(artifactId)
 
 const searchTerm = ref('')
 
 const filteredFields = computed(() => {
-    if (!searchTerm.value) return props.fields
+    const items = fields.value ?? []
+    if (!searchTerm.value) return items
 
     const query = searchTerm.value.toLowerCase()
-    return props.fields.filter(
+    return items.filter(
         (field) =>
             field.display_name?.toLowerCase().includes(query) ||
             field.api_name?.toLowerCase().includes(query) ||
@@ -28,7 +32,7 @@ const filteredFields = computed(() => {
 
 <template>
     <DataTable :value="filteredFields" striped-rows row-hover size="small" scrollable scroll-height="flex">
-        <template #empty> No fields available for module {{ module?.display_name || '' }}</template>
+        <template #empty> No fields available for module {{ artifact?.display_name || '' }}</template>
         <template #header>
             <div class="flex items-center justify-end">
                 <InputText v-model.lazy="searchTerm" placeholder="Search" size="small" />

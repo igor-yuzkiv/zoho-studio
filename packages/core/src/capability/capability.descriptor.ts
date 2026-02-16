@@ -1,5 +1,5 @@
 import type { CapabilityAdapterConstructor } from './capability.adapter.ts'
-import { IArtifact } from '../artifact'
+import { ArtifactDetailViewConfig, IArtifact } from '../artifact'
 import { ExportZipItem } from '@zoho-studio/export-zip'
 
 export type CapabilityType = 'functions' | 'workflows' | 'modules' | 'fields'
@@ -12,4 +12,5 @@ export interface CapabilityDescriptor {
     dependsOn?: CapabilityType
     adapter: CapabilityAdapterConstructor
     toExportZip?: (artifact: IArtifact) => ExportZipItem[]
+    artifactDetailView?: ArtifactDetailViewConfig
 }
