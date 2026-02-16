@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouteParams } from '@vueuse/router'
 import { useArtifactByIdQuery } from '../../../queries'
+import { useCurrentProvider } from '../../../composables'
 import { computed, ref, watch } from 'vue'
 import { IconButton, NoDataMessage, PageHeader, ViewModeSelect, ViewModeComponent } from '@zoho-studio/ui-kit'
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
@@ -13,8 +14,12 @@ const capabilityType = useRouteParams<CapabilityType>('capabilityType')
 
 const { data } = useArtifactByIdQuery(artifactId)
 const { copy } = useClipboard()
+const { findProviderCapability } = useCurrentProvider()
 
-const config = computed(() => artifactDetailConfigMap[capabilityType.value])
+const config = computed(() => {
+    const descriptor = findProviderCapability(capabilityType.value)
+    return descriptor?.artifactDetailView ?? artifactDetailConfigMap[capabilityType.value]
+})
 const viewModes = computed<ViewModeOption[]>(() => config.value?.viewModes ?? [])
 const currentMode = ref<string>('')
 
