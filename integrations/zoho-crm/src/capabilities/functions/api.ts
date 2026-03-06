@@ -6,51 +6,75 @@ export class CrmFunctionsApiService extends BaseCrmApiService {
     async listFunctions(pagination: PaginationParams): PromisePaginatedResult<ZohoCrmFunction> {
         const start = pagination.page <= 1 ? 0 : (pagination.page - 1) * pagination.per_page
         const limit = pagination.per_page
-        const response = await this.httpRequest<{ functions: ZohoCrmFunction[] }>({
-            url: `/crm/v2/settings/functions?type=org&start=${start}&limit=${limit}`,
-            method: 'GET',
-        })
 
-        if (!response.data || !Array.isArray(response.data.functions)) {
-            return { ok: false, error: 'Invalid response format' }
-        }
+        try {
+            const response = await this.httpRequest<{ functions: ZohoCrmFunction[] }>({
+                url: `/crm/v2/settings/functions?type=org&start=${start}&limit=${limit}`,
+                method: 'GET',
+            })
 
-        const functions = response.data.functions
+            if (!response.data || !Array.isArray(response.data.functions)) {
+                return { ok: false, error: 'Invalid response format' }
+            }
 
-        return {
-            ok: true,
-            data: functions,
-            meta: {
-                total: functions.length,
-                page: pagination.page,
-                per_page: pagination.per_page,
-                has_more: functions.length >= pagination.per_page,
-            },
+            const functions = response.data.functions
+
+            return {
+                ok: true,
+                data: functions,
+                meta: {
+                    total: functions.length,
+                    page: pagination.page,
+                    per_page: pagination.per_page,
+                    has_more: functions.length >= pagination.per_page,
+                },
+            }
+        } catch (error) {
+            console.error('[ZohoCrm][CrmFunctionsApiService@listFunctions] API request failed', {
+                error,
+                pagination,
+                start,
+                limit,
+            })
+
+            return { ok: false, error: 'Failed to fetch functions' }
         }
     }
 
     async functionDetails(functionId: string): Promise<Result<ZohoCrmFunction>> {
-        const query = new URLSearchParams({
-            category: 'automation',
-            source: 'crm',
-            language: 'deluge',
-        }).toString()
+        try {
+            const query = new URLSearchParams({
+                category: 'automation',
+                source: 'crm',
+                language: 'deluge',
+            }).toString()
 
-        const response = await this.httpRequest<{ functions: ZohoCrmFunction[] }>({
-            url: `/crm/v2/settings/functions/${functionId}?${query}`,
-            method: 'GET',
-        })
+            const response = await this.httpRequest<{ functions: ZohoCrmFunction[] }>({
+                url: `/crm/v2/settings/functions/${functionId}?${query}`,
+                method: 'GET',
+            })
 
-        if (!response.data || !Array.isArray(response.data.functions)) {
-            return { ok: false, error: 'Invalid response format' }
+            if (!response.data || !Array.isArray(response.data.functions)) {
+                return { ok: false, error: 'Invalid response format' }
+            }
+
+            const fx = response.data.functions[0]
+            if (!fx) {
+                return { ok: false, error: 'Function not found' }
+            }
+
+            return { ok: true, value: fx }
+        } catch (error) {
+            console.error(
+                `[ZohoCrm][CrmFunctionsApiService@functionDetails] API request failed for function ID ${functionId}`,
+                {
+                    functionId,
+                    error,
+                }
+            )
+
+            return { ok: false, error: 'Failed to fetch function details' }
         }
-
-        const fx = response.data.functions[0]
-        if (!fx) {
-            return { ok: false, error: 'Function not found' }
-        }
-
-        return { ok: true, value: fx }
     }
 
     async loadFunctionsDetails(functions: ZohoCrmFunction[]): Promise<ZohoCrmFunction[]> {
