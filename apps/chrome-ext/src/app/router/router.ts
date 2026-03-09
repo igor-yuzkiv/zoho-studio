@@ -29,6 +29,13 @@ export const router = createRouter({
         },
 
         {
+            name: AppRouteName.gitConfig,
+            path: '/settings/git',
+            meta: { hideSidebarMenu: true, layout: 'default' },
+            component: () => import('../../pages/settings/GitSettingsPage.vue'),
+        },
+
+        {
             name: AppRouteName.error,
             path: '/error',
             meta: { hideSidebarMenu: true, layout: 'default' },
