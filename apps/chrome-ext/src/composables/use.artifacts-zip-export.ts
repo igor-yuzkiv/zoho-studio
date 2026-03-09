@@ -16,10 +16,30 @@ export function useArtifactsZipExport() {
         const artifacts = await artifactsStorage.findByProviderId(provider.id)
         const capabilities = capabilitiesManager.getProviderCapabilities(provider)
 
-        return exportArtifacts(artifacts, capabilities, provider.title)
+        const items = generateCapabilitiesZipItems(capabilities, artifacts)
+
+        const normalizedProviderTitle = normalizeFileName(provider.title).toLocaleLowerCase()
+
+        await exportZip.downloadZip(
+            [
+                {
+                    name: normalizedProviderTitle,
+                    type: 'folder',
+                    children: items.concat({
+                        name: `manifest.json`,
+                        type: 'file',
+                        content: JSON.stringify(provider),
+                    }),
+                },
+            ],
+            normalizedProviderTitle
+        )
     }
 
-    async function exportArtifacts(artifacts: IArtifact[], capabilities: CapabilityDescriptor[], archiveName: string) {
+    function generateCapabilitiesZipItems(
+        capabilities: CapabilityDescriptor[],
+        artifacts: IArtifact[]
+    ): ExportZipItem[] {
         const artifactsByType = groupBy(artifacts, (artifact: IArtifact) => artifact.capability_type)
 
         const items = [] as ExportZipItem[]
@@ -37,7 +57,7 @@ export function useArtifactsZipExport() {
             })
         }
 
-        await exportZip.downloadZip(items, archiveName)
+        return items
     }
 
     return {
