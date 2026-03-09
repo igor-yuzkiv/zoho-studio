@@ -18,3 +18,14 @@ export type CreateGitRepositoryRequest = {
     description?: string
     author: GitAuthorDto
 }
+
+export type CommitGitRepositoryRequest = {
+    repository: string
+    message: string
+    author: GitAuthorDto
+    zipFile: Blob | File
+}
+
+export type CommitGitRepositoryResponse = {
+    repository: string
+}

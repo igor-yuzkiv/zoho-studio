@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
+import { useArtifactsZipExport, useCurrentProvider, useGitCommit, useProviderCacheManager } from '../../composables'
+import { useGitStore, useProvidersRuntimeStore } from '../../store'
 import { Icon } from '@iconify/vue'
 import { computed, ref, watch } from 'vue'
 import Menu from 'primevue/menu'
@@ -14,6 +15,8 @@ import { GitCommitDialog } from '../../shared/git'
 
 const toast = useToast()
 const confirm = useConfirm()
+const gitStore = useGitStore()
+const providersStore = useProvidersRuntimeStore()
 
 const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
 const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
@@ -21,9 +24,24 @@ const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
 const { refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
 const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
 
-const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
+const { exportProviderArtifacts, generateProviderArtifactsZipBlob, isExporting } = useArtifactsZipExport()
 
 const isVisibleGitCommitDialog = ref(false)
+const {
+    repository: gitCommitRepository,
+    message: gitCommitMessage,
+    loading: isGitCommitPending,
+    canSubmit: canCommitToGit,
+    initForm: initGitCommitForm,
+    resetForm: resetGitCommitForm,
+    submitCommit,
+} = useGitCommit(async () => {
+    if (!provider.value) {
+        throw new Error('Cannot commit because provider is unavailable.')
+    }
+
+    return generateProviderArtifactsZipBlob(provider.value)
+}, gitStore.gitAuthor)
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     return [
@@ -42,7 +60,7 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
         {
             label: 'Commit',
             icon: 'ph:git-commit-bold',
-            command: () => (isVisibleGitCommitDialog.value = true),
+            command: () => openGitCommitDialog(),
         },
     ]
 })
@@ -78,6 +96,42 @@ async function handleRefreshProviderCache() {
 function handleExportArtifacts() {
     if (provider.value) {
         exportProviderArtifacts(provider.value)
+    }
+}
+
+function openGitCommitDialog() {
+    if (!provider.value) {
+        return
+    }
+
+    initGitCommitForm({ repository: provider.value?.gitRepository })
+    isVisibleGitCommitDialog.value = true
+}
+
+function closeGitCommitDialog() {
+    isVisibleGitCommitDialog.value = false
+    resetGitCommitForm()
+}
+
+async function handleGitCommit() {
+    if (!provider.value || !canCommitToGit.value) {
+        return
+    }
+
+    try {
+        const response = await submitCommit()
+        const committedRepository = response.repository || gitCommitRepository.value
+        if (committedRepository) {
+            providersStore.updateProvider(providerId.value, { gitRepository: gitCommitRepository.value })
+        }
+
+        toast.success({ detail: 'Committed successfully.' })
+        closeGitCommitDialog()
+    } catch (error) {
+        console.error('Failed to commit provider artifacts', error)
+        const message =
+            error instanceof Error ? error.message : 'Failed to commit provider artifacts. Please try again.'
+        toast.error({ detail: message })
     }
 }
 
@@ -165,7 +219,17 @@ watch(provider, () => resetProviderTitle())
             </div>
         </div>
 
-        <GitCommitDialog v-model:visible="isVisibleGitCommitDialog" />
+        <GitCommitDialog
+            v-model:visible="isVisibleGitCommitDialog"
+            v-model:repository="gitCommitRepository"
+            v-model:message="gitCommitMessage"
+            :repositories="gitStore.repositories"
+            :is-authenticated="gitStore.isAuthenticated"
+            :loading="isGitCommitPending"
+            :can-commit="canCommitToGit"
+            @commit="handleGitCommit"
+            @cancel="closeGitCommitDialog"
+        />
     </div>
 </template>
 

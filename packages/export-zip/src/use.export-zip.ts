@@ -16,6 +16,15 @@ export function useExportZip() {
         }
     }
 
+    function generateBlob(items: ExportZipItem[]): Promise<Blob> {
+        const zip = new JSZip()
+        for (const item of items) {
+            processItem(zip, item)
+        }
+
+        return zip.generateAsync({ type: 'blob', compression: 'DEFLATE' })
+    }
+
     async function downloadZip(items: ExportZipItem[], archiveName: string) {
         const zip = new JSZip()
         for (const item of items) {
@@ -32,5 +41,6 @@ export function useExportZip() {
 
     return {
         downloadZip,
+        generateBlob,
     }
 }

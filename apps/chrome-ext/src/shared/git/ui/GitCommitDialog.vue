@@ -1,39 +1,34 @@
 <script setup lang="ts">
-import { useToast } from '@zoho-studio/ui-kit'
-import { useGitStore } from '../../../store'
-import { ref } from 'vue'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
 import Message from 'primevue/message'
+import type { IGitRepository } from '../types.ts'
 
-const toast = useToast()
-const gitStore = useGitStore()
-const visible = defineModel<boolean>('visible')
-const isPending = ref(false)
-const gitRepository = ref<string | null>(null)
-const gitMessage = ref(buildDefaultGitMessage())
+const visible = defineModel<boolean>('visible', { default: false })
+const gitRepository = defineModel<string | null>('repository', { default: null })
+const gitMessage = defineModel<string>('message', { default: '' })
 
-function buildDefaultGitMessage() {
-    if (!gitStore.isAuthenticated) {
-        return ''
-    }
+const props = defineProps<{
+    repositories: IGitRepository[]
+    isAuthenticated: boolean
+    loading: boolean
+    canCommit: boolean
+}>()
 
-    return `Update from Zoho Studio Browser Extension by ${gitStore.gitUserName}`
-}
+const emit = defineEmits<{
+    (e: 'commit'): void
+    (e: 'cancel'): void
+}>()
 
 function closeDialog() {
     visible.value = false
-    isPending.value = false
-    gitMessage.value = buildDefaultGitMessage()
+    emit('cancel')
 }
 
 function handleCommit() {
-    if (!gitRepository.value || !gitMessage.value) {
-        toast.error({ detail: 'Repository and commit message are required.' })
-        return
-    }
+    emit('commit')
 }
 </script>
 
@@ -50,12 +45,13 @@ function handleCommit() {
     >
         <div class="flex w-full flex-col items-center gap-2">
             <div class="flex w-full flex-col">
-                <label class="font-bold" for="git_message">Repository</label>
+                <label class="font-bold" for="git_repository">Repository</label>
                 <Select
                     id="git_repository"
                     aria-describedby="git_repository-help"
                     size="small"
-                    :options="gitStore.repositories"
+                    v-model="gitRepository"
+                    :options="props.repositories"
                     option-label="name"
                     option-value="name"
                 />
@@ -73,8 +69,8 @@ function handleCommit() {
                 />
             </div>
 
-            <Message v-if="!gitStore.isAuthenticated" class="w-full" severity="warn" size="small">
-                Please provide <b>user.name</b> and <b>user.email</b> to add a repository.
+            <Message v-if="!props.isAuthenticated" class="w-full" severity="warn" size="small">
+                Please provide <b>user.name</b> and <b>user.email</b> to create commits.
             </Message>
         </div>
 
@@ -85,16 +81,16 @@ function handleCommit() {
                     text
                     size="small"
                     @click="closeDialog"
-                    :disabled="isPending"
+                    :disabled="props.loading"
                     severity="secondary"
                 />
 
                 <Button
-                    label="Add"
+                    label="Commit"
                     text
                     size="small"
                     @click="handleCommit"
-                    :disabled="!gitStore.isAuthenticated || isPending"
+                    :disabled="!props.isAuthenticated || props.loading || !props.canCommit"
                 />
             </div>
         </template>

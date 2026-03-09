@@ -12,7 +12,7 @@ export type ServiceProvider = {
     metadata: Record<string, unknown>
     browserTabId?: Maybe<BrowserTabId>
     lastSyncedAt?: number
-    gitRepository?: string
+    gitRepository?: string | null
 }
 
 export type ServiceProviderFromBrowserTabResolver = (browserTab: BrowserTab) => Result<ServiceProvider>

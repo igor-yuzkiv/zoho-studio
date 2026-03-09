@@ -12,6 +12,14 @@ export function useArtifactsZipExport() {
 
     const exportZip = useExportZip()
 
+    function generateProviderManifestJson(provider: ServiceProvider): ExportZipItem {
+        return {
+            name: `manifest.json`,
+            type: 'file',
+            content: JSON.stringify(provider),
+        }
+    }
+
     async function exportProviderArtifacts(provider: ServiceProvider) {
         const artifacts = await artifactsStorage.findByProviderId(provider.id)
         const capabilities = capabilitiesManager.getProviderCapabilities(provider)
@@ -25,16 +33,30 @@ export function useArtifactsZipExport() {
                 {
                     name: normalizedProviderTitle,
                     type: 'folder',
-                    children: items.concat({
-                        name: `manifest.json`,
-                        type: 'file',
-                        content: JSON.stringify(provider),
-                    }),
+                    children: items.concat(generateProviderManifestJson(provider)),
                 },
             ],
             normalizedProviderTitle
         )
     }
+
+    async function generateProviderArtifactsZipBlob(provider: ServiceProvider): Promise<Blob> {
+        const artifacts = await artifactsStorage.findByProviderId(provider.id)
+        const capabilities = capabilitiesManager.getProviderCapabilities(provider)
+
+        const items = generateCapabilitiesZipItems(capabilities, artifacts)
+
+        const normalizedProviderTitle = normalizeFileName(provider.title).toLocaleLowerCase()
+
+        return exportZip.generateBlob([
+            {
+                name: normalizedProviderTitle,
+                type: 'folder',
+                children: items.concat(generateProviderManifestJson(provider)),
+            },
+        ])
+    }
+
 
     function generateCapabilitiesZipItems(
         capabilities: CapabilityDescriptor[],
@@ -63,5 +85,6 @@ export function useArtifactsZipExport() {
     return {
         isExporting,
         exportProviderArtifacts,
+        generateProviderArtifactsZipBlob,
     }
 }
