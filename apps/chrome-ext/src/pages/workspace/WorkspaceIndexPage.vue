@@ -1,19 +1,41 @@
 <script setup lang="ts">
 import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
 import { Icon } from '@iconify/vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import Menu from 'primevue/menu'
 import type { MenuItem } from 'primevue/menuitem'
+import Inplace from 'primevue/inplace'
+import InputText from 'primevue/inputtext'
+import InputGroup from 'primevue/inputgroup'
+import InputGroupAddon from 'primevue/inputgroupaddon'
+import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
 
 const toast = useToast()
 const confirm = useConfirm()
 
-const { providerId, providerManifest, provider, isOnline } = useCurrentProvider()
+const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
 const { refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
 const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
 
 const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
+
+const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
+
+function resetProviderTitle(closeCallback: () => void) {
+    providerTitle.value = provider.value?.title ?? 'Unknown Provider'
+    closeCallback()
+}
+
+function saveProviderTitle(closeCallback: () => void) {
+    const newTitle = providerTitle.value.trim()
+    if (!provider.value || !newTitle || newTitle === provider.value.title) {
+        return
+    }
+
+    updateProviderTitle(newTitle)
+    closeCallback()
+}
 
 const items = computed<MenuItem[]>(() => {
     return [
@@ -75,12 +97,52 @@ function handleExportArtifacts() {
 
 <template>
     <div class="app-card flex h-full w-full items-center justify-center">
-        <div v-if="providerManifest && provider" class="flex h-[30%] flex-col p-3">
-            <div class="flex flex-col">
+        <div v-if="providerManifest && provider" class="container mx-auto flex flex-col p-3">
+            <div class="flex w-full flex-col">
                 <h3 class="text-gray-700 dark:text-gray-400">Service Provider</h3>
-                <div class="flex items-center gap-x-2 text-2xl">
+                <div class="flex w-full items-center gap-x-2 text-2xl">
                     <Icon :icon="providerManifest.icon" />
-                    <h1 class="font-bold">{{ provider.title }}</h1>
+                    <Inplace class="w-full" unstyled>
+                        <template #display>
+                            <div class="group flex cursor-pointer items-center gap-x-2 hover:underline">
+                                <h1 class="font-bold">{{ provider.title }}</h1>
+                                <Icon
+                                    class="text-gray-500 opacity-0 group-hover:opacity-100"
+                                    icon="material-symbols:edit"
+                                />
+                            </div>
+                        </template>
+
+                        <template #content="{ closeCallback }">
+                            <InputGroup>
+                                <InputGroupAddon>
+                                    <IconButton
+                                        @click="resetProviderTitle(closeCallback)"
+                                        icon="ic:baseline-close"
+                                        size="small"
+                                        text
+                                        severity="secondary"
+                                        class="p-0"
+                                        rounded
+                                    />
+                                </InputGroupAddon>
+
+                                <InputText v-model="providerTitle" class="w-full" size="small" />
+
+                                <InputGroupAddon>
+                                    <IconButton
+                                        icon="material-symbols:check-rounded"
+                                        size="small"
+                                        text
+                                        class="p-0"
+                                        severity="success"
+                                        rounded
+                                        @click="saveProviderTitle(closeCallback)"
+                                    />
+                                </InputGroupAddon>
+                            </InputGroup>
+                        </template>
+                    </Inplace>
                 </div>
 
                 <Menu :model="items" class="mt-2 border-none bg-transparent">
@@ -88,6 +150,10 @@ function handleExportArtifacts() {
                         <Icon :icon="item?.icon ?? 'icon-park-outline:dot'" />
                     </template>
                 </Menu>
+
+                <div class="app-card mt-4 p-1">
+                    <pre>{{ provider }}</pre>
+                </div>
             </div>
         </div>
     </div>

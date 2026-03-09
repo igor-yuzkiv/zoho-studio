@@ -48,6 +48,7 @@ const gitConfigStore = useGitConfigStore()
                         id="user_email"
                         aria-describedby="user_email-help"
                         size="small"
+                        type="email"
                         placeholder="git config --global user.email 'your@mail.com'"
                         v-model.trim.lazy="gitConfigStore.gitUserEmail"
                     />

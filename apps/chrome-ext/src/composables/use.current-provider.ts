@@ -60,6 +60,14 @@ export function useCurrentProvider() {
         return capabilities.findProviderCapability(provider.value, capabilityType)
     }
 
+    function updateProviderTitle(newTitle: string) {
+        if (!provider.value) {
+            return
+        }
+
+        providersStore.updateProvider(provider.value.id, { title: newTitle })
+    }
+
     return {
         providerId,
         provider,
@@ -68,5 +76,6 @@ export function useCurrentProvider() {
         providerCapabilities,
         findProviderCapability,
         lastSyncedAtFormatted,
+        updateProviderTitle,
     }
 }
