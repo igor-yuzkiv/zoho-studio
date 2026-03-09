@@ -11,22 +11,18 @@ import { createGitRepository } from '../api.ts'
 import { CreateGitRepositoryRequest, IGitRepository } from '../types.ts'
 import { useToast } from '@zoho-studio/ui-kit'
 
+const emit = defineEmits<{ (e: 'created', payload: IGitRepository): void }>()
+
 const toast = useToast()
 const gitStore = useGitStore()
-
-const emit = defineEmits<{
-    (e: 'created', payload: IGitRepository): void
-}>()
-
 const visible = defineModel<boolean>('visible')
-const isCreating = ref<boolean>(false)
-
+const isPending = ref<boolean>(false)
 const repositoryName = ref<string>('')
 const repositoryDescription = ref<string>('')
 
 function closeDialog() {
     visible.value = false
-    isCreating.value = false
+    isPending.value = false
     repositoryName.value = ''
     repositoryDescription.value = ''
 }
@@ -44,7 +40,7 @@ async function handleAddRepository() {
     }
 
     try {
-        isCreating.value = true
+        isPending.value = true
 
         const payload: CreateGitRepositoryRequest = {
             name: repositoryName.value,
@@ -70,7 +66,7 @@ async function handleAddRepository() {
         const message = error instanceof Error ? error.message : 'Unknown error'
         toast.error({ detail: message })
     } finally {
-        isCreating.value = false
+        isPending.value = false
     }
 }
 </script>
@@ -122,7 +118,7 @@ async function handleAddRepository() {
                     text
                     size="small"
                     @click="closeDialog"
-                    :disabled="isCreating"
+                    :disabled="isPending"
                     severity="secondary"
                 />
 
@@ -131,7 +127,7 @@ async function handleAddRepository() {
                     text
                     size="small"
                     @click="handleAddRepository"
-                    :disabled="!gitStore.isAuthenticated || isCreating"
+                    :disabled="!gitStore.isAuthenticated || isPending"
                 />
             </div>
         </template>

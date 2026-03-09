@@ -10,6 +10,7 @@ import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
+import { GitCommitDialog } from '../../shared/git'
 
 const toast = useToast()
 const confirm = useConfirm()
@@ -21,6 +22,8 @@ const { refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
 const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
 
 const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
+
+const isVisibleGitCommitDialog = ref(false)
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     return [
@@ -39,6 +42,7 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
         {
             label: 'Commit',
             icon: 'ph:git-commit-bold',
+            command: () => (isVisibleGitCommitDialog.value = true),
         },
     ]
 })
@@ -160,6 +164,8 @@ watch(provider, () => resetProviderTitle())
                 </div>
             </div>
         </div>
+
+        <GitCommitDialog v-model:visible="isVisibleGitCommitDialog" />
     </div>
 </template>
 
