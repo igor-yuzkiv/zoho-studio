@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
 import { Icon } from '@iconify/vue'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Menu from 'primevue/menu'
 import type { MenuItem } from 'primevue/menuitem'
 import Inplace from 'primevue/inplace'
@@ -15,29 +15,14 @@ const toast = useToast()
 const confirm = useConfirm()
 
 const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
-const { refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
-const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
-
-const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
-
 const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
 
-function resetProviderTitle(closeCallback: () => void) {
-    providerTitle.value = provider.value?.title ?? 'Unknown Provider'
-    closeCallback()
-}
+const { refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
+const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
 
-function saveProviderTitle(closeCallback: () => void) {
-    const newTitle = providerTitle.value.trim()
-    if (!provider.value || !newTitle || newTitle === provider.value.title) {
-        return
-    }
+const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
 
-    updateProviderTitle(newTitle)
-    closeCallback()
-}
-
-const items = computed<MenuItem[]>(() => {
+const actionsMenuItems = computed<MenuItem[]>(() => {
     return [
         {
             label: 'Refresh Cache',
@@ -52,8 +37,8 @@ const items = computed<MenuItem[]>(() => {
             command: () => handleExportArtifacts(),
         },
         {
-            label: 'Git Commit',
-            icon: 'teenyicons:git-commit-solid',
+            label: 'Commit',
+            icon: 'ph:git-commit-bold',
         },
     ]
 })
@@ -87,17 +72,36 @@ async function handleRefreshProviderCache() {
 }
 
 function handleExportArtifacts() {
-    if (!provider.value) {
+    if (provider.value) {
+        exportProviderArtifacts(provider.value)
+    }
+}
+
+function resetProviderTitle(closeInplace?: () => void) {
+    providerTitle.value = provider.value?.title ?? 'Unknown Provider'
+    if (closeInplace) {
+        closeInplace()
+    }
+}
+
+function saveProviderTitle(closeInplace?: () => void) {
+    const newTitle = providerTitle.value.trim()
+    if (!provider.value || !newTitle || newTitle === provider.value.title) {
         return
     }
 
-    exportProviderArtifacts(provider.value)
+    updateProviderTitle(newTitle)
+    if (closeInplace) {
+        closeInplace()
+    }
 }
+
+watch(provider, () => resetProviderTitle())
 </script>
 
 <template>
     <div class="app-card flex h-full w-full items-center justify-center">
-        <div v-if="providerManifest && provider" class="container mx-auto flex flex-col p-3">
+        <div v-if="providerManifest && provider" class="container mx-auto flex flex-col p-3 xl:max-w-3xl">
             <div class="flex w-full flex-col">
                 <h3 class="text-gray-700 dark:text-gray-400">Service Provider</h3>
                 <div class="flex w-full items-center gap-x-2 text-2xl">
@@ -145,7 +149,7 @@ function handleExportArtifacts() {
                     </Inplace>
                 </div>
 
-                <Menu :model="items" class="mt-2 border-none bg-transparent">
+                <Menu :model="actionsMenuItems" class="mt-2 border-none bg-transparent">
                     <template #itemicon="{ item }">
                         <Icon :icon="item?.icon ?? 'icon-park-outline:dot'" />
                     </template>

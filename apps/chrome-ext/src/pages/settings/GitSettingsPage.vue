@@ -9,12 +9,12 @@ const gitConfig = useGitGlobalConfigStore()
 
 <template>
     <div class="app-card flex h-full w-full overflow-hidden">
-        <div class="container mx-auto flex h-full flex-col overflow-hidden p-2">
+        <div class="container mx-auto flex h-full flex-col overflow-hidden p-2 xl:max-w-3xl">
             <div class="flex items-center justify-between border-b">
                 <h1 class="text-lg font-bold">Git Config</h1>
             </div>
 
-            <div class="mt-1 mt-3 flex h-full w-full flex-col gap-3 overflow-auto">
+            <div class="mt-1 mt-4 flex h-full w-full flex-col gap-3 overflow-auto">
                 <div class="flex flex-col">
                     <label class="font-bold" for="user_name">Remote Server</label>
                     <InputText

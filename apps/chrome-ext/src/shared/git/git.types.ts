@@ -3,8 +3,7 @@ export type GitGlobalConfig = {
     userEmail: string
 }
 
-export type GitRepositoryDescription = {
-    slug: string
-    name: string
-    description: string
+export type GitRepositoryDescriptor = {
+    repo_slug: string
+    services_provider_id: string
 }

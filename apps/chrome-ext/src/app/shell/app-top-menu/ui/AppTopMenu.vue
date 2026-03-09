@@ -15,23 +15,12 @@ const providersStore = useProvidersRuntimeStore()
 const gitConfig = useGitGlobalConfigStore()
 
 const menuItems = computed<AppMenuItem[]>(() => {
-    const result: AppMenuItem[] = [
+    return [
         {
             label: 'Home',
             route: { name: AppRouteName.home },
         },
         {
-            label: 'Git',
-            items: [
-                { label: 'Config', route: { name: AppRouteName.gitConfig } },
-                { label: 'Init', disabled: !provider.value },
-                { label: 'Commit', disabled: !provider.value },
-            ],
-        },
-    ]
-
-    if (providersStore.providersList.length) {
-        result.push({
             label: 'Services',
             items: providersStore.providersList.map((p) => {
                 return {
@@ -39,10 +28,15 @@ const menuItems = computed<AppMenuItem[]>(() => {
                     route: { name: AppRouteName.workspaceIndex, params: { providerId: p.id } },
                 }
             }),
-        })
-    }
-
-    return result
+        },
+        {
+            label: 'Git',
+            items: [
+                { label: 'Config', route: { name: AppRouteName.gitConfig } },
+                { label: 'Commit', disabled: !provider.value },
+            ],
+        },
+    ]
 })
 </script>
 
