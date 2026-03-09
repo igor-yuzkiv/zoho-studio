@@ -10,6 +10,8 @@ import manifest from './chrome/manifest.config.ts'
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
 
+    console.log(env.VITE_API_BASE_URL)
+
     return {
         root: __dirname,
         cacheDir: '../../node_modules/.vite/apps/chrome-ext',

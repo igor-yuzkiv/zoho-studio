@@ -6,13 +6,13 @@ import { Icon } from '@iconify/vue'
 import Menubar from 'primevue/menubar'
 import type { MenuItem } from 'primevue/menuitem'
 import type { RouteLocationRaw } from 'vue-router'
-import { useGitGlobalConfigStore, useProvidersRuntimeStore } from '../../../../store'
+import { useGitStore, useProvidersRuntimeStore } from '../../../../store'
 
 type AppMenuItem = MenuItem & { route?: RouteLocationRaw }
 
 const { provider } = useCurrentProvider()
 const providersStore = useProvidersRuntimeStore()
-const gitConfig = useGitGlobalConfigStore()
+const gitConfig = useGitStore()
 
 const menuItems = computed<AppMenuItem[]>(() => {
     return [

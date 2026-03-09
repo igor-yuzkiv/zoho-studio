@@ -1,63 +1,81 @@
 <script setup lang="ts">
-import InputText from 'primevue/inputtext'
-import Message from 'primevue/message'
-import { useGitGlobalConfigStore } from '../../store'
+import { useGitStore } from '../../store'
+import Panel from 'primevue/panel'
+import Button from 'primevue/button'
+import { Icon } from '@iconify/vue'
+import {
+    GitGlobalConfigForm,
+    GitRepositoriesTable,
+    type IGitRepository,
+    AddGitRepositoryDialog,
+} from '../../shared/git'
+import { ref } from 'vue'
 
-const remoteServerUrl = import.meta.env.VITE_GIT_REMOTE_SERVER_URL
-const gitConfig = useGitGlobalConfigStore()
+const gitStore = useGitStore()
+
+const isVisibleAddRepoDialog = ref(false)
+
+function handleAddedRepository(newRepo: IGitRepository) {
+    gitStore.addRepository(newRepo)
+    isVisibleAddRepoDialog.value = false
+}
 </script>
 
 <template>
     <div class="app-card flex h-full w-full overflow-hidden">
-        <div class="container mx-auto flex h-full flex-col overflow-hidden p-2 xl:max-w-3xl">
+        <div class="container mx-auto flex h-full flex-col overflow-hidden p-2 xl:max-w-4xl">
             <div class="flex items-center justify-between border-b">
-                <h1 class="text-lg font-bold">Git Config</h1>
+                <h1 class="text-3xl font-bold">Git Config</h1>
             </div>
 
-            <div class="mt-1 mt-4 flex h-full w-full flex-col gap-3 overflow-auto">
-                <div class="flex flex-col">
-                    <label class="font-bold" for="user_name">Remote Server</label>
-                    <InputText
-                        id="remote_server_url"
-                        aria-describedby="remote_server_url-help"
-                        size="small"
-                        placeholder="https://example.com"
-                        :value="remoteServerUrl"
-                        readonly
-                        disabled
-                    />
-                </div>
+            <div class="mt-2 flex h-full w-full flex-col gap-5 overflow-auto">
+                <!--Global Config-->
+                <Panel
+                    class="border-none bg-transparent"
+                    header="Global Config"
+                    :pt="{
+                        content: { class: 'p-0' },
+                        header: { class: 'p-0 text-lg font-bold' },
+                    }"
+                    toggleable
+                >
+                    <template #toggleicon="{ collapsed }">
+                        <Icon :icon="collapsed ? 'famicons:chevron-up' : 'famicons:chevron-down'" />
+                    </template>
 
-                <div class="flex flex-col">
-                    <label class="font-bold" for="user_name">User Name</label>
-                    <InputText
-                        id="user_name"
-                        aria-describedby="user_name-help"
-                        size="small"
-                        placeholder="git config --global user.name 'Your Name'"
-                        v-model.trim.lazy="gitConfig.gitUserName"
+                    <GitGlobalConfigForm
+                        v-model:user-name="gitStore.gitUserName"
+                        v-model:user-email="gitStore.gitUserEmail"
                     />
-                    <Message size="small" severity="secondary" variant="simple">
-                        Enter the name you want to associate with your Git commits.
-                    </Message>
-                </div>
+                </Panel>
 
-                <div class="flex flex-col">
-                    <label class="font-bold" for="user_email">User Email</label>
-                    <InputText
-                        id="user_email"
-                        aria-describedby="user_email-help"
-                        size="small"
-                        type="email"
-                        placeholder="git config --global user.email 'your@mail.com'"
-                        v-model.trim.lazy="gitConfig.gitUserEmail"
-                    />
-                    <Message size="small" severity="secondary" variant="simple">
-                        Enter the email you want to associate with your Git commits.
-                    </Message>
-                </div>
+                <!--Repositories-->
+                <Panel
+                    class="border-none bg-transparent"
+                    header="Repositories"
+                    :pt="{
+                        content: { class: 'p-0' },
+                        header: { class: 'p-0' },
+                    }"
+                    toggleable
+                >
+                    <template #header>
+                        <div class="flex w-full items-center justify-between">
+                            <h1 class="text-lg font-bold">Repositories</h1>
+
+                            <Button size="small" text @click="isVisibleAddRepoDialog = true">Add</Button>
+                        </div>
+                    </template>
+                    <template #toggleicon="{ collapsed }">
+                        <Icon :icon="collapsed ? 'famicons:chevron-up' : 'famicons:chevron-down'" />
+                    </template>
+
+                    <GitRepositoriesTable :repositories="gitStore.repositories" />
+                </Panel>
             </div>
         </div>
+
+        <AddGitRepositoryDialog v-model:visible="isVisibleAddRepoDialog" @created="handleAddedRepository" />
     </div>
 </template>
 
