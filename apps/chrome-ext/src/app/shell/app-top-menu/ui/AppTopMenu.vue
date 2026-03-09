@@ -6,15 +6,13 @@ import { Icon } from '@iconify/vue'
 import Menubar from 'primevue/menubar'
 import type { MenuItem } from 'primevue/menuitem'
 import type { RouteLocationRaw } from 'vue-router'
-import { useProvidersRuntimeStore } from '../../../../store'
-import { storeToRefs } from 'pinia'
+import { useGitGlobalConfigStore, useProvidersRuntimeStore } from '../../../../store'
 
 type AppMenuItem = MenuItem & { route?: RouteLocationRaw }
 
 const { provider } = useCurrentProvider()
-
 const providersStore = useProvidersRuntimeStore()
-const { providersList } = storeToRefs(providersStore)
+const gitConfig = useGitGlobalConfigStore()
 
 const menuItems = computed<AppMenuItem[]>(() => {
     const result: AppMenuItem[] = [
@@ -32,10 +30,10 @@ const menuItems = computed<AppMenuItem[]>(() => {
         },
     ]
 
-    if (providersList.value.length) {
+    if (providersStore.providersList.length) {
         result.push({
             label: 'Services',
-            items: providersList.value.map((p) => {
+            items: providersStore.providersList.map((p) => {
                 return {
                     label: p.title,
                     route: { name: AppRouteName.workspaceIndex, params: { providerId: p.id } },
@@ -77,8 +75,12 @@ const menuItems = computed<AppMenuItem[]>(() => {
             <span class="w-full truncate text-center">{{ provider?.title ?? 'Search' }}</span>
         </div>
 
-        <div class="flex items-center justify-end gap-x-1">
+        <div class="flex items-center justify-end gap-x-1 pr-3">
             <slot name="end" />
+            <div class="flex items-center gap-x-1" v-if="gitConfig.gitUserName && gitConfig.gitUserEmail">
+                <span>{{ gitConfig.gitUserName }}</span>
+                <span>({{ gitConfig.gitUserEmail }})</span>
+            </div>
         </div>
     </div>
 </template>

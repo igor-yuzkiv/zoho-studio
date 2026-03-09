@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
-import { useGitConfigStore } from '../../store'
+import { useGitGlobalConfigStore } from '../../store'
 
 const remoteServerUrl = import.meta.env.VITE_GIT_REMOTE_SERVER_URL
-const gitConfigStore = useGitConfigStore()
+const gitConfig = useGitGlobalConfigStore()
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const gitConfigStore = useGitConfigStore()
                         aria-describedby="user_name-help"
                         size="small"
                         placeholder="git config --global user.name 'Your Name'"
-                        v-model.trim.lazy="gitConfigStore.gitUserName"
+                        v-model.trim.lazy="gitConfig.gitUserName"
                     />
                     <Message size="small" severity="secondary" variant="simple">
                         Enter the name you want to associate with your Git commits.
@@ -50,7 +50,7 @@ const gitConfigStore = useGitConfigStore()
                         size="small"
                         type="email"
                         placeholder="git config --global user.email 'your@mail.com'"
-                        v-model.trim.lazy="gitConfigStore.gitUserEmail"
+                        v-model.trim.lazy="gitConfig.gitUserEmail"
                     />
                     <Message size="small" severity="secondary" variant="simple">
                         Enter the email you want to associate with your Git commits.
