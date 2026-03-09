@@ -5,9 +5,7 @@ import type { IGitGlobalConfig, IGitRepository } from '../shared/git'
 
 export const useGitStore = defineStore('git-store', () => {
     const globalConfig = useStorage<IGitGlobalConfig>('git-config', { userName: '', userEmail: '' })
-
-    const storedRepositories = useStorage<IGitRepository[]>('git-repositories', [])
-    const repositories = computed(() => storedRepositories.value)
+    const repositories = useStorage<IGitRepository[]>('git-repositories', [])
 
     const gitUserName = computed({
         get: () => globalConfig.value.userName,
@@ -38,14 +36,14 @@ export const useGitStore = defineStore('git-store', () => {
             nextRepos.push(repo)
         }
 
-        storedRepositories.value = nextRepos
+        repositories.value = nextRepos
     }
 
     return {
         gitUserName,
         gitUserEmail,
         isAuthenticated,
-        repositories,
+        repositories: computed(() => repositories.value),
         addRepository,
     }
 })
