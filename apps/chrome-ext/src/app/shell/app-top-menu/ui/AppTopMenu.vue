@@ -6,13 +6,18 @@ import { Icon } from '@iconify/vue'
 import Menubar from 'primevue/menubar'
 import type { MenuItem } from 'primevue/menuitem'
 import type { RouteLocationRaw } from 'vue-router'
+import { useProvidersRuntimeStore } from '../../../../store'
+import { storeToRefs } from 'pinia'
 
 type AppMenuItem = MenuItem & { route?: RouteLocationRaw }
 
 const { provider } = useCurrentProvider()
 
+const providersStore = useProvidersRuntimeStore()
+const { providersList } = storeToRefs(providersStore)
+
 const menuItems = computed<AppMenuItem[]>(() => {
-    return [
+    const result: AppMenuItem[] = [
         {
             label: 'Home',
             route: { name: AppRouteName.home },
@@ -26,6 +31,20 @@ const menuItems = computed<AppMenuItem[]>(() => {
             ],
         },
     ]
+
+    if (providersList.value.length) {
+        result.push({
+            label: 'Services',
+            items: providersList.value.map((p) => {
+                return {
+                    label: p.title,
+                    route: { name: AppRouteName.workspaceIndex, params: { providerId: p.id } },
+                }
+            }),
+        })
+    }
+
+    return result
 })
 </script>
 
