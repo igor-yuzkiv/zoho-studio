@@ -26,7 +26,7 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType, ArtifactDet
     },
     modules: {
         header: {
-            title: (a) => a.display_name,
+            title: (a) => a.api_name ?? a.display_name,
         },
         viewModes: [
             {

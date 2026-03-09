@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCurrentProvider, useProviderCacheManager } from '../../../composables'
 import { ProviderCapabilitiesMenu } from '../../../components/provider-capabilities-menu'
 import { AppFooter } from '../../shell/app-footer'
-import { AppHeader } from '../../shell/app-header'
+import { AppTopMenu } from '../../shell/app-top-menu'
 import { computed, onMounted } from 'vue'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
@@ -15,7 +15,8 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const confirm = useConfirm()
-const { providerId, provider, providerCapabilities, lastSyncedAtFormatted, isOnline } = useCurrentProvider()
+const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted, isOnline } =
+    useCurrentProvider()
 const { ensureSyncArtifacts, refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
 const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
 
@@ -65,16 +66,29 @@ onMounted(() => {
 
 <template>
     <div class="bg-secondary relative flex h-screen w-full flex-col overflow-hidden">
-        <AppHeader />
+        <AppTopMenu />
 
         <main
-            class="flex h-full w-full overflow-hidden px-2"
+            class="flex h-full w-full overflow-hidden pr-2"
             :class="{
                 'pt-2': route.meta?.hideTopbar,
                 'pb-2': route.meta?.hideFooter,
             }"
         >
-            <ProviderCapabilitiesMenu :provider-id="providerId" :capabilities="providerCapabilities" />
+            <ProviderCapabilitiesMenu :provider-id="providerId" :capabilities="providerCapabilities">
+                <template #start>
+                    <div v-if="provider && providerManifest" class="flex flex-col border-b py-1">
+                        <router-link
+                            v-tooltip="{ value: provider.title }"
+                            :to="{ name: AppRouteName.workspaceIndex, params: { providerId } }"
+                            class="hover:bg-selection flex cursor-pointer items-center justify-center rounded-lg p-2"
+                            active-class="bg-orange-500 text-white"
+                        >
+                            <Icon :icon="providerManifest.icon" class="h-4 w-4" />
+                        </router-link>
+                    </div>
+                </template>
+            </ProviderCapabilitiesMenu>
 
             <Splitter
                 class="flex h-full w-full overflow-hidden bg-transparent"

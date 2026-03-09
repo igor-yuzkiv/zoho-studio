@@ -3,14 +3,14 @@ import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute } from 'vue-router'
 import { AppFooter } from '../../shell/app-footer'
-import { AppHeader } from '../../shell/app-header'
+import { AppTopMenu } from '../../shell/app-top-menu'
 
 const route = useRoute()
 </script>
 
 <template>
-    <div class="relative bg-secondary flex h-screen w-full flex-col overflow-hidden">
-        <AppHeader />
+    <div class="bg-secondary relative flex h-screen w-full flex-col overflow-hidden">
+        <AppTopMenu />
 
         <main
             class="flex h-full w-full flex-col overflow-hidden px-2"
@@ -25,15 +25,15 @@ const route = useRoute()
             >
                 <SplitterPanel
                     v-if="!route.meta?.hideSidebarMenu"
-                    class="flex h-full overflow-hidden w-full"
+                    class="flex h-full w-full overflow-hidden"
                     :size="5"
                     style="min-width: 10rem; max-width: 50rem"
                 >
-                    <div class="flex flex-col w-full h-full overflow-hidden app-card">
+                    <div class="app-card flex h-full w-full flex-col overflow-hidden">
                         <router-view name="menu" />
                     </div>
                 </SplitterPanel>
-                <SplitterPanel class="flex flex-col w-full h-full overflow-hidden">
+                <SplitterPanel class="flex h-full w-full flex-col overflow-hidden">
                     <router-view />
                 </SplitterPanel>
             </Splitter>

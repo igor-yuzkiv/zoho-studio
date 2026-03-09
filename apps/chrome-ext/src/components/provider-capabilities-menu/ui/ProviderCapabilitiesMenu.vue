@@ -21,7 +21,11 @@ const itemsForDisplay = computed<CapabilitiesMenuItem[]>(() => {
 </script>
 
 <template>
-    <CapabilitiesMenu :capabilities="itemsForDisplay" />
+    <div class="flex items-center flex-col">
+        <slot name="start"></slot>
+        <CapabilitiesMenu :capabilities="itemsForDisplay" />
+        <slot name="end"></slot>
+    </div>
 </template>
 
 <style scoped></style>

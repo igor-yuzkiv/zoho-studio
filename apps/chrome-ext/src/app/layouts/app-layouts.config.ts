@@ -8,6 +8,6 @@ export const AppLayout = {
 export type AppLayoutName = (typeof AppLayout)[keyof typeof AppLayout]
 
 export const AppLayoutComponentMap: Record<AppLayoutName, ReturnType<typeof defineAsyncComponent>> = {
-    [AppLayout.default]: defineAsyncComponent(() => import('./ui/DefaultLayout.vue')),
-    [AppLayout.workspace]: defineAsyncComponent(() => import('./ui/WorkspaceLayout.vue')),
+    [AppLayout.default]: defineAsyncComponent(() => import('./default/DefaultLayout.vue')),
+    [AppLayout.workspace]: defineAsyncComponent(() => import('./workspace/WorkspaceLayout.vue')),
 }
