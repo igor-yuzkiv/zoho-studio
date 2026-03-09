@@ -9,40 +9,14 @@ import { AppTopMenu } from '../../shell/app-top-menu'
 import { computed, onMounted } from 'vue'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
-import { IconButton, useConfirm, useToast } from '@zoho-studio/ui-kit'
 
 const route = useRoute()
 const router = useRouter()
-const toast = useToast()
-const confirm = useConfirm()
-const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted, isOnline } =
-    useCurrentProvider()
-const { ensureSyncArtifacts, refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
+
+const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted } = useCurrentProvider()
+const { ensureSyncArtifacts, isProviderInProgress } = useProviderCacheManager()
+
 const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
-
-async function handleRefreshProviderCache() {
-    if (!provider.value || isCachingInProgress.value) {
-        return
-    }
-
-    if (!isOnline.value) {
-        toast.error({ detail: 'Cannot refresh cache while provider is offline.' })
-        return
-    }
-
-    confirm.require({
-        header: 'Refresh Cache',
-        message: 'This will clear and re-sync all artifacts for this provider. Are you sure you want to continue?',
-        accept: async () => {
-            if (provider.value) {
-                refreshProviderCache(provider.value).catch((error) => {
-                    console.error('Failed to clear cache', error)
-                    toast.error({ detail: 'Failed to refresh provider cache. Please try again.' })
-                })
-            }
-        },
-    })
-}
 
 onMounted(() => {
     if (!provider.value) {
@@ -118,19 +92,6 @@ onMounted(() => {
                     <span>Caching...</span>
                 </div>
                 <div v-else class="text-sm text-gray-500">Last synced: {{ lastSyncedAtFormatted }}</div>
-            </template>
-
-            <template #end>
-                <IconButton
-                    class="p-0"
-                    text
-                    size="small"
-                    severity="secondary"
-                    icon="tdesign:clear-filled"
-                    :disabled="isCachingInProgress"
-                    @click="handleRefreshProviderCache"
-                    v-tooltip="{ value: 'Refresh Cache', placement: 'top' }"
-                />
             </template>
         </AppFooter>
     </div>

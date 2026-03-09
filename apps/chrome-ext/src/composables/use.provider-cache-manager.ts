@@ -13,6 +13,8 @@ export function useProviderCacheManager() {
     const queryClient = useQueryClient()
 
     const providersInProgress = ref(new Set<ServiceProviderId>())
+    //
+    // TODO: create and use global state manager to track in-progress operations per provider
     const isProviderInProgress = (providerId: ServiceProviderId) => providersInProgress.value.has(providerId)
     const addProviderInProgress = (providerId: ServiceProviderId) => providersInProgress.value.add(providerId)
     const removeProviderInProgress = (providerId: ServiceProviderId) => providersInProgress.value.delete(providerId)

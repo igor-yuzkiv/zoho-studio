@@ -12,6 +12,15 @@ export function useToast(defaultLife: MaybeRefOrGetter<number> = 5000) {
         })
     }
 
+    function success(options: ToastMessageOptions) {
+        baseToast.add({
+            severity: 'success',
+            summary: 'Success',
+            life: toValue(defaultLife),
+            ...options,
+        })
+    }
+
     function error(options: ToastMessageOptions) {
         baseToast.add({
             severity: 'error',
@@ -39,5 +48,5 @@ export function useToast(defaultLife: MaybeRefOrGetter<number> = 5000) {
         })
     }
 
-    return { add, error, warn, info }
+    return { add, success, error, warn, info }
 }
