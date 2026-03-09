@@ -1,5 +1,6 @@
 import { computed, MaybeRefOrGetter, ref, toValue } from 'vue'
-import { commitGitRepository, type CommitGitRepositoryResponse, type GitAuthorDto } from '../shared/git'
+import { commitGitRepository } from '../api.ts'
+import type { CommitGitRepositoryResponse, GitAuthorDto } from '../types.ts'
 
 type GetZipFile = () => Promise<Blob | File>
 

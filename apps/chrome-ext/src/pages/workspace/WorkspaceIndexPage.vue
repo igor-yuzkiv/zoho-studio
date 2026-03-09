@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useArtifactsZipExport, useCurrentProvider, useGitCommit, useProviderCacheManager } from '../../composables'
+import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
 import { useGitStore, useProvidersRuntimeStore } from '../../store'
 import { Icon } from '@iconify/vue'
 import { computed, ref, watch } from 'vue'
@@ -11,7 +11,7 @@ import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
-import { GitCommitDialog } from '../../shared/git'
+import { GitCommitDialog, useGitCommit } from '../../shared/git'
 
 const toast = useToast()
 const confirm = useConfirm()
