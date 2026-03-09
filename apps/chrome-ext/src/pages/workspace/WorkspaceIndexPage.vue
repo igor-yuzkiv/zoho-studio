@@ -119,18 +119,16 @@ async function handleGitCommit() {
     }
 
     try {
-        const response = await submitCommit()
-        const committedRepository = response.repository || gitCommitRepository.value
-        if (committedRepository) {
-            providersStore.updateProvider(providerId.value, { gitRepository: gitCommitRepository.value })
-        }
+        await submitCommit()
+
+        providersStore.updateProvider(providerId.value, { gitRepository: gitCommitRepository.value })
 
         toast.success({ detail: 'Committed successfully.' })
+
         closeGitCommitDialog()
     } catch (error) {
         console.error('Failed to commit provider artifacts', error)
-        const message =
-            error instanceof Error ? error.message : 'Failed to commit provider artifacts. Please try again.'
+        const message = error instanceof Error ? error.message : 'Failed to commit. Please try again.'
         toast.error({ detail: message })
     }
 }
