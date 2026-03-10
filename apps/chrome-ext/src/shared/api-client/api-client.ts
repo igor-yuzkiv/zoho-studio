@@ -15,8 +15,8 @@ const baseURL =
 
 export const apiClient = axios.create({
     baseURL,
-    withCredentials: true,
-    withXSRFToken: true,
+    //withCredentials: true,
+    //withXSRFToken: true,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json',
