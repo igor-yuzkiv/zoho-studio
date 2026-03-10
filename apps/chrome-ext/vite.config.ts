@@ -5,12 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { crx } from '@crxjs/vite-plugin'
-import manifest from './chrome/manifest.config.ts'
+import { createManifest } from './chrome/manifest.config.ts'
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
 
-    console.log(env.VITE_API_BASE_URL)
+    const manifest = createManifest([env.VITE_API_HOST_PERMISSION_URL || ''])
+
+    console.log(manifest);
 
     return {
         root: __dirname,
