@@ -10,7 +10,7 @@ export type InitGitCommitFormPayload = {
 }
 
 export function useGitCommit(getZipFile: GetZipFile, author: MaybeRefOrGetter<GitAuthorDto>) {
-    const repository = ref<string | null>(null)
+        const repository = ref<string | null>(null)
     const message = ref<string>('')
     const loading = ref<boolean>(false)
 
@@ -48,7 +48,7 @@ export function useGitCommit(getZipFile: GetZipFile, author: MaybeRefOrGetter<Gi
         loading.value = true
         try {
             const zipFile = await getZipFile()
-            return commitGitRepository({
+            return await commitGitRepository({
                 repository: commitRepository,
                 message: commitMessage,
                 author: toValue(author),

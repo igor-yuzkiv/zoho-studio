@@ -4,70 +4,24 @@ import Button from 'primevue/button'
 import Message from 'primevue/message'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
-import { ref } from 'vue'
-import { snakeCase } from 'lodash'
-import { useGitStore } from '../../../store'
-import { createGitRepository } from '../api.ts'
-import { CreateGitRepositoryRequest, IGitRepository } from '../types.ts'
-import { useToast } from '@zoho-studio/ui-kit'
 
-const emit = defineEmits<{ (e: 'created', payload: IGitRepository): void }>()
+const emit = defineEmits<{
+    (e: 'submit'): void
+    (e: 'cancel'): void
+}>()
+defineProps<{
+    isAuthenticated: boolean
+    loading: boolean
+    canSubmit: boolean
+}>()
 
-const toast = useToast()
-const gitStore = useGitStore()
 const visible = defineModel<boolean>('visible')
-const isPending = ref<boolean>(false)
-const repositoryName = ref<string>('')
-const repositoryDescription = ref<string>('')
+const repositoryName = defineModel<string>('repositoryName')
+const repositoryDescription = defineModel<string>('repositoryDescription')
 
 function closeDialog() {
     visible.value = false
-    isPending.value = false
-    repositoryName.value = ''
-    repositoryDescription.value = ''
-}
-
-function normalizeRepositoryName() {
-    repositoryName.value = snakeCase(repositoryName.value.trim().toLocaleLowerCase())
-}
-
-async function handleAddRepository() {
-    normalizeRepositoryName()
-
-    if (!repositoryName.value) {
-        toast.error({ detail: 'Repository name is required.' })
-        return
-    }
-
-    try {
-        isPending.value = true
-
-        const payload: CreateGitRepositoryRequest = {
-            name: repositoryName.value,
-            description: repositoryDescription.value.trim() || undefined,
-            author: {
-                name: gitStore.gitUserName,
-                email: gitStore.gitUserEmail,
-            },
-        }
-
-        const response = await createGitRepository(payload)
-        if (!response?.name) {
-            toast.error({ detail: 'Failed to create repository. Please try again.' })
-            return
-        }
-
-        toast.success({ detail: 'Repository created successfully.' })
-        emit('created', response)
-
-        closeDialog()
-    } catch (error) {
-        console.error('Failed to create repository', error)
-        const message = error instanceof Error ? error.message : 'Unknown error'
-        toast.error({ detail: message })
-    } finally {
-        isPending.value = false
-    }
+    emit('cancel')
 }
 </script>
 
@@ -77,7 +31,7 @@ async function handleAddRepository() {
         modal
         :draggable="false"
         header="Git Repository"
-        class="w-auto lg:w-xl"
+        class="w-auto min-w-xl"
         :closable="false"
         :dismissable-mask="false"
         :close-on-escape="false"
@@ -106,7 +60,7 @@ async function handleAddRepository() {
                 />
             </div>
 
-            <Message v-if="!gitStore.isAuthenticated" class="w-full" severity="warn" size="small">
+            <Message v-if="!isAuthenticated" class="w-full" severity="warn" size="small">
                 Please provide <b>user.name</b> and <b>user.email</b> to add a repository.
             </Message>
         </div>
@@ -118,7 +72,7 @@ async function handleAddRepository() {
                     text
                     size="small"
                     @click="closeDialog"
-                    :disabled="isPending"
+                    :disabled="loading"
                     severity="secondary"
                 />
 
@@ -126,8 +80,8 @@ async function handleAddRepository() {
                     label="Add"
                     text
                     size="small"
-                    @click="handleAddRepository"
-                    :disabled="!gitStore.isAuthenticated || isPending"
+                    @click="$emit('submit')"
+                    :disabled="!isAuthenticated || loading || !canSubmit"
                 />
             </div>
         </template>

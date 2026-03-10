@@ -12,10 +12,12 @@ import InputGroupAddon from 'primevue/inputgroupaddon'
 import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
 import { GitCommitDialog, useGitCommit } from '../../shared/git'
+import { storeToRefs } from 'pinia'
 
 const toast = useToast()
 const confirm = useConfirm()
 const gitStore = useGitStore()
+const { gitAuthor } = storeToRefs(gitStore)
 const providersStore = useProvidersRuntimeStore()
 
 const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
@@ -41,7 +43,7 @@ const {
     }
 
     return generateProviderArtifactsZipBlob(provider.value)
-}, gitStore.gitAuthor)
+}, gitAuthor)
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     return [

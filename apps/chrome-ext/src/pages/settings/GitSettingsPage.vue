@@ -6,18 +6,45 @@ import { Icon } from '@iconify/vue'
 import {
     GitGlobalConfigForm,
     GitRepositoriesTable,
-    type IGitRepository,
     AddGitRepositoryDialog,
+    useAddGitRepository,
 } from '../../shared/git'
 import { ref } from 'vue'
+import { useToast } from '@zoho-studio/ui-kit'
+import { storeToRefs } from 'pinia'
 
+const toast = useToast()
 const gitStore = useGitStore()
+const { gitAuthor } = storeToRefs(gitStore)
 
 const isVisibleAddRepoDialog = ref(false)
+const addRepo = useAddGitRepository(gitAuthor)
 
-function handleAddedRepository(newRepo: IGitRepository) {
-    gitStore.addRepository(newRepo)
+function closeAddRepoDialog() {
     isVisibleAddRepoDialog.value = false
+    addRepo.resetForm()
+}
+
+function openAddRepoDialog() {
+    isVisibleAddRepoDialog.value = true
+}
+
+async function handleAddRepository() {
+    try {
+        const newRepo = await addRepo.submitNewRepository()
+        if (!newRepo.name) {
+            toast.error({ detail: 'Failed to create repository. Please try again.' })
+            return
+        }
+
+        gitStore.addRepository(newRepo)
+        toast.success({ detail: 'Repository created successfully.' })
+        closeAddRepoDialog()
+    } catch (error) {
+        console.error('Failed to add repository:', error)
+        const message = error instanceof Error ? error.message : 'Failed to commit. Please try again.'
+        toast.error({ detail: message })
+    }
 }
 </script>
 
@@ -63,7 +90,7 @@ function handleAddedRepository(newRepo: IGitRepository) {
                         <div class="flex w-full items-center justify-between">
                             <h1 class="text-lg font-bold">Repositories</h1>
 
-                            <Button size="small" text @click="isVisibleAddRepoDialog = true">Add</Button>
+                            <Button size="small" text @click="openAddRepoDialog">Add</Button>
                         </div>
                     </template>
                     <template #toggleicon="{ collapsed }">
@@ -75,7 +102,16 @@ function handleAddedRepository(newRepo: IGitRepository) {
             </div>
         </div>
 
-        <AddGitRepositoryDialog v-model:visible="isVisibleAddRepoDialog" @created="handleAddedRepository" />
+        <AddGitRepositoryDialog
+            v-model:visible="isVisibleAddRepoDialog"
+            v-model:repository-name="addRepo.repositoryName.value"
+            v-model:repository-description="addRepo.repositoryDescription.value"
+            :is-authenticated="addRepo.isAuthenticated.value"
+            :can-submit="addRepo.canSubmit.value"
+            :loading="addRepo.loading.value"
+            @submit="handleAddRepository"
+            @cancel="closeAddRepoDialog"
+        />
     </div>
 </template>
 

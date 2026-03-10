@@ -33,7 +33,7 @@ const menuItems = computed<AppMenuItem[]>(() => {
             label: 'Git',
             items: [
                 { label: 'Config', route: { name: AppRouteName.gitConfig } },
-                { label: 'Commit', disabled: !provider.value },
+                // { label: 'Commit', disabled: !provider.value },
             ],
         },
     ]

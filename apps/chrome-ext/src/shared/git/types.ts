@@ -27,5 +27,5 @@ export type CommitGitRepositoryRequest = {
 }
 
 export type CommitGitRepositoryResponse = {
-    repository: string
+    message: string
 }

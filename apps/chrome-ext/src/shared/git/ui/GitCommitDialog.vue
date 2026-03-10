@@ -10,7 +10,7 @@ const visible = defineModel<boolean>('visible', { default: false })
 const gitRepository = defineModel<string | null>('repository', { default: null })
 const gitMessage = defineModel<string>('message', { default: '' })
 
-const props = defineProps<{
+defineProps<{
     repositories: IGitRepository[]
     isAuthenticated: boolean
     loading: boolean
@@ -38,7 +38,7 @@ function handleCommit() {
         modal
         :draggable="false"
         header="Git Commit"
-        class="w-auto lg:w-xl"
+        class="w-auto min-w-xl"
         :closable="false"
         :dismissable-mask="false"
         :close-on-escape="false"
@@ -51,7 +51,7 @@ function handleCommit() {
                     aria-describedby="git_repository-help"
                     size="small"
                     v-model="gitRepository"
-                    :options="props.repositories"
+                    :options="repositories"
                     option-label="name"
                     option-value="name"
                 />
@@ -69,7 +69,7 @@ function handleCommit() {
                 />
             </div>
 
-            <Message v-if="!props.isAuthenticated" class="w-full" severity="warn" size="small">
+            <Message v-if="!isAuthenticated" class="w-full" severity="warn" size="small">
                 Please provide <b>user.name</b> and <b>user.email</b> to create commits.
             </Message>
         </div>
@@ -81,7 +81,7 @@ function handleCommit() {
                     text
                     size="small"
                     @click="closeDialog"
-                    :disabled="props.loading"
+                    :disabled="loading"
                     severity="secondary"
                 />
 
@@ -90,7 +90,7 @@ function handleCommit() {
                     text
                     size="small"
                     @click="handleCommit"
-                    :disabled="!props.isAuthenticated || props.loading || !props.canCommit"
+                    :disabled="!isAuthenticated || loading || !canCommit"
                 />
             </div>
         </template>
