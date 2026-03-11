@@ -5,8 +5,6 @@ import { useGitConfigStore } from '../../store'
 import { storeToRefs } from 'pinia'
 import * as zod from 'zod'
 
-type GetZipFile = () => Promise<Blob | File>
-
 export type InitGitCommitFormPayload = {
     repository?: string | null
     message?: string | null
@@ -22,7 +20,7 @@ const RequestPayloadSchema = zod.object({
     zipFile: zod.instanceof(Blob),
 })
 
-export function useGitCommit(getZipFile: GetZipFile) {
+export function useGitCommit() {
     const repository = ref<string | null>(null)
     const message = ref<string>('')
     const loading = ref<boolean>(false)
@@ -46,15 +44,13 @@ export function useGitCommit(getZipFile: GetZipFile) {
         loading.value = false
     }
 
-    async function submitCommit(): Promise<CommitGitRepositoryResponse> {
+    async function submitCommit(zipFile: Blob | File): Promise<CommitGitRepositoryResponse> {
         if (loading.value) {
             throw new Error('Commit request is already in progress.')
         }
 
         loading.value = true
         try {
-            const zipFile = await getZipFile()
-
             const requestPayload: CommitGitRepositoryRequest = RequestPayloadSchema.parse({
                 repository: repository.value?.trim(),
                 message: message.value.trim(),

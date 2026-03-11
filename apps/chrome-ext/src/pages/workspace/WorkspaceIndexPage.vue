@@ -20,10 +20,10 @@ const confirm = useConfirm()
 const gitStore = useGitConfigStore()
 
 const providersStore = useProvidersRuntimeStore()
-const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
+const { providerId, providerManifest, provider, isOnline, updateProviderTitle, isCachingInProgress } =
+    useCurrentProvider()
 const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
 const { refreshProviderCache } = useProviderCacheManager()
-const isCachingInProgress = computed<boolean>(() => providersStore.isProviderCacheInProgress(providerId.value))
 
 const { exportProviderArtifacts, generateProviderArtifactsZipBlob, isExporting } = useArtifactsZipExport()
 
@@ -35,13 +35,7 @@ const {
     initForm: initGitCommitForm,
     resetForm: resetGitCommitForm,
     submitCommit,
-} = useGitCommit(async () => {
-    if (!provider.value) {
-        throw new Error('Cannot commit because provider is unavailable.')
-    }
-
-    return generateProviderArtifactsZipBlob(provider.value)
-})
+} = useGitCommit()
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     return [
@@ -66,11 +60,12 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
 })
 
 async function handleRefreshProviderCache() {
-    if (!provider.value || isCachingInProgress.value) {
+    if (isCachingInProgress.value) {
+        toast.info({ detail: 'Cache refresh is already in progress. Please wait for it to complete.' })
         return
     }
 
-    if (!isOnline.value) {
+    if (!provider.value || !isOnline.value) {
         toast.error({ detail: 'Cannot refresh cache while provider is offline.' })
         return
     }
@@ -119,7 +114,8 @@ async function handleGitCommit() {
     }
 
     try {
-        await submitCommit()
+        const zipFile = await generateProviderArtifactsZipBlob(provider.value)
+        await submitCommit(zipFile)
 
         providersStore.updateProvider(providerId.value, { gitRepository: gitCommitRepository.value })
 

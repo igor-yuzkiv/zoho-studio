@@ -9,7 +9,7 @@ import {
 } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
-import { useCapabilitiesManager } from '../capability/use.capabilities.manager.ts'
+import { useCapabilitiesManager } from '../capability'
 import { integrationsRegistry } from '../../integrations.registry.ts'
 import {format} from 'date-fns'
 
@@ -17,6 +17,8 @@ export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()
     const providerId = useRouteParams<ServiceProviderId>('providerId')
     const capabilities = useCapabilitiesManager()
+    const isCachingInProgress = computed<boolean>(() => providersStore.isProviderCacheInProgress(providerId.value))
+
 
     const provider = computed<Maybe<ServiceProvider>>(() => {
         if (!providerId.value || !providersStore.providersMap.has(providerId.value)) {
@@ -72,6 +74,7 @@ export function useCurrentProvider() {
         providerId,
         provider,
         providerManifest,
+        isCachingInProgress,
         isOnline,
         providerCapabilities,
         findProviderCapability,
