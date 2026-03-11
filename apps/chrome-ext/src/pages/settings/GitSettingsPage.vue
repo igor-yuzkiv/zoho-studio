@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { useGitStore } from '../../store'
+import { useGitConfigStore } from '../../store'
 import Panel from 'primevue/panel'
 import Button from 'primevue/button'
 import { Icon } from '@iconify/vue'
-import {
-    GitGlobalConfigForm,
-    GitRepositoriesTable,
-    AddGitRepositoryDialog,
-    useAddGitRepository,
-} from '../../shared/git'
+import { GitGlobalConfigForm, GitRepositoriesTable, AddGitRepositoryDialog } from '../../components/git'
 import { ref } from 'vue'
 import { useToast } from '@zoho-studio/ui-kit'
 import { storeToRefs } from 'pinia'
+import { useAddGitRepository } from '../../composables'
 
 const toast = useToast()
-const gitStore = useGitStore()
+const gitStore = useGitConfigStore()
 const { gitAuthor } = storeToRefs(gitStore)
 
 const isVisibleAddRepoDialog = ref(false)

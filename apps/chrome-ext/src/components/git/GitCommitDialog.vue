@@ -4,7 +4,7 @@ import Button from 'primevue/button'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
 import Message from 'primevue/message'
-import type { IGitRepository } from '../types.ts'
+import type { IGitRepository } from '../../types'
 
 const visible = defineModel<boolean>('visible', { default: false })
 const gitRepository = defineModel<string | null>('repository', { default: null })

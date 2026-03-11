@@ -1,6 +1,6 @@
 import { computed, MaybeRefOrGetter, ref, toValue } from 'vue'
-import { commitGitRepository } from '../git.api.ts'
-import type { CommitGitRepositoryResponse, GitAuthorDto } from '../types.ts'
+import { commitIntoGitRepository } from '../../api'
+import type { CommitGitRepositoryResponse, GitAuthorDto } from '../../types'
 
 type GetZipFile = () => Promise<Blob | File>
 
@@ -48,7 +48,7 @@ export function useGitCommit(getZipFile: GetZipFile, author: MaybeRefOrGetter<Gi
         loading.value = true
         try {
             const zipFile = await getZipFile()
-            return await commitGitRepository({
+            return await commitIntoGitRepository({
                 repository: commitRepository,
                 message: commitMessage,
                 author: toValue(author),

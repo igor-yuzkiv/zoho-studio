@@ -1,12 +1,19 @@
 <script setup lang="ts" generic="TCapabilityType extends CapabilityType = CapabilityType">
 import type { ArtifactId, CapabilityType, IArtifact } from '@zoho-studio/core'
 import { computed, ref, useTemplateRef } from 'vue'
-import type { ArtifactGroup, ArtifactGroupBy } from '../types.ts'
 import ArtifactExplorerMenuItem from './ArtifactExplorerMenuItem.vue'
 import { Icon } from '@iconify/vue'
 import { get } from 'lodash'
 import { onKeyStroke, useFocusWithin } from '@vueuse/core'
 import InputText from 'primevue/inputtext'
+
+type ArtifactGroupBy = ((artifact: IArtifact) => string) | string
+
+type ArtifactGroup<TCapabilityType extends CapabilityType = CapabilityType> = {
+    key: string
+    title: string
+    items: IArtifact<TCapabilityType>[]
+}
 
 const props = withDefaults(
     defineProps<{

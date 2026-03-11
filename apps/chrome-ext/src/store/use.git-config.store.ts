@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
-import type { GitAuthorDto, IGitGlobalConfig, IGitRepository } from '../shared/git'
+import type { GitAuthorDto, IGitGlobalConfig, IGitRepository } from '../types'
 
-export const useGitStore = defineStore('git-store', () => {
+export const useGitConfigStore = defineStore('git-store', () => {
     const globalConfig = useStorage<IGitGlobalConfig>('git-config', { userName: '', userEmail: '' })
     const repositories = useStorage<IGitRepository[]>('git-repositories', [])
 

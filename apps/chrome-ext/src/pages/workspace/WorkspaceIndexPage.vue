@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
-import { useGitStore, useProvidersRuntimeStore } from '../../store'
+import { useGitConfigStore, useProvidersRuntimeStore } from '../../store'
 import { Icon } from '@iconify/vue'
 import { computed, ref, watch } from 'vue'
 import Menu from 'primevue/menu'
@@ -11,12 +11,13 @@ import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
-import { GitCommitDialog, useGitCommit } from '../../shared/git'
+import { GitCommitDialog } from '../../components/git'
+import { useGitCommit } from '../../composables'
 import { storeToRefs } from 'pinia'
 
 const toast = useToast()
 const confirm = useConfirm()
-const gitStore = useGitStore()
+const gitStore = useGitConfigStore()
 const { gitAuthor } = storeToRefs(gitStore)
 const providersStore = useProvidersRuntimeStore()
 

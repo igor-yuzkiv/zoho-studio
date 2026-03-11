@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IGitRepository } from '../types.ts'
+import type { IGitRepository } from '../../types'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 

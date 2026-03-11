@@ -3,14 +3,14 @@ import {
     CommitGitRepositoryResponse,
     CreateGitRepositoryRequest,
     IGitRepository,
-} from './types.ts'
-import { apiClient } from '../api-client/api-client.ts'
+} from '../types'
+import { apiClient } from './api-client.ts'
 
 export async function createGitRepository(data: CreateGitRepositoryRequest): Promise<IGitRepository> {
     return apiClient.post<IGitRepository>('git/repositories', data).then((response) => response.data)
 }
 
-export async function commitGitRepository(data: CommitGitRepositoryRequest): Promise<CommitGitRepositoryResponse> {
+export async function commitIntoGitRepository(data: CommitGitRepositoryRequest): Promise<CommitGitRepositoryResponse> {
     const formData = new FormData()
     formData.append('file', data.zipFile, 'file.zip')
     formData.append('message', data.message)
