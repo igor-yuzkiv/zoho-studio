@@ -1,7 +1,7 @@
 import { CapabilityDescriptor, IArtifact, ServiceProvider } from '@zoho-studio/core'
 import { ref } from 'vue'
 import { useArtifactsStorage } from './use.artifacts.storage.ts'
-import { useCapabilitiesManager } from '../capability/use.capabilities.manager.ts'
+import { useCapabilitiesManager } from '../capability'
 import { normalizeFileName, ExportZipItem, useExportZip } from '@zoho-studio/export-zip'
 import { groupBy } from 'lodash'
 
@@ -40,8 +40,11 @@ export function useArtifactsZipExport() {
         )
     }
 
-    async function generateProviderArtifactsZipBlob(provider: ServiceProvider): Promise<Blob> {
-        const artifacts = await artifactsStorage.findByProviderId(provider.id)
+    async function generateProviderArtifactsZipBlob(provider: ServiceProvider, artifacts?: IArtifact[]): Promise<Blob> {
+        if (artifacts === undefined) {
+            artifacts = await artifactsStorage.findByProviderId(provider.id)
+        }
+
         const capabilities = capabilitiesManager.getProviderCapabilities(provider)
 
         const items = generateCapabilitiesZipItems(capabilities, artifacts)

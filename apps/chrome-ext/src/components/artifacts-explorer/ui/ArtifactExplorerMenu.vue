@@ -6,6 +6,9 @@ import { Icon } from '@iconify/vue'
 import { get } from 'lodash'
 import { onKeyStroke, useFocusWithin } from '@vueuse/core'
 import InputText from 'primevue/inputtext'
+import { objectMatchesSearch } from '../../../utils'
+
+// TODO: add filtering support based on artifact properties (e.g. name, description, tags)
 
 type ArtifactGroupBy = ((artifact: IArtifact) => string) | string
 
@@ -21,10 +24,12 @@ const props = withDefaults(
         groupBy?: ArtifactGroupBy
         activeId?: ArtifactId
         icon?: string
+        searchable?: boolean
         searchPlaceholder?: string
         searchFields?: string[]
     }>(),
     {
+        searchable: true,
         searchPlaceholder: 'Start typing to search...',
         searchFields: () => ['display_name', 'api_name'],
     }
@@ -35,6 +40,7 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
+    'header': () => any
     'item-icon': (props: { artifact: IArtifact<TCapabilityType> }) => any
 }>()
 
@@ -59,10 +65,7 @@ function isArtifactMatchingSearch(artifact: IArtifact): boolean {
     const term = searchTerm.value.toLowerCase().trim()
     if (!term) return true
 
-    return props.searchFields.some((field) => {
-        const value = get(artifact, field)
-        return typeof value === 'string' && value.toLowerCase().includes(term)
-    })
+    return objectMatchesSearch<IArtifact>(artifact, props.searchFields, term)
 }
 
 const filteredItems = computed(() => props.items.filter(isArtifactMatchingSearch))
@@ -137,11 +140,13 @@ onKeyStroke('ArrowUp', (e) => {
 
 <template>
     <div ref="list-container" tabindex="0" class="flex h-full w-full flex-col overflow-hidden outline-none">
-        <div class="flex items-center border-b">
+        <slot name="header" />
+
+        <div v-if="searchable" class="flex items-center border-b">
             <InputText
                 v-model.lazy="searchTerm"
                 size="small"
-                class="bg-primary w-full rounded-none border-none shadow-none"
+                class="w-full rounded-none border-none bg-transparent shadow-none"
                 :placeholder="searchPlaceholder"
             />
         </div>
@@ -197,6 +202,10 @@ onKeyStroke('ArrowUp', (e) => {
         </template>
 
         <div v-else class="app-secondary-text flex h-full w-full items-center justify-center p-4">No items found.</div>
+
+        <div class="flex items-center gap-x-2 border-t p-1 text-gray-500">
+            <span>Items: {{ filteredItems.length }}</span>
+        </div>
     </div>
 </template>
 

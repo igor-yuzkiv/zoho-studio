@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
-import { useGitConfigStore, useProvidersRuntimeStore } from '../../store'
+import { useProvidersRuntimeStore } from '../../store'
 import { Icon } from '@iconify/vue'
 import { computed, ref, watch } from 'vue'
 import Menu from 'primevue/menu'
@@ -11,13 +11,12 @@ import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
-import { GitCommitDialog } from '../../components/git'
-import { useGitCommit } from '../../composables'
+import { useCommitProviderArtifacts } from '../../composables'
 import { ZodError } from 'zod'
+import { CommitProviderArtifactsDialog } from '../../components/provider'
 
 const toast = useToast()
 const confirm = useConfirm()
-const gitStore = useGitConfigStore()
 
 const providersStore = useProvidersRuntimeStore()
 const { providerId, providerManifest, provider, isOnline, updateProviderTitle, isCachingInProgress } =
@@ -25,17 +24,9 @@ const { providerId, providerManifest, provider, isOnline, updateProviderTitle, i
 const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
 const { refreshProviderCache } = useProviderCacheManager()
 
-const { exportProviderArtifacts, generateProviderArtifactsZipBlob, isExporting } = useArtifactsZipExport()
+const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
 
-const isVisibleGitCommitDialog = ref(false)
-const {
-    repository: gitCommitRepository,
-    message: gitCommitMessage,
-    loading: isGitCommitPending,
-    initForm: initGitCommitForm,
-    resetForm: resetGitCommitForm,
-    submitCommit,
-} = useGitCommit()
+const commitDialog = useCommitProviderArtifacts()
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     return [
@@ -54,7 +45,11 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
         {
             label: 'Commit',
             icon: 'ph:git-commit-bold',
-            command: () => openGitCommitDialog(),
+            command: () => {
+                if (provider.value) {
+                    commitDialog.openDialog(provider.value)
+                }
+            },
         },
     ]
 })
@@ -94,34 +89,15 @@ function handleExportArtifacts() {
     }
 }
 
-function openGitCommitDialog() {
-    if (!provider.value) {
-        return
-    }
-
-    initGitCommitForm({ repository: provider.value?.gitRepository })
-    isVisibleGitCommitDialog.value = true
-}
-
-function closeGitCommitDialog() {
-    isVisibleGitCommitDialog.value = false
-    resetGitCommitForm()
-}
-
 async function handleGitCommit() {
-    if (!provider.value) {
-        return
-    }
-
     try {
-        const zipFile = await generateProviderArtifactsZipBlob(provider.value)
-        await submitCommit(zipFile)
+        await commitDialog.commit()
 
-        providersStore.updateProvider(providerId.value, { gitRepository: gitCommitRepository.value })
+        providersStore.updateProvider(providerId.value, { gitRepository: commitDialog.repository.value })
 
         toast.success({ detail: 'Committed successfully.' })
 
-        closeGitCommitDialog()
+        commitDialog.closeDialog()
     } catch (error) {
         console.error('Failed to commit provider artifacts', error)
 
@@ -136,7 +112,9 @@ async function handleGitCommit() {
 
             toast.error({ detail: errorMessage })
         } else {
-            toast.error({ detail: 'Something went wrong try again.' })
+            toast.error({
+                detail: error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.',
+            })
         }
     }
 }
@@ -225,15 +203,15 @@ watch(provider, () => resetProviderTitle())
             </div>
         </div>
 
-        <GitCommitDialog
-            v-model:visible="isVisibleGitCommitDialog"
-            v-model:repository="gitCommitRepository"
-            v-model:message="gitCommitMessage"
-            :repositories="gitStore.repositories"
-            :is-authenticated="gitStore.isAuthenticated"
-            :loading="isGitCommitPending"
+        <CommitProviderArtifactsDialog
+            v-model:visible="commitDialog.visible.value"
+            v-model:filter-term="commitDialog.filterTerm.value"
+            v-model:repository="commitDialog.repository.value"
+            v-model:message="commitDialog.message.value"
+            :artifacts="commitDialog.filteredArtifacts.value"
+            :loading="commitDialog.isLoading.value"
             @commit="handleGitCommit"
-            @cancel="closeGitCommitDialog"
+            @cancel="commitDialog.closeDialog"
         />
     </div>
 </template>

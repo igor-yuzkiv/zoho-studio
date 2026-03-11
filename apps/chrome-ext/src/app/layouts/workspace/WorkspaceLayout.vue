@@ -3,22 +3,26 @@ import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute, useRouter } from 'vue-router'
 import { useCurrentProvider, useProviderCacheManager } from '../../../composables'
-import { ProviderCapabilitiesMenu } from '../../../components/provider-capabilities-menu'
+import { ProviderCapabilitiesMenu } from '../../../components/provider'
 import { AppFooter } from '../../shell/app-footer'
 import { AppTopMenu } from '../../shell/app-top-menu'
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
-import { useProvidersRuntimeStore } from '../../../store'
 
 const route = useRoute()
 const router = useRouter()
 
-const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted } = useCurrentProvider()
-const { isProviderCacheInProgress } = useProvidersRuntimeStore()
+const {
+    providerId,
+    provider,
+    providerManifest,
+    providerCapabilities,
+    lastSyncedAtFormatted,
+    isCachingInProgress,
+} = useCurrentProvider()
 const { ensureSyncArtifacts } = useProviderCacheManager()
 
-const isCachingInProgress = computed<boolean>(() => isProviderCacheInProgress(providerId.value))
 
 onMounted(() => {
     if (!provider.value) {

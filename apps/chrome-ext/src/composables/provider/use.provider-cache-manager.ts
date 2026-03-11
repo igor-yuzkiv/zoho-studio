@@ -35,6 +35,11 @@ export function useProviderCacheManager() {
             return
         }
 
+        if (!providersStore.isOnline(provider.id)) {
+            console.warn('Provider', provider.id, 'is currently offline, skipping sync.')
+            return
+        }
+
         const isRequired = await isSyncRequired(provider)
 
         if (!isRequired) {

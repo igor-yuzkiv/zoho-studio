@@ -105,6 +105,16 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         return providersCacheInProgressMap.value.get(providerId) || false
     }
 
+    function isOnline(providerId: ServiceProviderId): boolean {
+        const provider = providersMap.value.get(providerId)
+        if (!provider) {
+            console.warn(`Trying to check online status of non-existing provider with id "${providerId}"`)
+            return false
+        }
+
+        return !!provider.browserTabId
+    }
+
     return {
         providersMap,
         providersList,
@@ -115,5 +125,6 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         updateProviderLastSyncedAt,
         toggleProviderCacheInProgress,
         isProviderCacheInProgress,
+        isOnline,
     }
 })
