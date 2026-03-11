@@ -1,6 +1,6 @@
 import { computed, MaybeRefOrGetter, ref, toValue } from 'vue'
 import { CreateGitRepositoryRequest, GitAuthorDto, IGitRepository } from '../types.ts'
-import { createGitRepository } from '../api.ts'
+import { createGitRepository } from '../git.api.ts'
 
 export const normalizeRepositoryName = (name: string): string => {
     return name.trim().toLowerCase().replace(/\s+/g, '-')

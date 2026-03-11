@@ -1,5 +1,5 @@
 export * from './types.ts'
-export * from './api.ts'
+export * from './git.api.ts'
 export * from './lib/use.git-commit.ts'
 export * from './lib/use.add-git-repository.ts'
 
