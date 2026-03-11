@@ -40,7 +40,8 @@ export function useCommitProviderArtifacts() {
         artifacts.value.filter((a) => objectMatchesSearch<IArtifact>(a, FILTER_FIELDS, filterTerm.value))
     )
 
-    const { gitUserName, gitUserEmail } = storeToRefs(useGitConfigStore())
+    const gitConfig = useGitConfigStore()
+    const { gitUserName, gitUserEmail } = storeToRefs(gitConfig)
 
     const { generateProviderArtifactsZipBlob } = useArtifactsZipExport()
 
@@ -53,7 +54,12 @@ export function useCommitProviderArtifacts() {
     function openDialog(provider: ServiceProvider) {
         visible.value = true
         serviceProvider.value = provider
-        repository.value = null
+
+        repository.value =
+            provider.gitRepository && gitConfig.isRepositoryExists(provider.gitRepository)
+                ? provider.gitRepository
+                : null
+
         message.value = buildDefaultGitMessage()
     }
 

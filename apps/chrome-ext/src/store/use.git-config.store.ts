@@ -44,6 +44,10 @@ export const useGitConfigStore = defineStore('git-store', () => {
         repositories.value = nextRepos
     }
 
+    function isRepositoryExists(repoName: string) {
+        return repositories.value.some((r) => r.name === repoName)
+    }
+
     return {
         gitAuthor,
         gitUserName,
@@ -51,5 +55,6 @@ export const useGitConfigStore = defineStore('git-store', () => {
         isAuthenticated,
         repositories: computed(() => repositories.value),
         addRepository,
+        isRepositoryExists,
     }
 })
