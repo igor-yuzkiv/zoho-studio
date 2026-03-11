@@ -1,4 +1,4 @@
-import { useProvidersRuntimeStore } from '../store'
+import { useProvidersRuntimeStore } from '../../store'
 import { useRouteParams } from '@vueuse/router'
 import {
     CapabilityDescriptor,
@@ -9,8 +9,8 @@ import {
 } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
-import { useCapabilitiesManager } from './use.capabilities.manager.ts'
-import { integrationsRegistry } from '../integrations.registry.ts'
+import { useCapabilitiesManager } from '../capability/use.capabilities.manager.ts'
+import { integrationsRegistry } from '../../integrations.registry.ts'
 import {format} from 'date-fns'
 
 export function useCurrentProvider() {

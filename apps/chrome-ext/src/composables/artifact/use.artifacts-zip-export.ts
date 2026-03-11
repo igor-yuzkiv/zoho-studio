@@ -1,7 +1,7 @@
 import { CapabilityDescriptor, IArtifact, ServiceProvider } from '@zoho-studio/core'
 import { ref } from 'vue'
 import { useArtifactsStorage } from './use.artifacts.storage.ts'
-import { useCapabilitiesManager } from './use.capabilities.manager.ts'
+import { useCapabilitiesManager } from '../capability/use.capabilities.manager.ts'
 import { normalizeFileName, ExportZipItem, useExportZip } from '@zoho-studio/export-zip'
 import { groupBy } from 'lodash'
 

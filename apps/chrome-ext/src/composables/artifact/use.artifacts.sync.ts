@@ -1,7 +1,7 @@
 import { ServiceProvider } from '@zoho-studio/core'
 import { useArtifactsFetcher } from './use.artifacts.fetcher.ts'
 import { ref } from 'vue'
-import { useCapabilitiesManager } from './use.capabilities.manager.ts'
+import { useCapabilitiesManager } from '../capability/use.capabilities.manager.ts'
 import { useArtifactsStorage } from './use.artifacts.storage.ts'
 
 export function useArtifactsSync() {

@@ -1,3 +1,2 @@
-declare const _default: import("@crxjs/vite-plugin", { with: { "resolution-mode": "import" } }).ManifestV3Export;
-export default _default;
+export declare function createManifest(extraHostPermissions?: string[]): import("@crxjs/vite-plugin", { with: { "resolution-mode": "import" } }).ManifestV3Export;
 //# sourceMappingURL=manifest.config.d.ts.map

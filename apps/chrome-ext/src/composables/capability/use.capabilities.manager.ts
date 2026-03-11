@@ -1,5 +1,5 @@
 import { CapabilityDescriptor, CapabilityType, ServiceProvider } from '@zoho-studio/core'
-import { integrationsRegistry } from '../integrations.registry.ts'
+import { integrationsRegistry } from '../../integrations.registry.ts'
 import { Maybe } from '@zoho-studio/utils'
 
 export function useCapabilitiesManager() {
