@@ -12,7 +12,6 @@ const emit = defineEmits<{
 defineProps<{
     isAuthenticated: boolean
     loading: boolean
-    canSubmit: boolean
 }>()
 
 const visible = defineModel<boolean>('visible')
@@ -81,7 +80,7 @@ function closeDialog() {
                     text
                     size="small"
                     @click="$emit('submit')"
-                    :disabled="!isAuthenticated || loading || !canSubmit"
+                    :disabled="!isAuthenticated || loading"
                 />
             </div>
         </template>

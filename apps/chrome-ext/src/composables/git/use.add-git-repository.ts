@@ -1,48 +1,47 @@
-import { computed, MaybeRefOrGetter, ref, toValue } from 'vue'
-import { CreateGitRepositoryRequest, GitAuthorDto, IGitRepository } from '../../types'
+import { ref } from 'vue'
+import { CreateGitRepositoryRequest, IGitRepository } from '../../types'
 import { createGitRepository } from '../../api'
+import { useGitConfigStore } from '../../store'
+import { storeToRefs } from 'pinia'
+import * as zod from 'zod'
+
+const RequestPayloadSchema = zod.object({
+    name: zod.string().min(1, 'Repository name is required').max(100, 'Repository name must be at most 100 characters'),
+    description: zod.string().max(255, 'Description must be at most 255 characters').optional(),
+    author: zod.object({
+        name: zod.string().min(1, 'Author user.name is required'),
+        email: zod.string().email('Invalid user.email format'),
+    }),
+})
 
 export const normalizeRepositoryName = (name: string): string => {
     return name.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
-export function useAddGitRepository(author: MaybeRefOrGetter<GitAuthorDto>) {
+export function useAddGitRepository() {
     const repositoryName = ref<string>('')
     const repositoryDescription = ref<string>('')
     const loading = ref<boolean>(false)
 
-    const isAuthenticated = computed(() => {
-        const authorValue = toValue(author)
-        return Boolean(authorValue && authorValue.name && authorValue.email)
-    })
-
-    const canSubmit = computed(() => {
-        return Boolean(repositoryName.value.trim() && !loading.value && isAuthenticated.value)
-    })
+    const gitStore = useGitConfigStore()
+    const { gitAuthor } = storeToRefs(gitStore)
 
     async function submitNewRepository(): Promise<IGitRepository> {
-        const authorValue = toValue(author)
-        if (!authorValue || !authorValue.name || !authorValue.email) {
-            throw new Error('Author information is required to create a Git repository.')
-        }
-
-        if (!canSubmit.value) {
-            throw new Error(
-                'Cannot submit: Repository name is required, author information must be valid, and no request should be in progress.'
-            )
+        if (loading.value) {
+            throw new Error('Repository creation is already in progress.')
         }
 
         try {
             loading.value = true
 
-            const payload: CreateGitRepositoryRequest = {
+            const payload: CreateGitRepositoryRequest = RequestPayloadSchema.parse({
                 name: normalizeRepositoryName(repositoryName.value),
                 description: repositoryDescription.value.trim() || undefined,
                 author: {
-                    name: authorValue.name,
-                    email: authorValue.email,
+                    name: gitAuthor.value.name,
+                    email: gitAuthor.value.email,
                 },
-            }
+            })
 
             const response = await createGitRepository(payload)
             if (!response?.name) {
@@ -66,8 +65,6 @@ export function useAddGitRepository(author: MaybeRefOrGetter<GitAuthorDto>) {
         repositoryName,
         repositoryDescription,
         loading,
-        canSubmit,
-        isAuthenticated,
         submitNewRepository,
         resetForm,
     }

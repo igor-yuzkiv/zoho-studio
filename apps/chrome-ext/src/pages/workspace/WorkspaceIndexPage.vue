@@ -13,17 +13,15 @@ import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
 import { GitCommitDialog } from '../../components/git'
 import { useGitCommit } from '../../composables'
-import { storeToRefs } from 'pinia'
+import { ZodError } from 'zod'
 
 const toast = useToast()
 const confirm = useConfirm()
 const gitStore = useGitConfigStore()
-const { gitAuthor } = storeToRefs(gitStore)
-const providersStore = useProvidersRuntimeStore()
 
+const providersStore = useProvidersRuntimeStore()
 const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
 const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
-
 const { refreshProviderCache } = useProviderCacheManager()
 const isCachingInProgress = computed<boolean>(() => providersStore.isProviderCacheInProgress(providerId.value))
 
@@ -34,7 +32,6 @@ const {
     repository: gitCommitRepository,
     message: gitCommitMessage,
     loading: isGitCommitPending,
-    canSubmit: canCommitToGit,
     initForm: initGitCommitForm,
     resetForm: resetGitCommitForm,
     submitCommit,
@@ -44,7 +41,7 @@ const {
     }
 
     return generateProviderArtifactsZipBlob(provider.value)
-}, gitAuthor)
+})
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     return [
@@ -117,7 +114,7 @@ function closeGitCommitDialog() {
 }
 
 async function handleGitCommit() {
-    if (!provider.value || !canCommitToGit.value) {
+    if (!provider.value) {
         return
     }
 
@@ -131,8 +128,20 @@ async function handleGitCommit() {
         closeGitCommitDialog()
     } catch (error) {
         console.error('Failed to commit provider artifacts', error)
-        const message = error instanceof Error ? error.message : 'Failed to commit. Please try again.'
-        toast.error({ detail: message })
+
+        if (error instanceof ZodError) {
+            const [first, ...rest] = error.issues
+            if (!first) {
+                toast.error({ detail: 'Validation failed. Please check your input and try again.' })
+                return
+            }
+
+            const errorMessage = rest.length > 0 ? `${first.message} (and ${rest.length} more errors)` : first.message
+
+            toast.error({ detail: errorMessage })
+        } else {
+            toast.error({ detail: 'Something went wrong try again.' })
+        }
     }
 }
 
@@ -227,7 +236,6 @@ watch(provider, () => resetProviderTitle())
             :repositories="gitStore.repositories"
             :is-authenticated="gitStore.isAuthenticated"
             :loading="isGitCommitPending"
-            :can-commit="canCommitToGit"
             @commit="handleGitCommit"
             @cancel="closeGitCommitDialog"
         />

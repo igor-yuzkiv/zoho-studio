@@ -1,6 +1,9 @@
-import { computed, MaybeRefOrGetter, ref, toValue } from 'vue'
+import { ref } from 'vue'
 import { commitIntoGitRepository } from '../../api'
-import type { CommitGitRepositoryResponse, GitAuthorDto } from '../../types'
+import { CommitGitRepositoryRequest, CommitGitRepositoryResponse } from '../../types'
+import { useGitConfigStore } from '../../store'
+import { storeToRefs } from 'pinia'
+import * as zod from 'zod'
 
 type GetZipFile = () => Promise<Blob | File>
 
@@ -9,19 +12,28 @@ export type InitGitCommitFormPayload = {
     message?: string | null
 }
 
-export function useGitCommit(getZipFile: GetZipFile, author: MaybeRefOrGetter<GitAuthorDto>) {
+const RequestPayloadSchema = zod.object({
+    repository: zod.string().min(1, 'Repository is required'),
+    message: zod.string().min(1, 'Commit message is required'),
+    author: zod.object({
+        name: zod.string().min(1, 'Author user.name is required'),
+        email: zod.string().email('Invalid user.email format'),
+    }),
+    zipFile: zod.instanceof(Blob),
+})
+
+export function useGitCommit(getZipFile: GetZipFile) {
     const repository = ref<string | null>(null)
     const message = ref<string>('')
     const loading = ref<boolean>(false)
 
+    const gitStore = useGitConfigStore()
+    const { gitAuthor } = storeToRefs(gitStore)
+
     function buildDefaultGitMessage() {
-        const { name } = toValue(author) || { name: 'Unknown Author' }
+        const name = gitAuthor.value?.name || 'Unknown Author'
         return `Update from Zoho Studio Browser Extension by ${name}`
     }
-
-    const canSubmit = computed(() => {
-        return Boolean(repository.value && message.value.trim() && !loading.value)
-    })
 
     function initForm(payload: InitGitCommitFormPayload = {}) {
         repository.value = payload.repository?.trim() || null
@@ -39,21 +51,21 @@ export function useGitCommit(getZipFile: GetZipFile, author: MaybeRefOrGetter<Gi
             throw new Error('Commit request is already in progress.')
         }
 
-        const commitRepository = repository.value?.trim()
-        const commitMessage = message.value.trim()
-        if (!commitRepository || !commitMessage) {
-            throw new Error('Repository and commit message are required.')
-        }
-
         loading.value = true
         try {
             const zipFile = await getZipFile()
-            return await commitIntoGitRepository({
-                repository: commitRepository,
-                message: commitMessage,
-                author: toValue(author),
+
+            const requestPayload: CommitGitRepositoryRequest = RequestPayloadSchema.parse({
+                repository: repository.value?.trim(),
+                message: message.value.trim(),
+                author: {
+                    name: gitAuthor.value.name,
+                    email: gitAuthor.value.email,
+                },
                 zipFile,
             })
+
+            return await commitIntoGitRepository(requestPayload)
         } finally {
             loading.value = false
         }
@@ -63,7 +75,6 @@ export function useGitCommit(getZipFile: GetZipFile, author: MaybeRefOrGetter<Gi
         repository,
         message,
         loading,
-        canSubmit,
         initForm,
         resetForm,
         submitCommit,

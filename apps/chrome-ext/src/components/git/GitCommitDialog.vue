@@ -14,7 +14,6 @@ defineProps<{
     repositories: IGitRepository[]
     isAuthenticated: boolean
     loading: boolean
-    canCommit: boolean
 }>()
 
 const emit = defineEmits<{
@@ -90,7 +89,7 @@ function handleCommit() {
                     text
                     size="small"
                     @click="handleCommit"
-                    :disabled="!isAuthenticated || loading || !canCommit"
+                    :disabled="!isAuthenticated || loading"
                 />
             </div>
         </template>

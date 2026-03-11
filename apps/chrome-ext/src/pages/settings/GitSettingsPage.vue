@@ -8,13 +8,14 @@ import { ref } from 'vue'
 import { useToast } from '@zoho-studio/ui-kit'
 import { storeToRefs } from 'pinia'
 import { useAddGitRepository } from '../../composables'
+import { ZodError } from 'zod'
 
 const toast = useToast()
 const gitStore = useGitConfigStore()
-const { gitAuthor } = storeToRefs(gitStore)
+const { isAuthenticated } = storeToRefs(gitStore)
 
 const isVisibleAddRepoDialog = ref(false)
-const addRepo = useAddGitRepository(gitAuthor)
+const addRepo = useAddGitRepository()
 
 function closeAddRepoDialog() {
     isVisibleAddRepoDialog.value = false
@@ -38,8 +39,20 @@ async function handleAddRepository() {
         closeAddRepoDialog()
     } catch (error) {
         console.error('Failed to add repository:', error)
-        const message = error instanceof Error ? error.message : 'Failed to commit. Please try again.'
-        toast.error({ detail: message })
+
+        if (error instanceof ZodError) {
+            const [first, ...rest] = error.issues
+            if (!first) {
+                toast.error({ detail: 'Validation failed. Please check your input and try again.' })
+                return
+            }
+
+            const errorMessage = rest.length > 0 ? `${first.message} (and ${rest.length} more errors)` : first.message
+
+            toast.error({ detail: errorMessage })
+        } else {
+            toast.error({ detail: 'Something went wrong try again.' })
+        }
     }
 }
 </script>
@@ -102,8 +115,7 @@ async function handleAddRepository() {
             v-model:visible="isVisibleAddRepoDialog"
             v-model:repository-name="addRepo.repositoryName.value"
             v-model:repository-description="addRepo.repositoryDescription.value"
-            :is-authenticated="addRepo.isAuthenticated.value"
-            :can-submit="addRepo.canSubmit.value"
+            :is-authenticated="isAuthenticated"
             :loading="addRepo.loading.value"
             @submit="handleAddRepository"
             @cancel="closeAddRepoDialog"
