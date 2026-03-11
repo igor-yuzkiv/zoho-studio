@@ -1,23 +1,14 @@
-import { ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
-import { useArtifactsSync } from '../artifact/use.artifacts.sync.ts'
+import { ServiceProvider } from '@zoho-studio/core'
+import { useArtifactsSync, useArtifactsStorage } from '../artifact'
 import { useProvidersRuntimeStore } from '../../store'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ArtifactsQueryKeys, PROVIDER_CACHE_TTL_MS } from '../../config.ts'
-import { ref } from 'vue'
-import { useArtifactsStorage } from '../artifact/use.artifacts.storage.ts'
 
 export function useProviderCacheManager() {
     const artifactsStorage = useArtifactsStorage()
     const { syncProviderArtifacts } = useArtifactsSync()
     const providersStore = useProvidersRuntimeStore()
     const queryClient = useQueryClient()
-
-    const providersInProgress = ref(new Set<ServiceProviderId>())
-    //
-    // TODO: create and use global state manager to track in-progress operations per provider
-    const isProviderInProgress = (providerId: ServiceProviderId) => providersInProgress.value.has(providerId)
-    const addProviderInProgress = (providerId: ServiceProviderId) => providersInProgress.value.add(providerId)
-    const removeProviderInProgress = (providerId: ServiceProviderId) => providersInProgress.value.delete(providerId)
 
     function isCacheStale(provider: ServiceProvider) {
         if (!provider.lastSyncedAt) return true
@@ -39,7 +30,7 @@ export function useProviderCacheManager() {
     }
 
     async function ensureSyncArtifacts(provider: ServiceProvider): Promise<void> {
-        if (isProviderInProgress(provider.id)) {
+        if (providersStore.isProviderCacheInProgress(provider.id)) {
             console.warn('Cache operation is already in progress for provider', provider.id, ', skipping sync request.')
             return
         }
@@ -52,32 +43,32 @@ export function useProviderCacheManager() {
         }
 
         try {
-            addProviderInProgress(provider.id)
+            providersStore.toggleProviderCacheInProgress(provider.id, true)
 
             await syncProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
             providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
         } finally {
-            removeProviderInProgress(provider.id)
+            providersStore.toggleProviderCacheInProgress(provider.id, false)
         }
     }
 
     async function clearProviderCache(providerId: string): Promise<void> {
-        if (isProviderInProgress(providerId)) {
+        if (providersStore.isProviderCacheInProgress(providerId)) {
             console.warn('Cache operation is already in progress for provider', providerId, ', skipping sync request.')
             return
         }
 
         try {
-            addProviderInProgress(providerId)
+            providersStore.toggleProviderCacheInProgress(providerId, true)
             await Promise.all([artifactsStorage.deleteByProviderId(providerId), invalidateProviderQueries(providerId)])
         } finally {
-            removeProviderInProgress(providerId)
+            providersStore.toggleProviderCacheInProgress(providerId, false)
         }
     }
 
     async function refreshProviderCache(provider: ServiceProvider): Promise<void> {
-        if (isProviderInProgress(provider.id)) {
+        if (providersStore.isProviderCacheInProgress(provider.id)) {
             console.warn(
                 'Cache operation is already in progress for provider',
                 provider.id,
@@ -87,19 +78,18 @@ export function useProviderCacheManager() {
         }
 
         try {
-            addProviderInProgress(provider.id)
+            providersStore.toggleProviderCacheInProgress(provider.id, true)
             await artifactsStorage.deleteByProviderId(provider.id)
             await syncProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
 
             providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
         } finally {
-            removeProviderInProgress(provider.id)
+            providersStore.toggleProviderCacheInProgress(provider.id, false)
         }
     }
 
     return {
-        isProviderInProgress,
         ensureSyncArtifacts,
         clearProviderCache,
         refreshProviderCache,

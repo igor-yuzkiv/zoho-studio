@@ -24,8 +24,8 @@ const providersStore = useProvidersRuntimeStore()
 const { providerId, providerManifest, provider, isOnline, updateProviderTitle } = useCurrentProvider()
 const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
 
-const { refreshProviderCache, isProviderInProgress } = useProviderCacheManager()
-const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
+const { refreshProviderCache } = useProviderCacheManager()
+const isCachingInProgress = computed<boolean>(() => providersStore.isProviderCacheInProgress(providerId.value))
 
 const { exportProviderArtifacts, generateProviderArtifactsZipBlob, isExporting } = useArtifactsZipExport()
 

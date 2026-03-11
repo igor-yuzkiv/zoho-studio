@@ -9,14 +9,16 @@ import { AppTopMenu } from '../../shell/app-top-menu'
 import { computed, onMounted } from 'vue'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
+import { useProvidersRuntimeStore } from '../../../store'
 
 const route = useRoute()
 const router = useRouter()
 
 const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted } = useCurrentProvider()
-const { ensureSyncArtifacts, isProviderInProgress } = useProviderCacheManager()
+const { isProviderCacheInProgress } = useProvidersRuntimeStore()
+const { ensureSyncArtifacts } = useProviderCacheManager()
 
-const isCachingInProgress = computed<boolean>(() => isProviderInProgress(providerId.value))
+const isCachingInProgress = computed<boolean>(() => isProviderCacheInProgress(providerId.value))
 
 onMounted(() => {
     if (!provider.value) {

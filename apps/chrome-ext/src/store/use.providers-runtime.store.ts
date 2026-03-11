@@ -50,6 +50,8 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     const providersList = computed(() => Array.from(providersMap.value.values()))
     const cachedProviders = useStorage('service-providers', [], undefined, { serializer: LocalStorageSerializer })
 
+    const providersCacheInProgressMap = ref<Map<ServiceProviderId, boolean>>(new Map())
+
     function initialize() {
         if (!cachedProviders.value.length) {
             return
@@ -92,12 +94,26 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         updateProvider(providerId, { lastSyncedAt: timestamp })
     }
 
+    function toggleProviderCacheInProgress(providerId: ServiceProviderId, inProgress: boolean) {
+        const next = new Map(providersCacheInProgressMap.value)
+        next.set(providerId, inProgress)
+
+        providersCacheInProgressMap.value = next
+    }
+
+    function isProviderCacheInProgress(providerId: ServiceProviderId): boolean {
+        return providersCacheInProgressMap.value.get(providerId) || false
+    }
+
     return {
         providersMap,
         providersList,
+        providersCacheInProgressMap,
         initialize,
         handleBrowserTabsChange,
         updateProvider,
         updateProviderLastSyncedAt,
+        toggleProviderCacheInProgress,
+        isProviderCacheInProgress,
     }
 })
