@@ -36,20 +36,24 @@ const { isAuthenticated, repositories } = storeToRefs(gitStore)
         modal
         :draggable="false"
         header="Commit Provider Artifacts"
-        class="h-[60vh] w-[80%] md:w-[60%] xl:w-[40%]"
+        class="w-[90%]"
         content-class="flex flex-col w-full h-full overflow-hidden"
         :closable="false"
         :dismissable-mask="false"
         :close-on-escape="false"
     >
         <template #header>
-            <div class="flex items-center justify-between w-full">
-                <h1 class="text-lg font-bold w-full">Commit Provider Artifacts</h1>
+            <div class="flex w-full items-center justify-between">
+                <h1 class="w-full text-lg font-bold">Commit Provider Artifacts</h1>
                 <Icon v-if="loading" icon="gg:spinner-two" class="h-7 w-7 animate-spin text-blue-600" />
             </div>
         </template>
-        <div class="flex h-full w-full gap-2 overflow-hidden">
-            <div class="flex w-1/2 flex-col gap-2">
+        <div class="flex h-full w-full flex-col gap-2 overflow-hidden p-2 md:flex-row">
+            <div class="flex w-full flex-col gap-2 md:w-1/2">
+                <Message v-if="!isAuthenticated" class="w-full" severity="warn" size="small">
+                    Please provide <b>user.name</b> and <b>user.email</b> to create commits.
+                </Message>
+
                 <div class="flex w-full flex-col gap-1">
                     <label class="font-bold" for="git_repository">Repository</label>
                     <Select
@@ -71,16 +75,12 @@ const { isAuthenticated, repositories } = storeToRefs(gitStore)
                         v-model="gitMessage"
                         size="small"
                         placeholder="A brief description about the commit"
-                        rows="10"
+                        rows="6"
                     />
                 </div>
-
-                <Message v-if="!isAuthenticated" class="w-full" severity="warn" size="small">
-                    Please provide <b>user.name</b> and <b>user.email</b> to create commits.
-                </Message>
             </div>
 
-            <div class="flex w-1/2 flex-col overflow-auto">
+            <div class="flex w-full flex-col overflow-auto md:w-1/2">
                 <ArtifactExplorerMenu :items="artifacts" group-by="capability_type" :searchable="false">
                     <template #header>
                         <div class="flex items-center border-b">
