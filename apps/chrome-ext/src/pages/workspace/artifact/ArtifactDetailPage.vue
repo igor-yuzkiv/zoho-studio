@@ -7,19 +7,40 @@ import { IconButton, NoDataMessage, PageHeader, ViewModeSelect, ViewModeComponen
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
 import { useClipboard } from '@vueuse/core'
 import { artifactDetailConfigMap } from '../../../components/artifact-details/default-views.config.ts'
-import type { CapabilityType } from '@zoho-studio/core'
+import { ArtifactDetailViewConfig, CapabilityType } from '@zoho-studio/core'
 
 const artifactId = useRouteParams<string>('artifactId')
 const capabilityType = useRouteParams<CapabilityType>('capabilityType')
 
 const { data } = useArtifactByIdQuery(artifactId)
 const { copy } = useClipboard()
-const { findProviderCapability } = useCurrentProvider()
+const { findProviderCapability, provider } = useCurrentProvider()
 
-const config = computed(() => {
+const config = computed((): ArtifactDetailViewConfig | undefined => {
     const descriptor = findProviderCapability(capabilityType.value)
-    return descriptor?.artifactDetailView ?? artifactDetailConfigMap[capabilityType.value]
+    const defaultConfig = artifactDetailConfigMap[capabilityType.value]
+
+    if (!defaultConfig) {
+        console.warn(`No default artifact detail view config found for capability type: ${capabilityType.value}`)
+        return undefined
+    }
+
+    if (!descriptor?.artifactDetailViewSettings) {
+        return defaultConfig
+    }
+
+    const artifactConfig = descriptor.artifactDetailViewSettings
+
+    return {
+        header: {
+            title: artifactConfig.header?.title ?? defaultConfig?.header.title ?? '',
+            subtitle: artifactConfig.header?.subtitle ?? defaultConfig?.header.subtitle ?? '',
+        },
+        viewModes: defaultConfig.viewModes.concat(artifactConfig.viewModes ?? []),
+    }
 })
+
+
 const viewModes = computed<ViewModeOption[]>(() => config.value?.viewModes ?? [])
 const currentMode = ref<string>('')
 
@@ -28,7 +49,7 @@ watch(
     () => {
         currentMode.value = viewModes.value[0]?.value ?? ''
     },
-    { immediate: true }
+    { immediate: true },
 )
 
 const resolvedTitle = computed(() => {
@@ -63,7 +84,7 @@ const resolvedSubtitle = computed(() => {
         </PageHeader>
 
         <div class="app-card flex h-full w-full flex-col overflow-auto">
-            <ViewModeComponent :options="viewModes" v-model="currentMode" :artifact="data" />
+            <ViewModeComponent :options="viewModes" v-model="currentMode" :artifact="data" :provider="provider" />
         </div>
     </div>
 

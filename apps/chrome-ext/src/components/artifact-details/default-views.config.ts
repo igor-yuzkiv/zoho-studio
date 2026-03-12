@@ -9,14 +9,16 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType, ArtifactDet
         },
         viewModes: [
             {
-                value: 'code',
+                label: 'Code',
+                value: '__default_code',
                 icon: 'mdi:code',
                 component: defineAsyncComponent(
                     () => import('./ui/defaults/function/FunctionCodeView.vue')
                 ),
             },
             {
-                value: 'json metadata',
+                label: 'Metadata',
+                value: '__default_json_metadata',
                 icon: 'si:json-duotone',
                 component: defineAsyncComponent(
                     () => import('./ui/defaults/function/FunctionMetadataJsonView.vue')
@@ -30,14 +32,16 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType, ArtifactDet
         },
         viewModes: [
             {
-                value: 'table',
+                label: 'Table',
+                value: '__default_json_table',
                 icon: 'material-symbols:table-sharp',
                 component: defineAsyncComponent(
                     () => import('./ui/defaults/module/ModuleTableView.vue')
                 ),
             },
             {
-                value: 'json metadata',
+                label: 'Metadata',
+                value: '__default_json_json_metadata',
                 icon: 'si:json-duotone',
                 component: defineAsyncComponent(
                     () => import('./ui/defaults/module/ModuleMetadataJsonView.vue')
@@ -52,7 +56,8 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType, ArtifactDet
         },
         viewModes: [
             {
-                value: 'json metadata',
+                label: 'Metadata',
+                value: '__default_json_metadata',
                 icon: 'si:json-duotone',
                 component: defineAsyncComponent(
                     () => import('./ui/defaults/workflow/WorkflowMetadataJsonView.vue')

@@ -19,3 +19,55 @@ export interface ZohoCrmFunction extends IEntity {
     script?: string | null
     workflow?: string | null
 }
+
+export interface CrmFunctionLog extends IEntity  {
+    id: string
+    component_type: string
+    function_name: string
+    status: string
+    execution_time: number
+    executed_time?: string
+    start_datetime?: string
+    end_datetime?: string
+}
+
+export interface CrmFunctionLogDetails extends IEntity {
+    id: string
+    component_type: string
+    function_name: string
+    arguments: Record<string, unknown>
+    info_message: string[]
+}
+
+export type CrmFunctionLogsRequestParams = {
+    period: 'past_24_hours' | 'today' | 'yesterday' | 'last_month' | 'specific_date'
+
+    // if period = specific_date
+    start_datetime?: string, // 2026-03-11T00:00:00-04:00
+    end_datetime?: string, // 2026-03-11T23:30:59-04:00
+
+    page: number
+    per_page: number
+    language: string // deluge
+}
+
+export type CrmFunctionLogsResponse = {
+    function_logs: CrmFunctionLog[]
+    info: {
+        per_page: number
+        timezone: string
+        count: number
+        page: number
+        more_records: boolean
+    }
+}
+
+export type CrmFunctionLogDetailsRequestParams = {
+    period?: CrmFunctionLogsRequestParams['period'] | 'custom'
+    start_datetime?: string
+    end_datetime?: string
+}
+
+export type CrmFunctionLogDetailsResponse = {
+    function_logs: CrmFunctionLogDetails[]
+}

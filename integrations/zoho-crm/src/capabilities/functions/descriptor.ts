@@ -1,6 +1,7 @@
 import { CapabilityDescriptor, IArtifact } from '@zoho-studio/core'
 import { CrmFunctionsAdapter } from './adapter.ts'
 import { ExportZipItem, normalizeFileName } from '@zoho-studio/export-zip'
+import { defineAsyncComponent } from 'vue'
 
 function toExportZip(artifact: IArtifact): ExportZipItem[] {
     if (artifact.capability_type !== 'functions') {
@@ -36,4 +37,20 @@ export const CrmFunctionsDescriptor: CapabilityDescriptor = {
     icon: 'material-symbols:function',
     adapter: CrmFunctionsAdapter,
     toExportZip,
+
+    artifactDetailViewSettings: {
+        viewModes: [
+
+            {
+                value: 'crm_function_logs_view',
+                label: 'Execution Logs',
+                icon: 'mdi:format-list-bulleted',
+                component: defineAsyncComponent(
+                    () => import('./ui/CrmFunctionLogsView.vue'),
+                ),
+            },
+
+
+        ],
+    },
 }

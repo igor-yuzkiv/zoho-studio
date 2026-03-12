@@ -3,7 +3,7 @@ import vue from 'eslint-plugin-vue'
 
 export default [
     ...baseConfig,
-    ...vue.configs['flat/recommended'],
+    ...vue.configs['flat/essential'],
     {
         files: ['**/*.vue'],
         languageOptions: {
