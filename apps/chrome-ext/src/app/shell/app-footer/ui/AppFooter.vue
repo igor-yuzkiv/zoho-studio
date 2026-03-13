@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { IconButton, ToggleThemeButton, useAppThemeStore } from '@zoho-studio/ui-kit'
 
+const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
+    ? `${import.meta.env.VITE_GITHUB_REPO_URL}/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+description+of+the+issue`
+    : null
+
 const appTheme = useAppThemeStore()
 
 function fullScreen() {
@@ -15,7 +19,17 @@ function fullScreen() {
         </div>
         <div class="flex items-center justify-end gap-x-2">
             <slot name="end"></slot>
-            <IconButton class="p-0" text size="small" @click="fullScreen" icon="mingcute:fullscreen-fill"></IconButton>
+
+            <a
+                v-if="reportIssueUrl"
+                target="_blank"
+                :href="reportIssueUrl"
+                class="text-primary-500 text-sm hover:underline"
+            >
+                Report Issue
+            </a>
+
+            <IconButton class="p-0" text size="small" @click="fullScreen" icon="mingcute:fullscreen-fill" />
             <ToggleThemeButton :is-dark="appTheme.isDark" @click="appTheme.toggle" />
         </div>
     </footer>
