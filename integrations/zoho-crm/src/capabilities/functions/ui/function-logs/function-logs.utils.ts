@@ -3,7 +3,7 @@ import {
     CrmFunctionLogDetailsRequestParams,
     CrmFunctionLogsResponse,
     CrmFunctionsLogsPeriod,
-} from '../../../types'
+} from '../../../../types'
 import { addMinutes, format, parse, parseISO, subMinutes } from 'date-fns'
 
 export const PERIOD_OPTIONS: Array<{ label: string; value: CrmFunctionsLogsPeriod }> = [
