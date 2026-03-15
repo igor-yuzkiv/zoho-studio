@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IArtifact } from '@zoho-studio/core'
-import { MetadataJsonView } from '@zoho-studio/ui-kit'
+import { JsonViewer } from '@zoho-studio/ui-kit'
 import { computed } from 'vue'
 import { useArtifactsByParentIdQuery } from '../../../../../queries'
 
@@ -17,5 +17,5 @@ const jsonData = computed(() => {
 </script>
 
 <template>
-    <MetadataJsonView :data="jsonData" />
+    <JsonViewer :data="jsonData" />
 </template>

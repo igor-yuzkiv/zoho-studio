@@ -14,6 +14,7 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import { Icon } from '@iconify/vue'
 import { buildLogDetailsParams, PERIOD_OPTIONS, getDefaultPaginationState } from './function-logs.utils.ts'
+import CrmFunctionLogDetails from './CrmFunctionLogDetails.vue'
 
 const props = defineProps<{
     artifact: IArtifact<'functions', ZohoCrmFunction>
@@ -25,8 +26,8 @@ const logger = useConsoleLogger('[ZohoCrm|CrmFunctionLogsView]')
 const apiService = new CrmFunctionsApiService(props.provider)
 
 const isPendingList = ref(false)
-const isPendingDetails = ref(false)
-const isPending = computed(() => isPendingList.value || isPendingDetails.value)
+const isPendingDetails = ref<string | null>(null)
+const isPending = computed(() => isPendingList.value || Boolean(isPendingDetails.value))
 
 const period = ref<CrmFunctionsLogsPeriod>('past_24_hours')
 const preserveLogsOnReload = ref(true)
@@ -83,7 +84,7 @@ async function loadLogsPage() {
 function resetLogsListState() {
     logsById.value = new Map()
     pagination.value = getDefaultPaginationState()
-    selectedLog.value = null;
+    selectedLog.value = null
 }
 
 async function reloadLogs() {
@@ -112,7 +113,7 @@ async function handleSelectLog(log: CrmFunctionLog) {
     }
 
     try {
-        isPendingDetails.value = true
+        isPendingDetails.value = log.id
 
         const params = buildLogDetailsParams(log)
         const response = await apiService.functionLogDetails(props.artifact.source_id, log.id, params)
@@ -144,7 +145,7 @@ async function handleSelectLog(log: CrmFunctionLog) {
             provider: props.provider,
         })
     } finally {
-        isPendingDetails.value = false
+        isPendingDetails.value = null
     }
 }
 
@@ -208,8 +209,9 @@ watch([() => props.artifact, () => props.provider], () => {
                     selectionMode="single"
                     :selection="selectedLog"
                     @update:selection="handleSelectLog"
+                    pt:footer:class="bg-transparent"
                 >
-                    <template #header>
+                    <template #footer>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-x-2">
                                 <Button
@@ -217,10 +219,24 @@ watch([() => props.artifact, () => props.provider], () => {
                                     size="small"
                                     @click="handleExportLogs"
                                     :disabled="logsList.length === 0 || isPending"
+                                    severity="secondary"
+                                    class="px-2 py-0"
                                 >
                                     Export
                                 </Button>
                             </div>
+
+                            <Button
+                                v-if="logsList.length > 0 && pagination.more_records"
+                                text
+                                size="small"
+                                @click="loadNextLogsPage"
+                                :disabled="isPending"
+                                class="px-1 py-0"
+                            >
+                                Load More
+                            </Button>
+
                             <div
                                 class="flex items-center gap-x-2"
                                 v-tooltip="{
@@ -237,7 +253,16 @@ watch([() => props.artifact, () => props.provider], () => {
 
                     <Column field="id">
                         <template #body="{ data }">
-                            <Icon icon="akar-icons:eye" v-if="data?.info_message" />
+                            <Icon
+                                v-if="isPendingDetails === data.id"
+                                icon="eos-icons:loading"
+                                class="h-4 w-4 text-orange-500"
+                            />
+                            <Icon
+                                v-else-if="data?.info_message"
+                                icon="akar-icons:eye"
+                                class="h-4 w-4 text-orange-500"
+                            />
                         </template>
                     </Column>
                     <Column field="status" header="status" :sortable="true">
@@ -259,23 +284,11 @@ watch([() => props.artifact, () => props.provider], () => {
                     <Column field="function_name" header="function_name" />
                     <Column field="component_type" header="component_type" />
                 </DataTable>
-
-                <div class="flex w-full justify-center border-t">
-                    <Button
-                        v-if="logsList.length > 0 && pagination.more_records"
-                        text
-                        size="small"
-                        @click="loadNextLogsPage"
-                        :disabled="isPending"
-                    >
-                        Load next page
-                    </Button>
-                </div>
             </SplitterPanel>
 
             <SplitterPanel
                 class="flex h-full w-full overflow-hidden"
-                :size="5"
+                :size="8"
                 style="min-width: 10rem; max-width: 50rem"
             >
                 <!-- Empty -->
@@ -288,9 +301,7 @@ watch([() => props.artifact, () => props.provider], () => {
                     />
                 </div>
 
-                <div v-else class="flex h-full w-full flex-col overflow-auto">
-                    <pre>{{ selectedLog }}</pre>
-                </div>
+                <CrmFunctionLogDetails v-else :log="selectedLog" />
             </SplitterPanel>
         </Splitter>
     </div>

@@ -52,4 +52,16 @@
     --color-primary: var(--app-color-primary);
     --color-secondary: var(--app-color-secondary);
     --color-selection: var(--app-color-selection);
+
+    --color-mine-shaft-50: #fafafa;
+    --color-mine-shaft-100: #f5f5f5;
+    --color-mine-shaft-200: #e6e6e6;
+    --color-mine-shaft-300: #d6d6d6;
+    --color-mine-shaft-400: #a5a5a5;
+    --color-mine-shaft-500: #767676;
+    --color-mine-shaft-600: #575757;
+    --color-mine-shaft-700: #434343;
+    --color-mine-shaft-800: #2d2d2d;
+    --color-mine-shaft-900: #1a1a1a;
+    --color-mine-shaft-950: #0a0a0a;
 }
