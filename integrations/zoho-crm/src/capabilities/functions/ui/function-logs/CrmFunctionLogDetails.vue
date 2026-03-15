@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import type { CrmFunctionLog } from '../../../../types'
-import { DisplayField, JsonViewer, IconButton, SectionTitle } from '@zoho-studio/ui-kit'
+import { DisplayField, JsonViewer, IconButton } from '@zoho-studio/ui-kit'
 import Dialog from 'primevue/dialog'
 import { Icon } from '@iconify/vue'
 import { computed, ref } from 'vue'
 import { normalizeJsonDeep } from '@zoho-studio/utils'
-
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
 import TabPanel from 'primevue/tabpanel'
-import { useClipboard } from '@vueuse/core'
-
-const { copy: copyToClipboard } = useClipboard()
 
 const props = defineProps<{
     log: CrmFunctionLog
@@ -49,10 +45,6 @@ const infoMessages = computed(() => {
         return { message }
     })
 })
-
-function handleCopyRaw() {
-    copyToClipboard(JSON.stringify(props.log, null, 2))
-}
 </script>
 
 <template>
@@ -98,15 +90,16 @@ function handleCopyRaw() {
                     </div>
                 </div>
 
-                <TabList>
+                <TabList class="bg-transparent">
                     <Tab class="px-3 py-1" value="overview">Overview</Tab>
                     <Tab class="px-3 py-1" value="arguments">Arguments</Tab>
                     <Tab class="px-3 py-1" value="info_messages">Info Messages</Tab>
+                    <Tab class="px-3 py-1" value="raw">Raw</Tab>
                 </TabList>
             </div>
 
             <TabPanel value="overview" class="overflow-hidden">
-                <div class="bg-mine-shaft-100 dark:bg-mine-shaft-800 grid gap-4 p-2 md:grid-cols-2">
+                <div class="grid gap-4 p-3 md:grid-cols-2">
                     <DisplayField label="id" :value="log.id" />
                     <DisplayField label="status" :value="log.status" />
                     <DisplayField label="function_name" :value="log.function_name" />
@@ -114,23 +107,38 @@ function handleCopyRaw() {
                     <DisplayField label="start_datetime" :value="log.start_datetime ?? 'N/A'" />
                     <DisplayField label="end_datetime" :value="log.end_datetime ?? 'N/A'" />
                     <DisplayField label="execution_time" :value="log.execution_time ?? 'N/A'" />
-                </div>
-
-                <div class="justify-between mt-3 mt-3 flex items-center">
-                    <SectionTitle class="font-bold">Raw</SectionTitle>
-                    <IconButton text icon="boxicons:copy" @click="handleCopyRaw" />
-                </div>
-                <div class="flex h-full w-full flex-col overflow-auto">
-                    <JsonViewer :data="log" class="bg-mine-shaft-100 dark:bg-mine-shaft-800" :depth="5" />
+                    <DisplayField label="info_messages" :value="log.info_message?.length" />
                 </div>
             </TabPanel>
 
-            <TabPanel value="arguments" class="overflow-auto">
-                <JsonViewer :data="functionArguments" class="bg-mine-shaft-100 dark:bg-mine-shaft-800" :depth="5" />
+            <TabPanel value="arguments" class="overflow-hidden">
+                <JsonViewer
+                    :data="functionArguments"
+                    :depth="5"
+                    class="h-full w-full overflow-hidden"
+                    title="Arguments"
+                    content-class="bg-mine-shaft-100 dark:bg-mine-shaft-800 overflow-auto"
+                />
             </TabPanel>
 
-            <TabPanel value="info_messages" class="overflow-auto">
-                <JsonViewer :data="infoMessages" class="bg-mine-shaft-100 dark:bg-mine-shaft-800" :depth="5" />
+            <TabPanel value="info_messages" class="overflow-hidden">
+                <JsonViewer
+                    :data="infoMessages"
+                    :depth="5"
+                    class="h-full w-full overflow-hidden"
+                    title="Info Messages"
+                    content-class="bg-mine-shaft-100 dark:bg-mine-shaft-800 overflow-auto"
+                />
+            </TabPanel>
+
+            <TabPanel value="raw" class="overflow-hidden">
+                <JsonViewer
+                    :data="log"
+                    :depth="5"
+                    class="h-full w-full overflow-hidden"
+                    title="Raw"
+                    content-class="bg-mine-shaft-100 dark:bg-mine-shaft-800 overflow-auto"
+                />
             </TabPanel>
         </Tabs>
     </component>
