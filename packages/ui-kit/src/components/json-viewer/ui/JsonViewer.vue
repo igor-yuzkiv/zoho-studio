@@ -7,7 +7,7 @@ import { computed } from 'vue'
 
 withDefaults(
     defineProps<{
-        data: object
+        data: string | number | boolean | unknown[] | Record<string, unknown> | null
         depth?: number
     }>(),
     {
