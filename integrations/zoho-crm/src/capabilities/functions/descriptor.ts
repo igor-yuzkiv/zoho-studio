@@ -40,17 +40,12 @@ export const CrmFunctionsDescriptor: CapabilityDescriptor = {
 
     artifactDetailViewSettings: {
         viewModes: [
-
             {
                 value: 'crm_function_logs_view',
                 label: 'Execution Logs',
                 icon: 'mdi:format-list-bulleted',
-                component: defineAsyncComponent(
-                    () => import('./ui/CrmFunctionLogsView.vue'),
-                ),
+                component: defineAsyncComponent(() => import('./ui/CrmFunctionLogsView.vue')),
             },
-
-
         ],
     },
 }

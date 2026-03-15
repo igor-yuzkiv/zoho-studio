@@ -1,7 +1,7 @@
 import { BaseCrmApiService } from '../../base-crm-api.service.ts'
 import { PaginationParams, PromisePaginatedResult, Result } from '@zoho-studio/utils'
 import {
-    CrmFunctionLogDetails,
+    CrmFunctionLog,
     CrmFunctionLogDetailsRequestParams,
     CrmFunctionLogDetailsResponse,
     CrmFunctionLogsRequestParams,
@@ -146,7 +146,7 @@ export class CrmFunctionsApiService extends BaseCrmApiService {
         functionId: string,
         logId: string,
         params?: CrmFunctionLogDetailsRequestParams
-    ): Promise<Result<CrmFunctionLogDetails>> {
+    ): Promise<Result<CrmFunctionLog>> {
         try {
             const queryParts: string[] = []
 

@@ -20,7 +20,7 @@ export interface ZohoCrmFunction extends IEntity {
     workflow?: string | null
 }
 
-export interface CrmFunctionLog extends IEntity  {
+export interface CrmFunctionLog extends IEntity {
     id: string
     component_type: string
     function_name: string
@@ -29,22 +29,20 @@ export interface CrmFunctionLog extends IEntity  {
     executed_time?: string
     start_datetime?: string
     end_datetime?: string
+
+    // details
+    arguments?: Record<string, unknown>
+    info_message?: string[]
 }
 
-export interface CrmFunctionLogDetails extends IEntity {
-    id: string
-    component_type: string
-    function_name: string
-    arguments: Record<string, unknown>
-    info_message: string[]
-}
+export type CrmFunctionsLogsPeriod = 'past_24_hours' | 'today' | 'yesterday' | 'last_month' | 'specific_date' | 'custom'
 
 export type CrmFunctionLogsRequestParams = {
-    period: 'past_24_hours' | 'today' | 'yesterday' | 'last_month' | 'specific_date'
+    period: CrmFunctionsLogsPeriod
 
     // if period = specific_date
-    start_datetime?: string, // 2026-03-11T00:00:00-04:00
-    end_datetime?: string, // 2026-03-11T23:30:59-04:00
+    start_datetime?: string // 2026-03-11T00:00:00-04:00
+    end_datetime?: string // 2026-03-11T23:30:59-04:00
 
     page: number
     per_page: number
@@ -55,19 +53,19 @@ export type CrmFunctionLogsResponse = {
     function_logs: CrmFunctionLog[]
     info: {
         per_page: number
-        timezone: string
         count: number
         page: number
         more_records: boolean
+        timezone?: string
     }
 }
 
 export type CrmFunctionLogDetailsRequestParams = {
-    period?: CrmFunctionLogsRequestParams['period'] | 'custom'
+    period?: CrmFunctionsLogsPeriod
     start_datetime?: string
     end_datetime?: string
 }
 
 export type CrmFunctionLogDetailsResponse = {
-    function_logs: CrmFunctionLogDetails[]
+    function_logs: CrmFunctionLog[]
 }

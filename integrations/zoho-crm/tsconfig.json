@@ -4,6 +4,9 @@
     "include": [],
     "references": [
         {
+            "path": "../../packages/ui-kit"
+        },
+        {
             "path": "../../packages/export-zip"
         },
         {
