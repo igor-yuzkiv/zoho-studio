@@ -21,6 +21,12 @@ export const CreatorFormsDescriptor: CapabilityDescriptor = {
                 icon: 'mdi:code-braces',
                 component: defineAsyncComponent(() => import('./ui/CreatorFormDefinitionView.vue')),
             },
+            {
+                value: 'creator_form_metadata_json_view',
+                label: 'Metadata',
+                icon: 'si:json-duotone',
+                component: defineAsyncComponent(() => import('./ui/CreatorFormMetadataJsonView.vue')),
+            },
         ],
     },
 }
