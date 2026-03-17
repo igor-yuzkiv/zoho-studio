@@ -23,6 +23,9 @@
         },
         {
             "path": "./packages/export-zip"
+        },
+        {
+            "path": "./integrations/zoho-creator"
         }
     ]
 }

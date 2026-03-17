@@ -6,12 +6,17 @@ import {
 import type { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
 import type { PromiseResult } from '@zoho-studio/utils'
 
-import { CrmFunctionsDescriptor, CrmWorkflowsDescriptor, CrmModulesDescriptor, CrmFieldsDescriptor } from './capabilities'
+import {
+    CrmFunctionsDescriptor,
+    CrmWorkflowsDescriptor,
+    CrmModulesDescriptor,
+    CrmFieldsDescriptor,
+} from './capabilities'
 
 export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
     serviceProviderType: 'zoho-crm',
     displayName: 'Zoho CRM',
-    icon: 'arcticons:zoho-crm',
+    icon: 'oui:nav-integrations',
     capabilities: [CrmFunctionsDescriptor, CrmWorkflowsDescriptor, CrmModulesDescriptor, CrmFieldsDescriptor],
     async resolveFromBrowserTab(browserTab: BrowserTab): PromiseResult<ServiceProvider> {
         if (!browserTab.url) {

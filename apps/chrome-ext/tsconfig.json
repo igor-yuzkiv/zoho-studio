@@ -4,6 +4,9 @@
     "include": ["vite.config.ts", "chrome/manifest.config.ts"],
     "references": [
         {
+            "path": "../../integrations/zoho-creator"
+        },
+        {
             "path": "../../integrations/zoho-crm"
         },
         {

@@ -16,6 +16,7 @@ const itemsForDisplay = computed(() => {
             title: provider.title,
             icon: integrationsRegistry.getManifest(provider.type)?.icon || 'mdi:application',
             isOnline: Boolean(provider.browserTabId),
+            type: provider.type,
         }
     })
 })
@@ -42,7 +43,7 @@ const itemsForDisplay = computed(() => {
                         To make a service appear in the list, simply open any Zoho service in a neighboring browser tab.
                     </div>
 
-                    <div class="mt-3 grid grid-cols-2">
+                    <div class="mt-3 grid grid-cols-2 gap-2">
                         <div v-for="provider in itemsForDisplay" :key="provider.id">
                             <router-link
                                 :to="{ name: AppRouteName.workspaceIndex, params: { providerId: provider.id } }"
@@ -53,6 +54,7 @@ const itemsForDisplay = computed(() => {
                             >
                                 <Icon :icon="provider.icon" class="h-5 w-5" />
                                 <div>{{ provider.title }}</div>
+                                <div class="text-gray-500">({{ provider.type }})</div>
                             </router-link>
                         </div>
                     </div>

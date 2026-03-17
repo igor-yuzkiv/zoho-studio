@@ -1,7 +1,10 @@
-import { ZOHO_CRM_REGULAR_URL_REGEX, ZOHO_CRM_SANDBOX_URL_REGEX } from './constants'
 import type { CrmServiceProviderMetadata } from './types'
 import { ServiceProvider } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
+
+export const ZOHO_CRM_REGULAR_URL_REGEX = /^(https:\/\/crm\.zoho\.[a-z]{2,})\/crm\/org(\d+)\//
+
+export const ZOHO_CRM_SANDBOX_URL_REGEX = /^(https:\/\/crmsandbox\.zoho\.[a-z]{2,})\/crm\/(\w+)\//
 
 export function resolveCrmServiceProviderMetadataFromUrl(url: string): Maybe<CrmServiceProviderMetadata> {
     let isSandbox = false

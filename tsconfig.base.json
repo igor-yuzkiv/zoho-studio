@@ -29,7 +29,8 @@
             "@zoho-studio/utils": ["packages/utils/src/index.ts"],
             "@zoho-studio/export-zip": ["packages/export-zip/src/index.ts"],
             "@zoho-studio/integrations/zoho-crm": ["integrations/zoho-crm/src/index.ts"],
-            "@zoho-studio/integrations/zoho-finance": ["integrations/zoho-finance/src/index.ts"]
+            "@zoho-studio/integrations/zoho-finance": ["integrations/zoho-finance/src/index.ts"],
+            "@zoho-studio/integrations/zoho-creator": ["integrations/zoho-creator/src/index.ts"]
         }
     }
 }

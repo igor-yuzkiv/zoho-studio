@@ -27,6 +27,9 @@
     "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.vue"],
     "references": [
         {
+            "path": "../../integrations/zoho-creator/tsconfig.lib.json"
+        },
+        {
             "path": "../../integrations/zoho-crm/tsconfig.lib.json"
         },
         {
