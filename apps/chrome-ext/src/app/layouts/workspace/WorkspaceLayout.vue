@@ -13,16 +13,9 @@ import { Icon } from '@iconify/vue'
 const route = useRoute()
 const router = useRouter()
 
-const {
-    providerId,
-    provider,
-    providerManifest,
-    providerCapabilities,
-    lastSyncedAtFormatted,
-    isCachingInProgress,
-} = useCurrentProvider()
+const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted, isCachingInProgress } =
+    useCurrentProvider()
 const { ensureSyncArtifacts } = useProviderCacheManager()
-
 
 onMounted(() => {
     if (!provider.value) {
@@ -64,7 +57,7 @@ onMounted(() => {
                             class="hover:bg-selection flex cursor-pointer items-center justify-center rounded-lg p-2"
                             active-class="bg-orange-500 text-white"
                         >
-                            <Icon :icon="providerManifest.icon" class="h-4 w-4" />
+                            <Icon icon="material-symbols-light:home-rounded" class="h-4 w-4" />
                         </router-link>
                     </div>
                 </template>

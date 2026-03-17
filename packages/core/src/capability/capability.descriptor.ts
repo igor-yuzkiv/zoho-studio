@@ -5,7 +5,7 @@ import { ExportZipItem } from '@zoho-studio/export-zip'
 export type CapabilityType = 'functions' | 'workflows' | 'modules' | 'fields'
 
 export interface CapabilityDescriptor {
-    type: CapabilityType
+    type: CapabilityType | string
     title: string
     icon: string
     hideInMenu?: boolean
