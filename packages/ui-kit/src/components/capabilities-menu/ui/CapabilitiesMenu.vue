@@ -19,7 +19,7 @@ const itemsForDisplay = computed(() => {
 
 <template>
     <ul>
-        <li v-for="capability in itemsForDisplay" :key="capability.id" class="p-2">
+        <li v-for="capability in itemsForDisplay" :key="capability.id" class="p-1">
             <CapabilitiesItem :capability="capability" :is-active="capability.isActive" />
         </li>
     </ul>
