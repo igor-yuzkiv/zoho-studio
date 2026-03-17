@@ -8,7 +8,7 @@ const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
 const appTheme = useAppThemeStore()
 
 function fullScreen() {
-    chrome.tabs.create({ url: chrome.runtime.getURL('index.html') })
+    chrome.tabs.create({ url: chrome.runtime.getURL(`index.html${window.location.hash || ''}`) })
 }
 </script>
 

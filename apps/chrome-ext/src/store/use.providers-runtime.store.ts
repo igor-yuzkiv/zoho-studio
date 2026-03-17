@@ -24,25 +24,26 @@ const LocalStorageSerializer: Serializer<ServiceProvider[]> = {
     },
 }
 
-function resolveFromBrowserTabs(
+async function resolveFromBrowserTabs(
     browserTabs: Array<BrowserTab>,
     prev = new Map<ServiceProviderId, ServiceProvider>()
-): Map<ServiceProviderId, ServiceProvider> {
-    return integrationsRegistry.list().reduce<Map<ServiceProviderId, ServiceProvider>>((acc, manifest) => {
+): Promise<Map<ServiceProviderId, ServiceProvider>> {
+    const result = new Map<ServiceProviderId, ServiceProvider>(prev)
+
+    for (const manifest of integrationsRegistry.list()) {
         for (const tab of browserTabs) {
-            const result = manifest.resolveFromBrowserTab(tab)
-            if (!result.ok) {
+            const resolution = await manifest.resolveFromBrowserTab(tab)
+            if (!resolution.ok) {
                 continue
             }
 
-            const instance = prev.get(result.value.id) || result.value
-
+            const instance = result.get(resolution.value.id) || resolution.value
             instance.browserTabId = tab.id
-            acc.set(instance.id, instance)
+            result.set(instance.id, instance)
         }
+    }
 
-        return acc
-    }, prev)
+    return result
 }
 
 export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
@@ -62,9 +63,9 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         )
     }
 
-    function handleBrowserTabsChange(browserTabs: Map<BrowserTabId, BrowserTab>) {
+    async function handleBrowserTabsChange(browserTabs: Map<BrowserTabId, BrowserTab>) {
         const prev = new Map(providersMap.value)
-        const next = resolveFromBrowserTabs(Array.from(browserTabs.values()), prev)
+        const next = await resolveFromBrowserTabs(Array.from(browserTabs.values()), prev)
 
         for (const sp of next.values()) {
             if (sp.browserTabId && !browserTabs.has(sp.browserTabId)) {

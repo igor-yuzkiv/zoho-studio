@@ -1,5 +1,5 @@
 import { BrowserTab, BrowserTabId } from '../browser'
-import { Maybe, Result } from '@zoho-studio/utils'
+import { Maybe, PromiseResult } from '@zoho-studio/utils'
 
 export type ServiceProviderId = string
 
@@ -15,4 +15,4 @@ export type ServiceProvider = {
     gitRepository?: string | null
 }
 
-export type ServiceProviderFromBrowserTabResolver = (browserTab: BrowserTab) => Result<ServiceProvider>
+export type ServiceProviderFromBrowserTabResolver = (browserTab: BrowserTab) => PromiseResult<ServiceProvider>
