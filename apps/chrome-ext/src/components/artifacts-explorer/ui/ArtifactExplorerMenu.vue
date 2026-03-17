@@ -152,7 +152,7 @@ onKeyStroke('ArrowUp', (e) => {
         </div>
 
         <template v-if="filteredItems.length">
-            <div v-if="groupedItems" class="flex flex-col gap-y-2 overflow-auto">
+            <div v-if="groupedItems" class="flex flex-col gap-y-2 overflow-auto w-full h-full">
                 <section v-for="group in groupedItems" :key="group.key" class="px-1">
                     <button
                         type="button"
@@ -185,7 +185,7 @@ onKeyStroke('ArrowUp', (e) => {
                 </section>
             </div>
 
-            <div v-else class="flex flex-col overflow-auto">
+            <div v-else class="flex flex-col overflow-auto w-full h-full">
                 <ArtifactExplorerMenuItem
                     v-for="artifact in filteredItems"
                     :key="artifact.id"

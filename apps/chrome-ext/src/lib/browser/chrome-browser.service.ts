@@ -78,7 +78,12 @@ export class ChromeBrowserServiceImpl implements IBrowserService {
                     const response = await fetch(url.toString(), {
                         method: options.method,
                         headers: options.headers || {},
-                        body: options.data ? JSON.stringify(options.data || {}) : undefined,
+                        body:
+                            typeof options.data === 'string'
+                                ? options.data
+                                : options.data
+                                  ? JSON.stringify(options.data)
+                                  : undefined,
                         credentials: 'include',
                     })
 
