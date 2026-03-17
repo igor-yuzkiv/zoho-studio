@@ -1,7 +1,7 @@
 import type { IArtifact, CapabilityType, ArtifactDetailViewConfig } from '@zoho-studio/core'
 import { defineAsyncComponent } from 'vue'
 
-export const artifactDetailConfigMap: Partial<Record<CapabilityType, ArtifactDetailViewConfig>> = {
+export const artifactDetailConfigMap: Partial<Record<CapabilityType | string, ArtifactDetailViewConfig>> = {
     functions: {
         header: {
             title: (a) => a.display_name,
@@ -64,5 +64,12 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType, ArtifactDet
                 ),
             },
         ],
+    },
+    forms: {
+        header: {
+            title: (a) => a.display_name,
+            subtitle: (a) => a.api_name ?? '',
+        },
+        viewModes: [],
     },
 }
