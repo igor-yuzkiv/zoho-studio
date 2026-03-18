@@ -1,4 +1,5 @@
-import { BaseCapabilityAdapter, IArtifact, ServiceProvider } from '@zoho-studio/core'
+import { BaseCapabilityAdapter } from '@zoho-studio/core'
+import type { IArtifact, ServiceProvider } from '@zoho-studio/core'
 import { sleep, type PaginationParams, type PromisePaginatedResult } from '@zoho-studio/utils'
 import { CreatorFormsApiService } from './api.ts'
 import { mapManyCreatorFormsToArtifact } from './mapper.ts'
