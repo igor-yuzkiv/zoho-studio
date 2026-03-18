@@ -4,8 +4,12 @@ import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute } from 'vue-router'
 import { AppFooter } from '../../shell/app-footer'
 import { AppTopMenu } from '../../shell/app-top-menu'
+import { storeToRefs } from 'pinia'
+import { useAppStateStore } from '../../../store'
 
 const route = useRoute()
+
+const { showLeftSidebar } = storeToRefs(useAppStateStore())
 </script>
 
 <template>
@@ -24,7 +28,7 @@ const route = useRoute()
                 :pt="{ gutter: { class: 'bg-transparent' } }"
             >
                 <SplitterPanel
-                    v-if="!route.meta?.hideSidebarMenu"
+                    v-if="!route.meta?.hideSidebarMenu && showLeftSidebar"
                     class="flex h-full w-full overflow-hidden"
                     :size="5"
                     style="min-width: 10rem; max-width: 50rem"

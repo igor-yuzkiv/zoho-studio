@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { IconButton, ToggleThemeButton, useAppThemeStore } from '@zoho-studio/ui-kit'
+import { storeToRefs } from 'pinia'
+import { useAppStateStore } from '../../../../store'
 
 const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
     ? `${import.meta.env.VITE_GITHUB_REPO_URL}/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+description+of+the+issue`
     : null
 
 const appTheme = useAppThemeStore()
+
+const { showLeftSidebar } = storeToRefs(useAppStateStore())
 
 function fullScreen() {
     chrome.tabs.create({ url: chrome.runtime.getURL(`index.html${window.location.hash || ''}`) })
@@ -29,7 +33,15 @@ function fullScreen() {
                 Report Issue
             </a>
 
-            <IconButton class="p-0" text size="small" @click="fullScreen" icon="mingcute:fullscreen-fill" />
+            <IconButton
+                class="p-0"
+                text
+                size="small"
+                @click="showLeftSidebar = !showLeftSidebar"
+                :icon="showLeftSidebar ? 'mingcute:layout-top-fill' : 'mingcute:layout-11-fill'"
+                title="Toggle Left Sidebar"
+            />
+            <IconButton class="p-0" text size="small" @click="fullScreen" icon="mingcute:fullscreen-fill" title="Open in Full Screen" />
             <ToggleThemeButton :is-dark="appTheme.isDark" @click="appTheme.toggle" />
         </div>
     </footer>

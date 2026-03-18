@@ -13,7 +13,8 @@ export type FunctionMetadata = {
 }
 
 export type FunctionArtifactPayload = {
-    type: FunctionType
+    type: FunctionType,
+    display_name?: Maybe<string>
     script?: Maybe<string>
     params?: Maybe<FunctionParams[]>
 }

@@ -5,7 +5,7 @@ import { makeArtifactId } from '@zoho-studio/core'
 import { snakeCase } from 'lodash'
 
 function normalizeCrmFunctionName(fx: ZohoCrmFunction): string {
-    const possibleFields = [fx.api_name, fx.name, fx.display_name]
+    const possibleFields = [fx.display_name, fx.api_name, fx.name]
 
     for (const field of possibleFields) {
         if (typeof field === 'string' && field.trim() !== '' && field.trim().toLowerCase() !== 'null') {
@@ -42,6 +42,7 @@ export function mapCrmFunctionToArtifact(
         payload: {
             type: mapFunctionCategoryToType(data?.category),
             script: data?.script,
+            display_name: data?.display_name,
         },
         origin: data,
     }

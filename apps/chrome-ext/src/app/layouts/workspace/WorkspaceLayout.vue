@@ -9,9 +9,13 @@ import { AppTopMenu } from '../../shell/app-top-menu'
 import { onMounted } from 'vue'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
+import { storeToRefs } from 'pinia'
+import { useAppStateStore } from '../../../store'
 
 const route = useRoute()
 const router = useRouter()
+
+const { showLeftSidebar } = storeToRefs(useAppStateStore())
 
 const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted, isCachingInProgress } =
     useCurrentProvider()
@@ -68,6 +72,7 @@ onMounted(() => {
                 :pt="{ gutter: { class: 'bg-transparent' } }"
             >
                 <SplitterPanel
+                    v-show="showLeftSidebar"
                     v-if="!route.meta?.hideSidebarMenu"
                     class="flex h-full w-full overflow-hidden"
                     :size="5"
