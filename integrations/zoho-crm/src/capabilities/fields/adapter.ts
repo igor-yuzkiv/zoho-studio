@@ -19,7 +19,7 @@ async function fetchModuleFields(
     providerId: ServiceProviderId
 ): Promise<IArtifact[]> {
     const origin = module.origin as ZohoCrmModule
-    const result = await api.listModuleFields(origin.api_name)
+    const result = await api.fetchModuleFields(origin.api_name)
 
     if (!result.ok) {
         console.error(`[ZohoCrm][Fields][Adapter] Failed to fetch fields for ${module.api_name} module`, result)

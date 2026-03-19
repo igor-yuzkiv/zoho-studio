@@ -8,4 +8,5 @@
 
 # Misc
 
-* [ ] add possibility refresh single artifact record without refreshing whole provider data, on details view
+* [~] add possibility refresh single artifact record without refreshing whole provider data, on details view
+* [ ] refactor modules/fields sync logic

@@ -1,27 +1,32 @@
 <script setup lang="ts">
 import { useRouteParams } from '@vueuse/router'
 import { useArtifactByIdQuery } from '../../../queries'
-import { useCurrentProvider } from '../../../composables'
+import { useArtifactsSync, useCurrentProvider } from '../../../composables'
 import { computed, ref, watch } from 'vue'
 import { IconButton, NoDataMessage, PageHeader, ViewModeSelect, ViewModeComponent } from '@zoho-studio/ui-kit'
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
 import { useClipboard } from '@vueuse/core'
 import { artifactDetailConfigMap } from '../../../components/artifact-details/default-views.config.ts'
 import { ArtifactDetailViewConfig, CapabilityType } from '@zoho-studio/core'
+import { useConsoleLogger } from '@zoho-studio/utils'
+import Button from 'primevue/button'
 
+const logger = useConsoleLogger('ArtifactDetailPage')
 const artifactId = useRouteParams<string>('artifactId')
 const capabilityType = useRouteParams<CapabilityType>('capabilityType')
 
-const { data } = useArtifactByIdQuery(artifactId)
+const { data, refetch, isPending } = useArtifactByIdQuery(artifactId)
 const { copy } = useClipboard()
-const { findProviderCapability, provider } = useCurrentProvider()
+const { findProviderCapability, provider, isOnline } = useCurrentProvider()
+
+const { syncOneProviderArtifact } = useArtifactsSync()
 
 const config = computed((): ArtifactDetailViewConfig | undefined => {
     const descriptor = findProviderCapability(capabilityType.value)
     const defaultConfig = artifactDetailConfigMap[capabilityType.value]
 
     if (!defaultConfig) {
-        console.warn(`No default artifact detail view config found for capability type: ${capabilityType.value}`)
+        logger.warn(`No default artifact detail view config found for capability type: ${capabilityType.value}`)
         return undefined
     }
 
@@ -40,16 +45,22 @@ const config = computed((): ArtifactDetailViewConfig | undefined => {
     }
 })
 
-
 const viewModes = computed<ViewModeOption[]>(() => config.value?.viewModes ?? [])
 const currentMode = ref<string>('')
+
+async function refreshArtifact() {
+    if (!provider.value || !data.value) return
+
+    await syncOneProviderArtifact(provider.value, data.value)
+    await refetch()
+}
 
 watch(
     capabilityType,
     () => {
         currentMode.value = viewModes.value[0]?.value ?? ''
     },
-    { immediate: true },
+    { immediate: true }
 )
 
 const resolvedTitle = computed(() => {
@@ -69,17 +80,12 @@ const resolvedSubtitle = computed(() => {
     <div v-if="artifactId && data && config" class="flex h-full w-full flex-col gap-1 overflow-hidden">
         <PageHeader :title="resolvedTitle" :description="resolvedSubtitle">
             <template #prepend>
-                <IconButton
-                    class="p-0"
-                    text
-                    icon="si:copy-fill"
-                    severity="secondary"
-                    @click="copy(resolvedTitle)"
-                />
+                <IconButton class="p-0" text icon="si:copy-fill" severity="secondary" @click="copy(resolvedTitle)" />
             </template>
 
-            <template v-if="viewModes.length >= 2" #actions>
-                <ViewModeSelect :options="viewModes" v-model="currentMode" />
+            <template #actions>
+                <Button :disabled="!isOnline || isPending" text size="small" @click="refreshArtifact"> Refresh </Button>
+                <ViewModeSelect v-if="viewModes.length >= 2" :options="viewModes" v-model="currentMode" />
             </template>
         </PageHeader>
 

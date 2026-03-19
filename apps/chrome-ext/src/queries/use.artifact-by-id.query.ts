@@ -7,7 +7,7 @@ import { ArtifactsQueryKeys } from '../config.ts'
 export function useArtifactByIdQuery<T extends CapabilityType = CapabilityType>(artifactId: MaybeRefOrGetter<string>) {
     const artifactsStorage = useArtifactsStorage()
 
-    const { isPending, data } = useQuery<IArtifact<T> | null>({
+    const { isPending, data, refetch } = useQuery<IArtifact<T> | null>({
         queryKey: ArtifactsQueryKeys.byId(artifactId),
         placeholderData: keepPreviousData,
         queryFn: () => {
@@ -19,5 +19,6 @@ export function useArtifactByIdQuery<T extends CapabilityType = CapabilityType>(
     return {
         isPending,
         data,
+        refetch,
     }
 }

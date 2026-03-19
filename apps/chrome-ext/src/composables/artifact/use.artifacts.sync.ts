@@ -1,16 +1,18 @@
-import { ServiceProvider } from '@zoho-studio/core'
+import { IArtifact, ServiceProvider } from '@zoho-studio/core'
 import { useArtifactsFetcher } from './use.artifacts.fetcher.ts'
 import { ref } from 'vue'
-import { useCapabilitiesManager } from '../capability/use.capabilities.manager.ts'
+import { useCapabilitiesManager } from '../capability'
 import { useArtifactsStorage } from './use.artifacts.storage.ts'
+import { useConsoleLogger } from '@zoho-studio/utils'
 
 export function useArtifactsSync() {
+    const logger = useConsoleLogger('useArtifactsSync')
     const artifactsStorage = useArtifactsStorage()
     const capabilitiesManager = useCapabilitiesManager()
     const fetcher = useArtifactsFetcher()
     const isSyncing = ref(false)
 
-    async function syncProviderArtifacts(provider: ServiceProvider) {
+    async function syncAllProviderArtifacts(provider: ServiceProvider) {
         try {
             isSyncing.value = true
 
@@ -29,8 +31,37 @@ export function useArtifactsSync() {
         }
     }
 
+    async function syncOneProviderArtifact(provider: ServiceProvider, artifact: IArtifact) {
+        try {
+            isSyncing.value = true
+
+            const capability = capabilitiesManager.findProviderCapability(provider, artifact.capability_type)
+
+            if (!capability) {
+                logger.warn(
+                    'No capability descriptor found for artifact',
+                    artifact.id,
+                    'of type',
+                    artifact.capability_type
+                )
+                return
+            }
+
+            const fetchedArtifacts = await fetcher.findOneArtifact(provider, capability, artifact)
+            if (!fetchedArtifacts) {
+                logger.warn('Artifact not found during sync', artifact.id)
+                return
+            }
+
+            await artifactsStorage.updateById(artifact.id, fetchedArtifacts)
+        } finally {
+            isSyncing.value = false
+        }
+    }
+
     return {
         isSyncing,
-        syncProviderArtifacts,
+        syncAllProviderArtifacts,
+        syncOneProviderArtifact,
     }
 }

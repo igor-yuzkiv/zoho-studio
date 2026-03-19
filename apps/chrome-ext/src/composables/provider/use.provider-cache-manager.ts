@@ -1,12 +1,14 @@
 import { ServiceProvider } from '@zoho-studio/core'
+import { useConsoleLogger } from '@zoho-studio/utils'
 import { useArtifactsSync, useArtifactsStorage } from '../artifact'
 import { useProvidersRuntimeStore } from '../../store'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ArtifactsQueryKeys, PROVIDER_CACHE_TTL_MS } from '../../config.ts'
 
 export function useProviderCacheManager() {
+    const logger = useConsoleLogger('useProviderCacheManager')
     const artifactsStorage = useArtifactsStorage()
-    const { syncProviderArtifacts } = useArtifactsSync()
+    const { syncAllProviderArtifacts } = useArtifactsSync()
     const providersStore = useProvidersRuntimeStore()
     const queryClient = useQueryClient()
 
@@ -26,31 +28,31 @@ export function useProviderCacheManager() {
     async function invalidateProviderQueries(providerId: string) {
         await queryClient
             .invalidateQueries({ queryKey: ArtifactsQueryKeys.byProviderId(providerId) })
-            .catch((e) => console.error('Failed to invalidate capability queries for provider', providerId, e))
+            .catch((error) => logger.error('Failed to invalidate capability queries for provider', providerId, error))
     }
 
     async function ensureSyncArtifacts(provider: ServiceProvider): Promise<void> {
         if (providersStore.isProviderCacheInProgress(provider.id)) {
-            console.warn('Cache operation is already in progress for provider', provider.id, ', skipping sync request.')
+            logger.warn('Cache operation is already in progress for provider', provider.id, ', skipping sync request.')
             return
         }
 
         if (!providersStore.isOnline(provider.id)) {
-            console.warn('Provider', provider.id, 'is currently offline, skipping sync.')
+            logger.warn('Provider', provider.id, 'is currently offline, skipping sync.')
             return
         }
 
         const isRequired = await isSyncRequired(provider)
 
         if (!isRequired) {
-            console.info('Cache is fresh for provider', provider.id, ', skipping sync.')
+            logger.info('Cache is fresh for provider', provider.id, ', skipping sync.')
             return
         }
 
         try {
             providersStore.toggleProviderCacheInProgress(provider.id, true)
 
-            await syncProviderArtifacts(provider)
+            await syncAllProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
             providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
         } finally {
@@ -60,7 +62,7 @@ export function useProviderCacheManager() {
 
     async function clearProviderCache(providerId: string): Promise<void> {
         if (providersStore.isProviderCacheInProgress(providerId)) {
-            console.warn('Cache operation is already in progress for provider', providerId, ', skipping sync request.')
+            logger.warn('Cache operation is already in progress for provider', providerId, ', skipping sync request.')
             return
         }
 
@@ -74,7 +76,7 @@ export function useProviderCacheManager() {
 
     async function refreshProviderCache(provider: ServiceProvider): Promise<void> {
         if (providersStore.isProviderCacheInProgress(provider.id)) {
-            console.warn(
+            logger.warn(
                 'Cache operation is already in progress for provider',
                 provider.id,
                 ', skipping refresh request.'
@@ -85,7 +87,7 @@ export function useProviderCacheManager() {
         try {
             providersStore.toggleProviderCacheInProgress(provider.id, true)
             await artifactsStorage.deleteByProviderId(provider.id)
-            await syncProviderArtifacts(provider)
+            await syncAllProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
 
             providersStore.updateProviderLastSyncedAt(provider.id, Date.now())

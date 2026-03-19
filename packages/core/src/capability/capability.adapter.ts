@@ -5,6 +5,8 @@ import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/util
 export interface ICapabilityAdapter {
     readonly serviceProvider: ServiceProvider
 
+    find?: (artifact: IArtifact) => Promise<IArtifact | null>
+
     list(pagination: PaginationParams): PromisePaginatedResult<IArtifact>
 }
 

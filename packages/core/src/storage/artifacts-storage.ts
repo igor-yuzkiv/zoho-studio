@@ -4,6 +4,8 @@ import type { CapabilityType } from '../capability'
 export interface IArtifactsStorage {
     bulkUpsert(artifacts: IArtifact[]): Promise<boolean>
 
+    updateById(id: string, artifact: Partial<IArtifact>): Promise<boolean>
+
     findById<T extends CapabilityType = CapabilityType>(id: string): Promise<IArtifact<T> | null>
 
     findByProviderId<T extends CapabilityType = CapabilityType>(providerId: string): Promise<IArtifact<T>[]>

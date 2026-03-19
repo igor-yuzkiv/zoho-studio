@@ -12,9 +12,11 @@ import InputGroupAddon from 'primevue/inputgroupaddon'
 import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
 import { useCommitProviderArtifacts } from '../../composables'
+import { useConsoleLogger } from '@zoho-studio/utils'
 import { ZodError } from 'zod'
 import { CommitProviderArtifactsDialog } from '../../components/provider'
 
+const logger = useConsoleLogger('WorkspaceIndexPage')
 const toast = useToast()
 const confirm = useConfirm()
 
@@ -75,7 +77,7 @@ async function handleRefreshProviderCache() {
                         toast.success({ detail: 'Provider cache refreshed successfully.' })
                     })
                     .catch((error) => {
-                        console.error('Failed to clear cache', error)
+                        logger.error('Failed to clear cache', error)
                         toast.error({ detail: 'Failed to refresh provider cache. Please try again.' })
                     })
             }
@@ -99,7 +101,7 @@ async function handleGitCommit() {
 
         commitDialog.closeDialog()
     } catch (error) {
-        console.error('Failed to commit provider artifacts', error)
+        logger.error('Failed to commit provider artifacts', error)
 
         if (error instanceof ZodError) {
             const [first, ...rest] = error.issues

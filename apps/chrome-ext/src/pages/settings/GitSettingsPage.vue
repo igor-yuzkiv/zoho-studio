@@ -8,8 +8,10 @@ import { ref } from 'vue'
 import { useToast } from '@zoho-studio/ui-kit'
 import { storeToRefs } from 'pinia'
 import { useAddGitRepository } from '../../composables'
+import { useConsoleLogger } from '@zoho-studio/utils'
 import { ZodError } from 'zod'
 
+const logger = useConsoleLogger('GitSettingsPage')
 const toast = useToast()
 const gitStore = useGitConfigStore()
 const { isAuthenticated } = storeToRefs(gitStore)
@@ -38,7 +40,7 @@ async function handleAddRepository() {
         toast.success({ detail: 'Repository created successfully.' })
         closeAddRepoDialog()
     } catch (error) {
-        console.error('Failed to add repository:', error)
+        logger.error('Failed to add repository:', error)
 
         if (error instanceof ZodError) {
             const [first, ...rest] = error.issues

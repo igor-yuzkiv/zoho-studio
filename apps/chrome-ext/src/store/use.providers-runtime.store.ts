@@ -1,8 +1,11 @@
 import { integrationsRegistry } from '../integrations.registry.ts'
 import { type Serializer, useStorage } from '@vueuse/core'
 import { BrowserTab, BrowserTabId, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
+import { useConsoleLogger } from '@zoho-studio/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+
+const logger = useConsoleLogger('useProvidersRuntimeStore')
 
 const LocalStorageSerializer: Serializer<ServiceProvider[]> = {
     read(raw) {
@@ -10,7 +13,7 @@ const LocalStorageSerializer: Serializer<ServiceProvider[]> = {
             const parsed = JSON.parse(raw || '[]')
             return Array.isArray(parsed) ? parsed : []
         } catch (error) {
-            console.error('Failed to parse service providers from localStorage:', error)
+            logger.error('Failed to parse service providers from localStorage:', error)
             return []
         }
     },
@@ -80,7 +83,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     function updateProvider(id: ServiceProviderId, data: Partial<ServiceProvider>) {
         const existing = providersMap.value.get(id)
         if (!existing) {
-            console.warn(`Trying to update non-existing provider with id "${id}"`)
+            logger.warn(`Trying to update non-existing provider with id "${id}"`)
             return
         }
 
@@ -109,7 +112,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     function isOnline(providerId: ServiceProviderId): boolean {
         const provider = providersMap.value.get(providerId)
         if (!provider) {
-            console.warn(`Trying to check online status of non-existing provider with id "${providerId}"`)
+            logger.warn(`Trying to check online status of non-existing provider with id "${providerId}"`)
             return false
         }
 

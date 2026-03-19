@@ -8,6 +8,19 @@ export class DexieArtifactsStorage implements IArtifactsStorage {
         return true
     }
 
+    async updateById(id: string, artifact: Partial<IArtifact>): Promise<boolean> {
+        const existing = await artifactsDexieDB.records.get(id)
+
+        if (!existing) {
+            return false
+        }
+
+        const updated = { ...existing, ...artifact }
+        await artifactsDexieDB.records.put(updated)
+
+        return true
+    }
+
     async findById<T extends CapabilityType = CapabilityType>(id: string): Promise<IArtifact<T> | null> {
         const result = await artifactsDexieDB.records.get(id)
 

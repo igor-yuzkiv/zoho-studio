@@ -12,8 +12,6 @@ export default defineConfig(({ mode }) => {
 
     const manifest = createManifest([env.VITE_API_HOST_PERMISSION_URL || ''])
 
-    console.log(manifest);
-
     return {
         root: __dirname,
         cacheDir: '../../node_modules/.vite/apps/chrome-ext',

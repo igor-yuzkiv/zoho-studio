@@ -7,7 +7,7 @@ type FieldsListResponse = {
 }
 
 export class CrmFieldsApiService extends BaseCrmApiService {
-    async listModuleFields(moduleApiName: string): Promise<Result<ZohoCrmModuleField[]>> {
+    async fetchModuleFields(moduleApiName: string): Promise<Result<ZohoCrmModuleField[]>> {
         const query = new URLSearchParams({
             module: moduleApiName,
             type: 'all',

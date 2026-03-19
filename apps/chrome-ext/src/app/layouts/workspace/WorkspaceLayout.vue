@@ -9,9 +9,11 @@ import { AppTopMenu } from '../../shell/app-top-menu'
 import { onMounted } from 'vue'
 import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
+import { useConsoleLogger } from '@zoho-studio/utils'
 import { storeToRefs } from 'pinia'
 import { useAppStateStore } from '../../../store'
 
+const logger = useConsoleLogger('WorkspaceLayout')
 const route = useRoute()
 const router = useRouter()
 
@@ -31,7 +33,7 @@ onMounted(() => {
     }
 
     ensureSyncArtifacts(provider.value).catch((error) => {
-        console.error(error)
+        logger.error('Failed to sync provider artifacts on mount', error)
 
         router.push({
             name: AppRouteName.error,

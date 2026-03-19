@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { CreateGitRepositoryRequest, IGitRepository } from '../../types'
 import { createGitRepository } from '../../api'
 import { useGitConfigStore } from '../../store'
+import { useConsoleLogger } from '@zoho-studio/utils'
 import { storeToRefs } from 'pinia'
 import * as zod from 'zod'
 
@@ -19,6 +20,7 @@ export const normalizeRepositoryName = (name: string): string => {
 }
 
 export function useAddGitRepository() {
+    const logger = useConsoleLogger('useAddGitRepository')
     const repositoryName = ref<string>('')
     const repositoryDescription = ref<string>('')
     const loading = ref<boolean>(false)
@@ -45,7 +47,7 @@ export function useAddGitRepository() {
 
             const response = await createGitRepository(payload)
             if (!response?.name) {
-                console.error('Invalid response from server:', response)
+                logger.error('Invalid response from server:', response)
                 throw new Error('Failed to create Git repository: Invalid response from server.')
             }
 

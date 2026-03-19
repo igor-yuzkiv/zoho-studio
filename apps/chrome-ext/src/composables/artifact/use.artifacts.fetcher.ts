@@ -1,7 +1,9 @@
 import { CapabilityDescriptor, IArtifact, ICapabilityAdapter, ServiceProvider } from '@zoho-studio/core'
-import { PaginationParams, sleep } from '@zoho-studio/utils'
+import { PaginationParams, sleep, useConsoleLogger } from '@zoho-studio/utils'
 
 export function useArtifactsFetcher(fetchDelay = 100) {
+    const logger = useConsoleLogger('useArtifactsFetcher')
+
     async function recursiveFetchArtifacts(
         adapter: ICapabilityAdapter,
         pagination: PaginationParams = { page: 1, per_page: 50 },
@@ -10,7 +12,7 @@ export function useArtifactsFetcher(fetchDelay = 100) {
         const response = await adapter.list(pagination)
 
         if (!response.ok) {
-            console.error(`[useArtifactsFetcher::fetchAllArtifacts] Failed to fetch artifacts from capability port`, {
+            logger.error(`[fetchAllArtifacts] Failed to fetch artifacts from capability port`, {
                 response,
                 pagination,
             })
@@ -51,8 +53,27 @@ export function useArtifactsFetcher(fetchDelay = 100) {
         return result.flatMap((res) => (res.status === 'fulfilled' ? res.value : []))
     }
 
+    async function findOneArtifact(
+        provider: ServiceProvider,
+        capability: CapabilityDescriptor,
+        artifact: IArtifact
+    ): Promise<IArtifact | null> {
+        const adapter = new capability.adapter(provider)
+
+        if (typeof adapter.find !== 'function') {
+            logger.warn(`[findOneArtifact] Capability adapter does not implement 'find' method.`, {
+                providerId: provider.id,
+                capability,
+            })
+            return null
+        }
+
+        return await adapter.find(artifact)
+    }
+
     return {
         fetchCapabilityArtifacts,
         fetchProviderArtifacts,
+        findOneArtifact,
     }
 }
