@@ -13,6 +13,5 @@ export interface CapabilityDescriptor {
     adapter: CapabilityAdapterConstructor
     toExportZip?: (artifact: IArtifact) => ExportZipItem[]
 
-
     artifactDetailViewSettings?: Partial<ArtifactDetailViewConfig>
 }
