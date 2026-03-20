@@ -9,6 +9,8 @@ import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
 import TabPanel from 'primevue/tabpanel'
+import Message from 'primevue/message'
+import FunctionLogStatus from './FunctionLogStatus.vue'
 
 const props = defineProps<{
     log: CrmFunctionLog
@@ -98,10 +100,15 @@ const infoMessages = computed(() => {
                 </TabList>
             </div>
 
-            <TabPanel value="overview" class="overflow-hidden">
+            <TabPanel value="overview" class="h-full w-full gap-2 overflow-hidden p-2">
+                <Message v-if="log.error_message" severity="error"><b>Error: </b>{{ log.error_message }}</Message>
                 <div class="grid gap-4 p-3 md:grid-cols-2">
                     <DisplayField label="id" :value="log.id" />
-                    <DisplayField label="status" :value="log.status" />
+                    <DisplayField label="status" :value="log.status">
+                        <template #value>
+                            <FunctionLogStatus :value="log.status" />
+                        </template>
+                    </DisplayField>
                     <DisplayField label="function_name" :value="log.function_name" />
                     <DisplayField label="component_type" :value="log.component_type ?? 'N/A'" />
                     <DisplayField label="start_datetime" :value="log.start_datetime ?? 'N/A'" />

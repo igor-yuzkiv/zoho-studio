@@ -15,6 +15,7 @@ import Column from 'primevue/column'
 import { Icon } from '@iconify/vue'
 import { buildLogDetailsParams, PERIOD_OPTIONS, getDefaultPaginationState } from './function-logs.utils.ts'
 import CrmFunctionLogDetails from './CrmFunctionLogDetails.vue'
+import FunctionLogStatus from './FunctionLogStatus.vue'
 
 const props = defineProps<{
     artifact: IArtifact<'functions', ZohoCrmFunction>
@@ -267,16 +268,7 @@ watch([() => props.artifact, () => props.provider], () => {
                     </Column>
                     <Column field="status" header="status" :sortable="true">
                         <template #body="slotProps">
-                            <span
-                                :class="{
-                                    'bg-green-300 text-green-900': slotProps.data.status === 'success',
-                                    'bg-red-300 text-red-900': slotProps.data.status === 'failure',
-                                    'bg-gray-300 text-gray-900': slotProps.data.status === 'pending',
-                                }"
-                                class="inline-flex h-6 items-center rounded-full px-2 text-xs font-medium"
-                            >
-                                {{ slotProps.data.status }}
-                            </span>
+                            <FunctionLogStatus :value="slotProps.data.status" />
                         </template>
                     </Column>
                     <Column field="executed_time" header="executed_time" :sortable="true" />

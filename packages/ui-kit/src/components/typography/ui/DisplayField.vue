@@ -9,12 +9,12 @@ defineProps<{
 
 <template>
     <div class="flex flex-col gap-1">
-        <div class="text-gray-600 dark:text-gray-400 uppercase">
+        <div class="text-gray-600 uppercase dark:text-gray-400">
             <slot name="label">{{ label }}</slot>
         </div>
-        <div class="text-black dark:text-white">
-            <slot name="value">{{ value }}</slot>
-        </div>
+        <slot name="value">
+            <span class="text-black dark:text-white">{{ value }}</span>
+        </slot>
     </div>
 </template>
 

@@ -25,6 +25,7 @@ export interface CrmFunctionLog extends IEntity {
     component_type: string
     function_name: string
     status: string
+    error_message?:string
     execution_time: number
     executed_time?: string
     start_datetime?: string
