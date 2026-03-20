@@ -10,12 +10,15 @@ import { artifactDetailConfigMap } from '../../../components/artifact-details/de
 import { ArtifactDetailViewConfig, CapabilityType } from '@zoho-studio/core'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import Button from 'primevue/button'
+import { useQueryClient } from '@tanstack/vue-query'
+import { ArtifactsQueryKeys } from '../../../config.ts'
 
 const logger = useConsoleLogger('ArtifactDetailPage')
 const artifactId = useRouteParams<string>('artifactId')
 const capabilityType = useRouteParams<CapabilityType>('capabilityType')
 
-const { data, refetch, isPending } = useArtifactByIdQuery(artifactId)
+const queryClient = useQueryClient()
+const { data, isPending } = useArtifactByIdQuery(artifactId)
 const { copy } = useClipboard()
 const { findProviderCapability, provider, isOnline } = useCurrentProvider()
 
@@ -52,7 +55,7 @@ async function refreshArtifact() {
     if (!provider.value || !data.value) return
 
     await syncOneProviderArtifact(provider.value, data.value)
-    await refetch()
+    await queryClient.invalidateQueries({ queryKey: ArtifactsQueryKeys.all })
 }
 
 watch(

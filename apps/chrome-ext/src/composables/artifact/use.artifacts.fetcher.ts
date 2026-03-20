@@ -53,6 +53,24 @@ export function useArtifactsFetcher(fetchDelay = 100) {
         return result.flatMap((res) => (res.status === 'fulfilled' ? res.value : []))
     }
 
+    async function fetchArtifactsByParent(
+        provider: ServiceProvider,
+        capability: CapabilityDescriptor,
+        parentArtifact: IArtifact
+    ): Promise<IArtifact[]> {
+        const adapter = new capability.adapter(provider)
+
+        if (typeof adapter.findByParent !== 'function') {
+            logger.warn(`[fetchArtifactsByParent] Capability adapter does not implement 'findByParent' method.`, {
+                providerId: provider.id,
+                capability,
+            })
+            return []
+        }
+
+        return await adapter.findByParent(parentArtifact)
+    }
+
     async function findOneArtifact(
         provider: ServiceProvider,
         capability: CapabilityDescriptor,
@@ -75,5 +93,6 @@ export function useArtifactsFetcher(fetchDelay = 100) {
         fetchCapabilityArtifacts,
         fetchProviderArtifacts,
         findOneArtifact,
+        fetchArtifactsByParent,
     }
 }

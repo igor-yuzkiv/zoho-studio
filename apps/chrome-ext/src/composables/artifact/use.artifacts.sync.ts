@@ -35,25 +35,31 @@ export function useArtifactsSync() {
         try {
             isSyncing.value = true
 
-            const capability = capabilitiesManager.findProviderCapability(provider, artifact.capability_type)
+            const providerCapabilities = capabilitiesManager.getProviderCapabilities(provider)
+            const capability = providerCapabilities.find((cap) => cap.type === artifact.capability_type)
 
             if (!capability) {
                 logger.warn(
-                    'No capability descriptor found for artifact',
-                    artifact.id,
-                    'of type',
-                    artifact.capability_type
+                    `No capability descriptor found for artifact ${artifact.id} of type ${artifact.capability_type} skipping sync`
                 )
                 return
             }
 
-            const fetchedArtifacts = await fetcher.findOneArtifact(provider, capability, artifact)
-            if (!fetchedArtifacts) {
-                logger.warn('Artifact not found during sync', artifact.id)
-                return
+            const childCapabilities = providerCapabilities.filter((cap) => cap.dependsOn === artifact.capability_type)
+
+            const newArtifact = await fetcher.findOneArtifact(provider, capability, artifact)
+            const artifactsToUpsert = newArtifact ? [newArtifact] : []
+
+            if (childCapabilities.length) {
+                for (const depCap of childCapabilities) {
+                    const dependentArtifacts = await fetcher.fetchArtifactsByParent(provider, depCap, artifact)
+                    artifactsToUpsert.push(...dependentArtifacts)
+                }
             }
 
-            await artifactsStorage.updateById(artifact.id, fetchedArtifacts)
+            if (artifactsToUpsert.length) {
+                await artifactsStorage.bulkUpsert(artifactsToUpsert)
+            }
         } finally {
             isSyncing.value = false
         }

@@ -39,6 +39,16 @@ export class CrmFieldsAdapter extends BaseCapabilityAdapter {
         this.storage = container.resolve<IArtifactsStorage>(ArtifactStorageToken)
     }
 
+    async findByParent(parentArtifact: IArtifact): Promise<IArtifact[]> {
+        if (parentArtifact.capability_type !== 'modules') {
+            throw new Error(
+                `Parent artifact must be of type modules to fetch fields, ${parentArtifact.capability_type} given`
+            )
+        }
+
+        return fetchModuleFields(this.api, parentArtifact as IArtifact<'modules'>, this.serviceProvider.id)
+    }
+
     async list(_pagination: PaginationParams): PromisePaginatedResult<IArtifact> {
         const modules = await this.storage
             .findByProviderIdAndCapabilityType<'modules'>(this.serviceProvider.id, 'modules')

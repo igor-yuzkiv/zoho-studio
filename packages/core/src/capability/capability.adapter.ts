@@ -7,6 +7,8 @@ export interface ICapabilityAdapter {
 
     find?: (artifact: IArtifact) => Promise<IArtifact | null>
 
+    findByParent?: (parentArtifact: IArtifact) => Promise<IArtifact[]>
+
     list(pagination: PaginationParams): PromisePaginatedResult<IArtifact>
 }
 
