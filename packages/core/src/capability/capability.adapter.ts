@@ -9,7 +9,7 @@ export interface ICapabilityAdapter {
 
     findByParent?: (parentArtifact: IArtifact) => Promise<IArtifact[]>
 
-    list(pagination: PaginationParams): PromisePaginatedResult<IArtifact>
+    list?: (pagination: PaginationParams) => PromisePaginatedResult<IArtifact>
 }
 
 export type CapabilityAdapterConstructor = new (provider: ServiceProvider) => ICapabilityAdapter

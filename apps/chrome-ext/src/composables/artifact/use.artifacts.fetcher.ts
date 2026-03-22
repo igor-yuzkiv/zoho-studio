@@ -9,6 +9,14 @@ export function useArtifactsFetcher(fetchDelay = 100) {
         pagination: PaginationParams = { page: 1, per_page: 50 },
         result: IArtifact[] = []
     ): Promise<IArtifact[]> {
+        if (typeof adapter.list !== 'function') {
+            logger.warn(`[recursiveFetchArtifacts] Capability adapter does not implement 'list' method.`, {
+                adapter,
+                pagination,
+            })
+            return result
+        }
+
         const response = await adapter.list(pagination)
 
         if (!response.ok) {
