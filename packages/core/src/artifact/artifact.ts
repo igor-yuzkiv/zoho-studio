@@ -16,6 +16,7 @@ export type ArtifactPayloadMap = {
     workflows: WorkflowArtifactPayload
     modules: ModuleArtifactPayload
     fields: FieldArtifactPayload
+    [key: string]: Record<string, unknown>
 }
 
 export interface IArtifact<

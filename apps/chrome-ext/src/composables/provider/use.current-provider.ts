@@ -11,7 +11,7 @@ import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
 import { useCapabilitiesManager } from '../capability'
 import { integrationsRegistry } from '../../integrations.registry.ts'
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 
 export function useCurrentProvider() {
     const providersStore = useProvidersRuntimeStore()

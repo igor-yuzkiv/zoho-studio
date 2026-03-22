@@ -5,7 +5,7 @@ import { useProviderCapabilityArtifactsQuery } from '../../../queries'
 import { ArtifactExplorerMenu } from '../../../components/artifact/artifacts-explorer'
 import { AppRouteName } from '../../../app/router'
 import { useRouteParams } from '@vueuse/router'
-import type { CapabilityType, IArtifact } from '@zoho-studio/core'
+import type { IArtifact } from '@zoho-studio/core'
 import { computed } from 'vue'
 import type { Component } from 'vue'
 import { FunctionIcon } from '../../../components/function/function-icon'
@@ -16,7 +16,7 @@ type ArtifactMenuConfig = {
     iconComponent?: Component
 }
 
-const artifactMenuConfigMap: Partial<Record<CapabilityType, ArtifactMenuConfig>> = {
+const artifactMenuConfigMap: Partial<Record<string, ArtifactMenuConfig>> = {
     functions: { groupBy: 'payload.type', iconComponent: FunctionIcon },
     modules: { groupBy: 'payload.module_type', icon: 'streamline-sharp:module' },
     workflows: { groupBy: 'payload.module_api_name', icon: 'mdi:workflow' },
@@ -26,7 +26,7 @@ const artifactMenuConfigMap: Partial<Record<CapabilityType, ArtifactMenuConfig>>
 const route = useRoute()
 const router = useRouter()
 const { providerId } = useCurrentProvider()
-const capabilityType = useRouteParams<CapabilityType>('capabilityType')
+const capabilityType = useRouteParams<string>('capabilityType')
 
 const { data } = useProviderCapabilityArtifactsQuery(providerId, capabilityType)
 

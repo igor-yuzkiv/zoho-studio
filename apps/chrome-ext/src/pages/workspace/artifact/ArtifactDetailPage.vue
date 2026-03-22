@@ -7,7 +7,7 @@ import { IconButton, NoDataMessage, PageHeader, ViewModeSelect, ViewModeComponen
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
 import { useClipboard } from '@vueuse/core'
 import { artifactDetailConfigMap } from '../../../components/artifact/artifact-details/artifacts-default-details-views.config.ts'
-import { ArtifactDetailViewConfig, CapabilityType } from '@zoho-studio/core'
+import { ArtifactDetailViewConfig, type IArtifact, type CapabilityType } from '@zoho-studio/core'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import Button from 'primevue/button'
 import { useQueryClient } from '@tanstack/vue-query'
@@ -27,17 +27,26 @@ const { syncOneProviderArtifact } = useArtifactsSync()
 const config = computed((): ArtifactDetailViewConfig | undefined => {
     const descriptor = findProviderCapability(capabilityType.value)
     const defaultConfig = artifactDetailConfigMap[capabilityType.value]
+    const artifactConfig = descriptor?.artifactDetailViewSettings
 
-    if (!defaultConfig) {
-        logger.warn(`No default artifact detail view config found for capability type: ${capabilityType.value}`)
+    if (!defaultConfig && !artifactConfig) {
+        logger.warn(`No artifact detail view config found for capability type: ${capabilityType.value}`)
         return undefined
     }
 
-    if (!descriptor?.artifactDetailViewSettings) {
-        return defaultConfig
+    if (!defaultConfig) {
+        return {
+            header: {
+                title: artifactConfig?.header?.title ?? ((artifact: IArtifact) => artifact.display_name),
+                subtitle: artifactConfig?.header?.subtitle ?? '',
+            },
+            viewModes: artifactConfig?.viewModes ?? [],
+        }
     }
 
-    const artifactConfig = descriptor.artifactDetailViewSettings
+    if (!artifactConfig) {
+        return defaultConfig
+    }
 
     return {
         header: {
