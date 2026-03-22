@@ -1,6 +1,11 @@
 import { BaseCrmApiService } from '../../base-crm-api.service.ts'
 import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
-import type { ZohoCrmWebhook } from '../../types'
+import {
+    ZohoCrmWebhook,
+    ZohoCrmWebhookFailEntry,
+    ZohoCrmWebhookFailuresRequest,
+    ZohoCrmWebhookFailuresResponse,
+} from '../../types'
 
 type WebhooksListResponse = {
     webhooks: ZohoCrmWebhook[]
@@ -35,6 +40,52 @@ export class CrmWebhooksApiService extends BaseCrmApiService {
                 page: pagination.page,
                 per_page: webhooks.length,
                 has_more: false,
+            },
+        }
+    }
+
+    async fetchWebhookFailures(
+        payload: ZohoCrmWebhookFailuresRequest
+    ): PromisePaginatedResult<ZohoCrmWebhookFailEntry> {
+        const query = new URLSearchParams()
+        query.set('webhook_id', payload.webhook_id)
+        query.set('from', payload.from)
+        query.set('to', payload.to)
+        query.set('page', String(payload.page))
+        query.set('per_page', String(payload.per_page))
+
+        const response = await this.httpRequest<ZohoCrmWebhookFailuresResponse>({
+            url: `/crm/v8/settings/automation/webhook_failures?${query}`,
+            method: 'GET',
+        })
+
+        if (response.status === 204) {
+            return {
+                ok: true,
+                data: [],
+                meta: {
+                    page: payload.page,
+                    per_page: payload.per_page,
+                    total: 0,
+                    has_more: false,
+                },
+            }
+        }
+
+        if (!response.data || !Array.isArray(response.data.webhook_failures)) {
+            return { ok: false, error: 'Invalid response format' }
+        }
+
+        const { webhook_failures, info } = response.data
+
+        return {
+            ok: true,
+            data: webhook_failures,
+            meta: {
+                page: info.page,
+                per_page: info.per_page,
+                total: info.count,
+                has_more: info.more_records,
             },
         }
     }

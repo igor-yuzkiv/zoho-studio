@@ -87,7 +87,8 @@ export class ChromeBrowserServiceImpl implements IBrowserService {
                         credentials: 'include',
                     })
 
-                    const data = await response.json()
+                    const data = await response.json().catch(() => null)
+
                     return {
                         status: response.status,
                         data: data,

@@ -25,14 +25,6 @@ export const CrmWebhooksDescriptor: CapabilityDescriptor = {
     artifactDetailViewSettings: {
         header: {
             title: (artifact) => artifact.display_name,
-            subtitle: (artifact) => {
-                const payload = artifact.payload as {
-                    module_api_name?: string | null
-                    http_method?: string | null
-                }
-
-                return [payload.module_api_name, payload.http_method].filter(Boolean).join(' - ')
-            },
         },
         viewModes: [
             {
@@ -40,6 +32,12 @@ export const CrmWebhooksDescriptor: CapabilityDescriptor = {
                 label: 'Metadata',
                 icon: 'si:json-duotone',
                 component: defineAsyncComponent(() => import('./ui/CrmWebhookMetadataJsonView.vue')),
+            },
+            {
+                value: 'crm_webhook_failures_view',
+                label: 'Failures Log',
+                icon: 'si:json-duotone',
+                component: defineAsyncComponent(() => import('./ui/CrmWebhookFailuresView.vue')),
             },
         ],
     },

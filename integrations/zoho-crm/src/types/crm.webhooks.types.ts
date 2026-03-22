@@ -36,3 +36,39 @@ export interface ZohoCrmWebhook extends IEntity {
     modified_by: Maybe<ZohoCrmWebhookUserRef>
     lock_status: Maybe<ZohoCrmWebhookLockStatus>
 }
+
+export type ZohoCrmWebhookFailuresRequest = {
+    webhook_id: string
+    from: string
+    to: string
+    page: number
+    per_page: number
+}
+
+export type ZohoCrmWebhookFailEntry = {
+    id: string
+    webhook: {
+        id: string
+        name: string
+    }
+    failure_reason: string
+    failure_time: string
+    workflow_rule: {
+        id: string
+        name: string
+    }
+    entity_details: {
+        id: string
+        module: ModuleRef
+    }
+}
+
+export type ZohoCrmWebhookFailuresResponse = {
+    webhook_failures: ZohoCrmWebhookFailEntry[]
+    info: {
+        count: number
+        page: number
+        per_page: number
+        more_records: boolean
+    }
+}

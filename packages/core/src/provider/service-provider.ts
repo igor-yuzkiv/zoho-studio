@@ -5,11 +5,11 @@ export type ServiceProviderId = string
 
 export type ServiceProviderType = 'zoho-crm' | 'zoho-finance' | 'zoho-creator' | 'zoho-recruit'
 
-export type ServiceProvider = {
+export type ServiceProvider<TMetadata = Record<string, unknown>> = {
     id: ServiceProviderId
     type: ServiceProviderType
     title: string
-    metadata: Record<string, unknown>
+    metadata: TMetadata
     browserTabId?: Maybe<BrowserTabId>
     lastSyncedAt?: number
     gitRepository?: string | null
