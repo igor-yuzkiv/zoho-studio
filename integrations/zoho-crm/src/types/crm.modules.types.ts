@@ -8,6 +8,7 @@ export type ZohoCrmModule = {
     description: string
     api_supported: boolean
     generated_type: Maybe<string>
+    module_name: string
 }
 
 export interface ZohoCrmModuleField extends IEntity {

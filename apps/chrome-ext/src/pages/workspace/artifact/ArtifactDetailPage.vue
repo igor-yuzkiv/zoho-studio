@@ -8,8 +8,7 @@ import type { ViewModeOption } from '@zoho-studio/ui-kit'
 import { useClipboard } from '@vueuse/core'
 import { artifactDetailConfigMap } from '../../../components/artifact/artifact-details/artifacts-default-details-views.config.ts'
 import { ArtifactDetailViewConfig, type IArtifact, type CapabilityType } from '@zoho-studio/core'
-import { useConsoleLogger } from '@zoho-studio/utils'
-import Button from 'primevue/button'
+import { Maybe, useConsoleLogger } from '@zoho-studio/utils'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ArtifactsQueryKeys } from '../../../config.ts'
 
@@ -22,10 +21,12 @@ const { data, isPending } = useArtifactByIdQuery(artifactId)
 const { copy } = useClipboard()
 const { findProviderCapability, provider, isOnline } = useCurrentProvider()
 
+const capabilityDescriptor = computed(() => findProviderCapability(capabilityType.value))
+
 const { syncOneProviderArtifact } = useArtifactsSync()
 
 const config = computed((): ArtifactDetailViewConfig | undefined => {
-    const descriptor = findProviderCapability(capabilityType.value)
+    const descriptor = capabilityDescriptor.value
     const defaultConfig = artifactDetailConfigMap[capabilityType.value]
     const artifactConfig = descriptor?.artifactDetailViewSettings
 
@@ -60,6 +61,18 @@ const config = computed((): ArtifactDetailViewConfig | undefined => {
 const viewModes = computed<ViewModeOption[]>(() => config.value?.viewModes ?? [])
 const currentMode = ref<string>('')
 
+const artifactServiceUrl = computed<Maybe<string>>(() => {
+    if (!provider.value || !data.value || !capabilityDescriptor.value) {
+        return null
+    }
+
+    if (typeof capabilityDescriptor.value?.getArtifactServiceUrl !== 'function') {
+        return null
+    }
+
+    return capabilityDescriptor.value.getArtifactServiceUrl(provider.value, data.value)
+})
+
 async function refreshArtifact() {
     if (!provider.value || !data.value) return
 
@@ -89,14 +102,31 @@ const resolvedSubtitle = computed(() => {
 </script>
 
 <template>
-    <div v-if="artifactId && data && config" class="flex h-full w-full flex-col gap-1 overflow-hidden">
+    <div v-if="provider && artifactId && data && config" class="flex h-full w-full flex-col gap-1 overflow-hidden">
         <PageHeader :title="resolvedTitle" :description="resolvedSubtitle">
             <template #prepend>
                 <IconButton class="p-0" text icon="si:copy-fill" severity="secondary" @click="copy(resolvedTitle)" />
             </template>
 
             <template #actions>
-                <Button :disabled="!isOnline || isPending" text size="small" @click="refreshArtifact"> Refresh </Button>
+                <IconButton
+                    as="a"
+                    icon="majesticons:open"
+                    v-if="artifactServiceUrl"
+                    :href="artifactServiceUrl"
+                    target="_blank"
+                    text
+                    :title="`Open in ${provider.type}`"
+                />
+                <IconButton
+                    icon="prime:sync"
+                    :disabled="!isOnline || isPending"
+                    text
+                    @click="refreshArtifact"
+                    title="Resync artifact data from provider"
+                >
+                    Refresh
+                </IconButton>
                 <ViewModeSelect v-if="viewModes.length >= 2" :options="viewModes" v-model="currentMode" />
             </template>
         </PageHeader>
