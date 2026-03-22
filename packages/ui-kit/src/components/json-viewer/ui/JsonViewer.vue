@@ -17,7 +17,7 @@ const props = withDefaults(
     }>(),
     {
         depth: 6,
-        title: "JSON"
+        title: 'Json Object',
     }
 )
 
@@ -32,9 +32,9 @@ function handleCopy() {
 
 <template>
     <div class="flex flex-col">
-        <div class="flex items-center justify-between gap-x-2 border-b border-gray-300 px-2 py-1" :class="headerClass">
+        <div class="flex items-center justify-between gap-x-2 border-b px-2 py-1" :class="headerClass">
             <div class="flex items-center gap-x-1">
-                <span v-if="title" class="text-sm text-gray-500">{{ title }}</span>
+                <span v-if="title" class="dark:text-anakiwa-200 text-anakiwa-500 text-sm">{{ title }}</span>
             </div>
             <div v-if="data" class="flex items-center gap-x-1">
                 <IconButton @click="handleCopy" icon="boxicons:copy" text class="p-0" severity="secondary" />
