@@ -1,4 +1,4 @@
-import { BaseCrmApiService } from '../../base-crm-api.service.ts'
+import { BaseCrmApiService } from '../../interanal/base-crm-api.service.ts'
 import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
 import type { ZohoCrmModule } from '../../types'
 

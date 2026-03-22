@@ -1,4 +1,4 @@
-import type { CrmServiceProviderMetadata } from './types'
+import type { CrmServiceProviderMetadata } from '../types'
 import { ServiceProvider } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 
@@ -40,4 +40,12 @@ export function assertZohoCrmServiceProviderMetadata(provider: ServiceProvider):
         throw new Error('Invalid provider metadata')
     }
     return provider.metadata as CrmServiceProviderMetadata
+}
+
+export function resolveCrmUrl(metadata: CrmServiceProviderMetadata, path: string) {
+    const baseUrl = metadata.host
+    const orgId = metadata.orgId
+    const orgSegment = metadata.isSandbox ? `${orgId}` : `org${orgId}`
+
+    return `${baseUrl}/crm/${orgSegment}/${path.replace(/^\/+/, '')}`
 }

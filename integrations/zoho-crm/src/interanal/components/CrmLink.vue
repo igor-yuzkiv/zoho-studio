@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { CrmServiceProviderMetadata } from '../../types'
 import { computed } from 'vue'
+import { resolveCrmUrl } from '../utils.ts'
 
 const props = defineProps<{
     metadata: CrmServiceProviderMetadata
@@ -8,17 +9,7 @@ const props = defineProps<{
     label?: string
 }>()
 
-function replaceStart(originalString: string, search: string, replace: string): string {
-    if (originalString.startsWith(search)) {
-        return replace + originalString.substring(search.length)
-    }
-    return originalString
-}
-
-const href = computed(() => {
-    const org = props.metadata?.isSandbox ? props.metadata.orgId : `org${props.metadata.orgId}`
-    return `${props.metadata.host}/crm/${org}/${replaceStart(props.path, '/', '')}`
-})
+const href = computed(() => resolveCrmUrl(props.metadata, props.path))
 </script>
 
 <template>

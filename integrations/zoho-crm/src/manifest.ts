@@ -2,7 +2,7 @@ import {
     makeZohoCrmServiceProviderId,
     makeZohoCrmServiceProviderTitle,
     resolveCrmServiceProviderMetadataFromUrl,
-} from './utils'
+} from './interanal/utils.ts'
 import type { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
 import type { PromiseResult } from '@zoho-studio/utils'
 

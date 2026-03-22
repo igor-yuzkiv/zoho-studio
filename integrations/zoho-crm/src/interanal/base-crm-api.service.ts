@@ -1,4 +1,4 @@
-import { CrmServiceProviderMetadata } from './types'
+import { CrmServiceProviderMetadata } from '../types'
 import { assertZohoCrmServiceProviderMetadata } from './utils.ts'
 import {
     BrowserServiceToken, BrowserTab,
