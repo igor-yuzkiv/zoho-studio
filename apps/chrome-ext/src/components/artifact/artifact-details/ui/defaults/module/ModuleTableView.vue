@@ -5,7 +5,7 @@ import { computed, ref } from 'vue'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import InputText from 'primevue/inputtext'
-import { useArtifactsByParentIdQuery } from '../../../../../queries'
+import { useArtifactsByParentIdQuery } from '../../../../../../queries'
 
 const props = defineProps<{
     artifact: IArtifact<'modules'>

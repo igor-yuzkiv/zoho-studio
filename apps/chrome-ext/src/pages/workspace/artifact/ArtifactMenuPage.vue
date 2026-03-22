@@ -2,13 +2,13 @@
 import { useRoute, useRouter } from 'vue-router'
 import { useCurrentProvider } from '../../../composables'
 import { useProviderCapabilityArtifactsQuery } from '../../../queries'
-import { ArtifactExplorerMenu } from '../../../components/artifacts-explorer'
+import { ArtifactExplorerMenu } from '../../../components/artifact/artifacts-explorer'
 import { AppRouteName } from '../../../app/router'
 import { useRouteParams } from '@vueuse/router'
 import type { CapabilityType, IArtifact } from '@zoho-studio/core'
 import { computed } from 'vue'
 import type { Component } from 'vue'
-import { FunctionIcon } from '../../../components/function-icon'
+import { FunctionIcon } from '../../../components/function/function-icon'
 
 type ArtifactMenuConfig = {
     groupBy: string
