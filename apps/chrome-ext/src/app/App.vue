@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import { useBrowserTabsStore, useProvidersRuntimeStore } from '../store'
-import { useAppStateStore } from '../store'
+import { AppRouteName } from './router'
+import { useAppStateStore, useBrowserTabsStore, useProvidersRuntimeStore, useSecurityRequirementsStore } from '../store'
 import { AppLayoutComponentMap } from './layouts'
 import { LoadingOverlay, useAppThemeStore } from '@zoho-studio/ui-kit'
+import Button from 'primevue/button'
 import { storeToRefs } from 'pinia'
 import ConfirmDialog from 'primevue/confirmdialog'
+import Dialog from 'primevue/dialog'
 import Toast from 'primevue/toast'
 import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 const appState = useAppStateStore()
 const tabsStore = useBrowserTabsStore()
 const providersStore = useProvidersRuntimeStore()
+const securityRequirementsStore = useSecurityRequirementsStore()
 
 const { tabsMap } = storeToRefs(tabsStore)
+const { hasAcceptedRequirements } = storeToRefs(securityRequirementsStore)
 
 const layoutComponent = computed(() => {
     const layoutName = route.meta?.layout
@@ -30,6 +35,19 @@ tabsStore.initialize()
 useAppThemeStore().initialize()
 
 watch(tabsMap, (newData) => providersStore.handleBrowserTabsChange(newData), { immediate: true })
+watch(
+    [hasAcceptedRequirements, () => route.name],
+    ([isAccepted, routeName]) => {
+        if (!isAccepted && routeName !== AppRouteName.home) {
+            router.replace({ name: AppRouteName.home })
+        }
+    },
+    { immediate: true }
+)
+
+function acceptSecurityRequirements() {
+    securityRequirementsStore.acceptRequirements()
+}
 </script>
 
 <template>
@@ -37,6 +55,37 @@ watch(tabsMap, (newData) => providersStore.handleBrowserTabsChange(newData), { i
     <LoadingOverlay v-if="appState.loadingOverlay" />
     <Toast />
     <ConfirmDialog />
+    <Dialog
+        :visible="!hasAcceptedRequirements"
+        modal
+        header="Welcome to Zoho Studio"
+        class="w-[92vw] max-w-xl"
+        content-class="overflow-hidden"
+        :draggable="false"
+        :closable="false"
+        :dismissable-mask="false"
+        :close-on-escape="false"
+    >
+        <div class="space-y-4">
+            <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                <b class="text-primary-500">Zoho Studio</b> is a browser extension that adds a developer-oriented workspace next to your Zoho
+                tabs.
+            </p>
+            <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                It uses your current browser session and may rely on unofficial Zoho APIs. <b>Please use this tool only in
+                environments and with services you are authorized to access.</b>
+            </p>
+            <p class="text-sm leading-6 font-bold text-gray-900 dark:text-gray-100">
+                By continuing, you acknowledge how the extension works and accept responsibility for how it is used.
+            </p>
+        </div>
+
+        <template #footer>
+            <div class="flex w-full justify-end">
+                <Button label="I agree and accept the risks" size="small" @click="acceptSecurityRequirements" />
+            </div>
+        </template>
+    </Dialog>
 </template>
 
 <style scoped></style>

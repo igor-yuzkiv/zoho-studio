@@ -74,6 +74,17 @@ Additional notes:
 - **Opt-in Features:** Features that depend on external backend behavior, such as Git integration, are disabled by
   default through feature flags.
 
+Before using the extension, make sure you agree with these requirements:
+
+- **Authorized Access Only:** Use the extension only with Zoho pages and API endpoints you are explicitly authorized to
+  access.
+- **Controlled Data Flow:** Review artifacts before export or Git actions, because those actions can send data to
+  infrastructure you control outside the browser.
+- **Local Browser Storage:** Understand that crawled metadata and artifacts are cached locally in browser storage
+  through **Dexie/IndexedDB** until you clear them.
+- **Browser-Context Credentials:** The extension uses browser permissions such as `cookies` and `webRequest` in your
+  browser context and does not store Zoho passwords outside it.
+
 ---
 
 ## 🛠 Functionality
@@ -133,35 +144,34 @@ The frontend currently expects these two backend endpoints:
 
 1. `POST /git/repositories`
 
-   JSON body:
+    JSON body:
 
-   ```json
-   {
-     "name": "string",
-     "description": "string?",
-     "author": {
-       "name": "string",
-       "email": "string"
-     }
-   }
-   ```
+    ```json
+    {
+        "name": "string",
+        "description": "string?",
+        "author": {
+            "name": "string",
+            "email": "string"
+        }
+    }
+    ```
 
-   Expected purpose:
-   create or register a Git repository and return a repository object with at least `name`.
+    Expected purpose:
+    create or register a Git repository and return a repository object with at least `name`.
 
 2. `POST /git/repositories/{repository}/commit`
 
-   Multipart form-data fields:
+    Multipart form-data fields:
+    - `file`
+    - `message`
+    - `repository`
+    - `author[name]`
+    - `author[email]`
 
-   - `file`
-   - `message`
-   - `repository`
-   - `author[name]`
-   - `author[email]`
-
-   Expected purpose:
-   accept the exported ZIP archive, create a commit in the target repository, and return a response with at least
-   `message`.
+    Expected purpose:
+    accept the exported ZIP archive, create a commit in the target repository, and return a response with at least
+    `message`.
 
 If these endpoints are not implemented on your backend, the Git beta functionality in the extension will not work.
 
@@ -172,13 +182,13 @@ If these endpoints are not implemented on your backend, the Git beta functionali
 The extension reads environment variables from `apps/chrome-ext/.env`. Use `apps/chrome-ext/.env.example` as the
 template.
 
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `VITE_API_BASE_URL` | Base URL for API requests | `http://127.0.0.1:8000/api` |
-| `VITE_API_PROXY_TARGET` | Proxy target used in local development | `http://127.0.0.1:8000` |
-| `VITE_API_HOST_PERMISSION_URL` | Chrome host permissions for your API. Supports one or multiple patterns separated by commas or new lines. | `*://127.0.0.1/*,*://localhost/*` |
-| `VITE_GITHUB_REPO_URL` | Repository URL used for issue/report links in the UI | `https://github.com/igor-yuzkiv/zoho-studio` |
-| `VITE_FEATURE_GIT` | Enables beta Git functionality | `false` |
+| Variable                       | Description                                                                                               | Default                                      |
+| :----------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
+| `VITE_API_BASE_URL`            | Base URL for API requests                                                                                 | `http://127.0.0.1:8000/api`                  |
+| `VITE_API_PROXY_TARGET`        | Proxy target used in local development                                                                    | `http://127.0.0.1:8000`                      |
+| `VITE_API_HOST_PERMISSION_URL` | Chrome host permissions for your API. Supports one or multiple patterns separated by commas or new lines. | `*://127.0.0.1/*,*://localhost/*`            |
+| `VITE_GITHUB_REPO_URL`         | Repository URL used for issue/report links in the UI                                                      | `https://github.com/igor-yuzkiv/zoho-studio` |
+| `VITE_FEATURE_GIT`             | Enables beta Git functionality                                                                            | `false`                                      |
 
 If your API runs on a different host, port, or domain, update both `VITE_API_BASE_URL` and
 `VITE_API_HOST_PERMISSION_URL` accordingly.
