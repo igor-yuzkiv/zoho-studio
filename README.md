@@ -30,25 +30,6 @@ consistent workflow.
 
 ---
 
-## 🧭 Roadmap And Vision
-
-This extension is actively evolving and is not intended to be a static tool.
-
-The long-term goal is to provide a fast, consistent, and developer-friendly navigation layer across Zoho services while
-remaining lightweight and browser-native.
-
-The project is moving in the direction of:
-
-- broader support for Zoho services and capabilities
-- faster access to artifacts across multiple products
-- a unified browsing and inspection workflow
-- reduced friction when switching between modules, workflows, functions, fields, and other entities
-- gradual expansion of export, Git, and backend-assisted workflows
-
-The intent is to complement the existing Zoho UI, not replace it.
-
----
-
 ## 🔒 Security & Privacy
 
 This project follows a **local-first** approach.
