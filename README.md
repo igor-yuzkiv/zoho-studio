@@ -1,16 +1,21 @@
 # Zoho Studio Chrome Extension
+
 ![extension_preview.png](extension_preview.png)
 
-Zoho Studio is a browser-based development workspace for Zoho services. This repository contains the Chrome extension application and the shared packages used to inspect, browse, and work with Zoho artifacts from a side panel UI.
+Zoho Studio is a browser-based development workspace for Zoho services. This repository contains the Chrome extension
+application and the shared packages used to inspect, browse, and work with Zoho artifacts from a side panel UI.
 
-The main application lives in [`apps/chrome-ext`](apps/chrome-ext). The current extension runtime registers integrations for:
+The main application lives in [`apps/chrome-ext`](apps/chrome-ext). The current extension runtime registers integrations
+for:
 
 - Zoho CRM
 - Zoho Creator
 
 ## What This Project Does
 
-The extension is designed to work next to an open Zoho tab and expose a development-oriented workspace inside the browser side panel. Depending on the active integration, it can detect available providers, read metadata, and work with artifacts through the configured API layer.
+The extension is designed to work next to an open Zoho tab and expose a development-oriented workspace inside the
+browser side panel. Depending on the active integration, it can detect available providers, read metadata, and work with
+artifacts through the configured API layer.
 
 At a high level, the project includes:
 
@@ -23,7 +28,8 @@ At a high level, the project includes:
 
 This extension is actively evolving and is not intended to be a static tool.
 
-The long-term goal is to provide a fast, consistent, and developer-friendly navigation layer across Zoho services, eliminating the need to manually navigate complex UI structures or rely on ad-hoc scripts.
+The long-term goal is to provide a fast, consistent, and developer-friendly navigation layer across Zoho services,
+eliminating the need to manually navigate complex UI structures or rely on ad-hoc scripts.
 
 The focus is on improving the developer experience by:
 
@@ -32,16 +38,17 @@ The focus is on improving the developer experience by:
 - reducing friction when switching between modules, functions, workflows, and other entities
 - expanding support for additional Zoho platforms and capabilities over time
 
-The direction of the project is to become a lightweight developer workspace that lives directly in the browser and complements the existing Zoho UI rather than replacing it.
+The direction of the project is to become a lightweight developer workspace that lives directly in the browser and
+complements the existing Zoho UI rather than replacing it.
 
 New features and improvements are continuously added based on real-world usage and identified pain points.
-
 
 ## Important Notice
 
 This project is an independent tool and is not affiliated with, endorsed by, or supported by Zoho.
 
-It relies on unofficial and undocumented Zoho web APIs and browser behavior. Because of this, some functionality may change or stop working if Zoho updates its UI or backend.
+It relies on unofficial and undocumented Zoho web APIs and browser behavior. Because of this, some functionality may
+change or stop working if Zoho updates its UI or backend.
 
 Use this tool only in environments you are authorized to access and in accordance with your organization's policies.
 
@@ -54,24 +61,37 @@ The extension operates only within:
 
 It is not designed to send data to unrelated third parties and does not include analytics or tracking by default.
 
-Note that if you configure a remote API server, requests and data will be sent to that server. You are responsible for operating and trusting the API service you use.
+Note that if you configure a remote API server, requests and data will be sent to that server. You are responsible for
+operating and trusting the API service you use.
+
 ## Functionality
 
 ### Core / Architectural Features
 
 The project already includes a number of foundational features at the architecture level:
 
-- modular integration architecture built around integration manifests, where each provider declares its type, display name, icon, browser-tab resolver, and supported capabilities
-- centralized integration registry in the extension app, allowing providers to be registered and discovered in a consistent way
-- typed service-provider model in `packages/core` for representing connected Zoho environments, provider metadata, sync state, and optional Git binding
-- typed artifact model in `packages/core` for storing provider data in a normalized format across capability types such as functions, workflows, modules, and fields
-- capability-driven design in the core package, so provider-specific logic can plug into a shared abstraction layer instead of hardcoding everything into the UI
-- browser abstraction layer in `packages/core` for tab discovery, tab watching, cookie access, and HTTP requests performed in the context of browser tabs
-- dependency injection setup in the extension app through `tsyringe`, which keeps browser services and storage implementations replaceable
-- local artifact persistence through Dexie/IndexedDB in the Chrome extension, which gives the app an internal cache layer for provider artifacts
-- app bootstrap based on Vue 3, Pinia, router, and shared plugin registration, keeping the extension shell separate from provider-specific logic
-- monorepo separation between app code, shared core abstractions, reusable UI kit, utilities, export helpers, and provider integrations
-- extension-side provider discovery flow that connects the registered integrations with currently open Zoho tabs and exposes them in the workspace UI
+- modular integration architecture built around integration manifests, where each provider declares its type, display
+  name, icon, browser-tab resolver, and supported capabilities
+- centralized integration registry in the extension app, allowing providers to be registered and discovered in a
+  consistent way
+- typed service-provider model in `packages/core` for representing connected Zoho environments, provider metadata, sync
+  state, and optional Git binding
+- typed artifact model in `packages/core` for storing provider data in a normalized format across capability types such
+  as functions, workflows, modules, and fields
+- capability-driven design in the core package, so provider-specific logic can plug into a shared abstraction layer
+  instead of hardcoding everything into the UI
+- browser abstraction layer in `packages/core` for tab discovery, tab watching, cookie access, and HTTP requests
+  performed in the context of browser tabs
+- dependency injection setup in the extension app through `tsyringe`, which keeps browser services and storage
+  implementations replaceable
+- local artifact persistence through Dexie/IndexedDB in the Chrome extension, which gives the app an internal cache
+  layer for provider artifacts
+- app bootstrap based on Vue 3, Pinia, router, and shared plugin registration, keeping the extension shell separate from
+  provider-specific logic
+- monorepo separation between app code, shared core abstractions, reusable UI kit, utilities, export helpers, and
+  provider integrations
+- extension-side provider discovery flow that connects the registered integrations with currently open Zoho tabs and
+  exposes them in the workspace UI
 
 ### Zoho CRM Features
 
@@ -108,7 +128,8 @@ The current `zoho-creator` integration already includes:
 
 ### Git Features (Beta)
 
-The current Git feature is available in beta form and is intended to support exporting provider artifacts into Git repositories through the configured API backend.
+The current Git feature is available in beta form and is intended to support exporting provider artifacts into Git
+repositories through the configured API backend.
 
 The current implementation already includes:
 
@@ -136,29 +157,23 @@ The frontend currently expects these two backend endpoints:
    Multipart form-data fields:
    `file`, `message`, `repository`, `author[name]`, `author[email]`
    Expected purpose:
-   accept the exported ZIP archive, create a commit in the target repository, and return a response with at least `message`
+   accept the exported ZIP archive, create a commit in the target repository, and return a response with at least
+   `message`
 
 If these endpoints are not implemented on your backend, the Git beta functionality in the extension will not work.
 
-## Repository Structure
-
-- `apps/chrome-ext` - the main browser extension application
-- `packages/core` - integration and capability primitives
-- `packages/ui-kit` - shared UI components and styles
-- `packages/utils` - shared utility helpers and types
-- `packages/export-zip` - ZIP export helpers
-- `integrations/*` - provider-specific integration packages
-
 ## Requirements
 
-- Node.js
+- Node.js (version 22 or higher)
 - npm
+- [nx](https://nx.dev/docs/getting-started/installation) `npm install -g nx`
 - Google Chrome or another Chromium-based browser with extension side panel support
 - A compatible API application/service available over HTTP
 
 ## Configuration
 
-The extension reads its environment variables from `apps/chrome-ext/.env` when run through the Nx targets configured in this repository.
+The extension reads its environment variables from `apps/chrome-ext/.env` when run through the Nx targets configured in
+this repository.
 
 Use [`apps/chrome-ext/.env.example`](apps/chrome-ext/.env.example) as the template:
 
@@ -175,6 +190,15 @@ Variable meaning:
 - `VITE_API_PROXY_TARGET` - proxy target used during local development when the API base URL is relative
 - `VITE_API_HOST_PERMISSION_URL` - extra Chrome host permission for your API host
 - `VITE_GITHUB_REPO_URL` - repository URL used for issue/report links inside the UI
+
+## Repository Structure
+
+- `apps/chrome-ext` - the main browser extension application
+- `packages/core` - integration and capability primitives
+- `packages/ui-kit` - shared UI components and styles
+- `packages/utils` - shared utility helpers and types
+- `packages/export-zip` - ZIP export helpers
+- `integrations/*` - provider-specific integration packages
 
 ## Installation Guide
 
