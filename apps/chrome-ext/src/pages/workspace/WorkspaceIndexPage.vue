@@ -15,6 +15,7 @@ import { useCommitProviderArtifacts } from '../../composables'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import { ZodError } from 'zod'
 import { CommitProviderArtifactsDialog } from '../../components/provider'
+import { isGitFeatureEnabled } from '../../feature-flags.ts'
 
 const logger = useConsoleLogger('WorkspaceIndexPage')
 const toast = useToast()
@@ -31,7 +32,7 @@ const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
 const commitDialog = useCommitProviderArtifacts()
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
-    return [
+    const items: MenuItem[] = [
         {
             label: 'Refresh Cache',
             icon: isCachingInProgress.value ? 'line-md:loading-loop' : 'tdesign:clear-filled',
@@ -44,7 +45,10 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
             disabled: isExporting.value,
             command: () => handleExportArtifacts(),
         },
-        {
+    ]
+
+    if (isGitFeatureEnabled) {
+        items.push({
             label: 'Commit',
             icon: 'ph:git-commit-bold',
             command: () => {
@@ -52,8 +56,10 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
                     commitDialog.openDialog(provider.value)
                 }
             },
-        },
-    ]
+        })
+    }
+
+    return items
 })
 
 async function handleRefreshProviderCache() {
@@ -206,6 +212,7 @@ watch(provider, () => resetProviderTitle())
         </div>
 
         <CommitProviderArtifactsDialog
+            v-if="isGitFeatureEnabled"
             v-model:visible="commitDialog.visible.value"
             v-model:filter-term="commitDialog.filterTerm.value"
             v-model:repository="commitDialog.repository.value"

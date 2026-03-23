@@ -7,10 +7,20 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { crx } from '@crxjs/vite-plugin'
 import { createManifest } from './chrome/manifest.config.ts'
 
+function parseHostPermissions(value: string | undefined): string[] {
+    if (!value) {
+        return []
+    }
+
+    return value
+        .split(/[\n,]/)
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+}
+
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
-
-    const manifest = createManifest([env.VITE_API_HOST_PERMISSION_URL || ''])
+    const manifest = createManifest(parseHostPermissions(env.VITE_API_HOST_PERMISSION_URL))
 
     return {
         root: __dirname,

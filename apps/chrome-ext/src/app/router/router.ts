@@ -1,5 +1,17 @@
 import { AppRouteName } from './app-route-name.ts'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import { isGitFeatureEnabled } from '../../feature-flags.ts'
+
+const gitRoutes: RouteRecordRaw[] = isGitFeatureEnabled
+    ? [
+          {
+              name: AppRouteName.gitConfig,
+              path: '/settings/git',
+              meta: { hideSidebarMenu: true, layout: 'default' },
+              component: () => import('../../pages/settings/GitSettingsPage.vue'),
+          },
+      ]
+    : []
 
 export const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -28,12 +40,7 @@ export const router = createRouter({
             },
         },
 
-        {
-            name: AppRouteName.gitConfig,
-            path: '/settings/git',
-            meta: { hideSidebarMenu: true, layout: 'default' },
-            component: () => import('../../pages/settings/GitSettingsPage.vue'),
-        },
+        ...gitRoutes,
 
         {
             name: AppRouteName.error,

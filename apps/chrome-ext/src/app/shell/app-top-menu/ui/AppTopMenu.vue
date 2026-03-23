@@ -7,6 +7,7 @@ import Menubar from 'primevue/menubar'
 import type { MenuItem } from 'primevue/menuitem'
 import type { RouteLocationRaw } from 'vue-router'
 import { useGitConfigStore, useProvidersRuntimeStore } from '../../../../store'
+import { isGitFeatureEnabled } from '../../../../feature-flags.ts'
 
 type AppMenuItem = MenuItem & { route?: RouteLocationRaw }
 
@@ -15,7 +16,7 @@ const providersStore = useProvidersRuntimeStore()
 const gitConfig = useGitConfigStore()
 
 const menuItems = computed<AppMenuItem[]>(() => {
-    return [
+    const items: AppMenuItem[] = [
         {
             label: 'Home',
             route: { name: AppRouteName.home },
@@ -29,14 +30,19 @@ const menuItems = computed<AppMenuItem[]>(() => {
                 }
             }),
         },
-        {
+    ]
+
+    if (isGitFeatureEnabled) {
+        items.push({
             label: 'Git',
             items: [
                 { label: 'Config', route: { name: AppRouteName.gitConfig } },
                 // { label: 'Commit', disabled: !provider.value },
             ],
-        },
-    ]
+        })
+    }
+
+    return items
 })
 </script>
 
@@ -71,7 +77,10 @@ const menuItems = computed<AppMenuItem[]>(() => {
 
         <div class="flex items-center justify-end gap-x-1 pr-3">
             <slot name="end" />
-            <div class="flex items-center gap-x-1" v-if="gitConfig.gitUserName && gitConfig.gitUserEmail">
+            <div
+                class="flex items-center gap-x-1"
+                v-if="isGitFeatureEnabled && gitConfig.gitUserName && gitConfig.gitUserEmail"
+            >
                 <span>{{ gitConfig.gitUserName }}</span>
                 <span>({{ gitConfig.gitUserEmail }})</span>
             </div>
