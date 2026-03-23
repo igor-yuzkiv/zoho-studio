@@ -42,26 +42,11 @@ The extension operates only within:
 
 Additional notes:
 
-- **No Third-Party Backend:** This extension does not include a hosted backend. It is a client-side tool that
-  communicates with your open Zoho tabs and the API endpoint you provide.
-- **Credential Handling:** It uses browser permissions such as `cookies` and `webRequest` to interact with Zoho on your
-  behalf. It does **not** store your Zoho passwords outside of the browser context.
-- **Local Data Storage:** Crawled metadata and artifacts are stored locally in the browser via **Dexie/IndexedDB**.
-- **Controlled Data Flow:** No data leaves your machine unless you explicitly trigger actions such as export or Git
-  commit to infrastructure you control.
-- **Opt-in Features:** Features that depend on external backend behavior, such as Git integration, are disabled by
-  default through feature flags.
-
-Before using the extension, make sure you agree with these requirements:
-
-- **Authorized Access Only:** Use the extension only with Zoho pages and API endpoints you are explicitly authorized to
-  access.
-- **Controlled Data Flow:** Review artifacts before export or Git actions, because those actions can send data to
-  infrastructure you control outside the browser.
-- **Local Browser Storage:** Understand that crawled metadata and artifacts are cached locally in browser storage
-  through **Dexie/IndexedDB** until you clear them.
-- **Browser-Context Credentials:** The extension uses browser permissions such as `cookies` and `webRequest` in your
-  browser context and does not store Zoho passwords outside it.
+- **No Hosted Backend:** The extension runs entirely in the browser and communicates only with your active Zoho session and any API endpoints you explicitly configure.
+- **Credential Handling:** It uses browser-level permissions (such as `cookies` and `webRequest`) to operate within your Zoho session and does not store credentials outside of the browser.
+- **Local Storage:** Artifacts and metadata are cached locally using **IndexedDB (Dexie)**.
+- **Controlled Data Flow:** Data remains on your machine unless you explicitly configure or modify the extension to send it elsewhere.
+- **User-Controlled Behavior:** Any interaction with external systems depends on your own configuration or changes to the code.
 
 ---
 
