@@ -19,6 +19,127 @@ At a high level, the project includes:
 - integration packages for Zoho-related providers
 - a configurable HTTP API endpoint used by the extension
 
+## Roadmap And Vision
+
+This extension is actively evolving and is not intended to be a static tool.
+
+The long-term goal is to provide a fast, consistent, and developer-friendly navigation layer across Zoho services, eliminating the need to manually navigate complex UI structures or rely on ad-hoc scripts.
+
+The focus is on improving the developer experience by:
+
+- enabling quick access to artifacts across different Zoho services
+- providing a unified interface for browsing, inspecting, and working with resources
+- reducing friction when switching between modules, functions, workflows, and other entities
+- expanding support for additional Zoho platforms and capabilities over time
+
+The direction of the project is to become a lightweight developer workspace that lives directly in the browser and complements the existing Zoho UI rather than replacing it.
+
+New features and improvements are continuously added based on real-world usage and identified pain points.
+
+
+## Important Notice
+
+This project is an independent tool and is not affiliated with, endorsed by, or supported by Zoho.
+
+It relies on unofficial and undocumented Zoho web APIs and browser behavior. Because of this, some functionality may change or stop working if Zoho updates its UI or backend.
+
+Use this tool only in environments you are authorized to access and in accordance with your organization's policies.
+
+## Privacy And Data Handling
+
+The extension operates only within:
+
+- the Zoho pages opened in your browser
+- the API endpoint you explicitly configure
+
+It is not designed to send data to unrelated third parties and does not include analytics or tracking by default.
+
+Note that if you configure a remote API server, requests and data will be sent to that server. You are responsible for operating and trusting the API service you use.
+## Functionality
+
+### Core / Architectural Features
+
+The project already includes a number of foundational features at the architecture level:
+
+- modular integration architecture built around integration manifests, where each provider declares its type, display name, icon, browser-tab resolver, and supported capabilities
+- centralized integration registry in the extension app, allowing providers to be registered and discovered in a consistent way
+- typed service-provider model in `packages/core` for representing connected Zoho environments, provider metadata, sync state, and optional Git binding
+- typed artifact model in `packages/core` for storing provider data in a normalized format across capability types such as functions, workflows, modules, and fields
+- capability-driven design in the core package, so provider-specific logic can plug into a shared abstraction layer instead of hardcoding everything into the UI
+- browser abstraction layer in `packages/core` for tab discovery, tab watching, cookie access, and HTTP requests performed in the context of browser tabs
+- dependency injection setup in the extension app through `tsyringe`, which keeps browser services and storage implementations replaceable
+- local artifact persistence through Dexie/IndexedDB in the Chrome extension, which gives the app an internal cache layer for provider artifacts
+- app bootstrap based on Vue 3, Pinia, router, and shared plugin registration, keeping the extension shell separate from provider-specific logic
+- monorepo separation between app code, shared core abstractions, reusable UI kit, utilities, export helpers, and provider integrations
+- extension-side provider discovery flow that connects the registered integrations with currently open Zoho tabs and exposes them in the workspace UI
+
+### Zoho CRM Features
+
+The current `zoho-crm` integration already includes:
+
+- CRM provider detection from supported Zoho CRM browser tabs, including provider identity and title resolution
+- capability support for CRM functions, workflows, modules, fields, and webhooks
+- artifact loading for CRM functions with detailed data retrieval
+- execution logs view for CRM functions inside the artifact details UI
+- ZIP export for CRM functions, including metadata JSON and extracted Deluge code
+- workflow artifact listing and direct link generation to the related workflow page in Zoho CRM
+- ZIP export for workflow artifacts as JSON
+- module artifact listing and direct link generation to the related module layouts page in Zoho CRM
+- ZIP export for module artifacts as JSON
+- field artifact support linked to CRM modules
+- ZIP export for field artifacts as JSON
+- webhook artifact listing
+- webhook details UI with metadata view and failures log view
+- direct link generation to the related webhook edit page in Zoho CRM
+- ZIP export for webhook artifacts as JSON
+
+### Zoho Creator Features
+
+The current `zoho-creator` integration already includes:
+
+- Creator provider detection from supported Zoho Creator URLs
+- form capability support for Zoho Creator apps
+- loading of available forms from the current Creator app context
+- additional loading of individual form definitions through the Creator application builder endpoints
+- artifact details UI for forms with a fields table view
+- artifact details UI for forms with a raw definition view
+- artifact details UI for forms with a metadata JSON view
+- normalized mapping of Creator forms into shared artifact records used by the extension workspace
+
+### Git Features (Beta)
+
+The current Git feature is available in beta form and is intended to support exporting provider artifacts into Git repositories through the configured API backend.
+
+The current implementation already includes:
+
+- Git user configuration inside the extension UI
+- repository registration from the extension UI
+- provider artifact export and commit flow into a selected repository
+- commit author name and email support
+- ZIP-based artifact upload during commit operations
+
+Important:
+
+- this feature is not standalone and requires a backend API
+- this repository does not ship a complete Git backend for you
+- if you want to use the Git feature, you can implement that backend yourself and connect the extension to it
+
+The frontend currently expects these two backend endpoints:
+
+1. `POST /git/repositories`
+   JSON body:
+   `{"name":"string","description":"string?","author":{"name":"string","email":"string"}}`
+   Expected purpose:
+   create or register a Git repository and return a repository object with at least `name`
+
+2. `POST /git/repositories/{repository}/commit`
+   Multipart form-data fields:
+   `file`, `message`, `repository`, `author[name]`, `author[email]`
+   Expected purpose:
+   accept the exported ZIP archive, create a commit in the target repository, and return a response with at least `message`
+
+If these endpoints are not implemented on your backend, the Git beta functionality in the extension will not work.
+
 ## Repository Structure
 
 - `apps/chrome-ext` - the main browser extension application
@@ -34,36 +155,6 @@ At a high level, the project includes:
 - npm
 - Google Chrome or another Chromium-based browser with extension side panel support
 - A compatible API application/service available over HTTP
-
-## Important Notice
-
-This project is an independent tool and is not affiliated with, endorsed by, or supported by Zoho.
-
-This project uses unofficial, undocumented, or otherwise unsupported Zoho web APIs, browser flows, and page/runtime behavior. Because of that:
-
-- compatibility may break at any time without notice
-- some features may stop working after Zoho UI or backend changes
-- you use this software at your own risk
-
-By using this project, the user accepts full responsibility for:
-
-- how the extension is installed and used
-- the environments and accounts it is connected to
-- compliance with internal policies, contracts, and applicable law
-- any impact caused by unsupported API usage or automation behavior
-
-No warranty is provided. Use it only in environments you are authorized to access.
-
-## Privacy And Data Handling
-
-The project is intended to work only with:
-
-- the Zoho pages you open in your browser
-- the API endpoint you explicitly configure for the extension
-
-The project is not designed to send your working data to unrelated third parties. The codebase does not describe analytics, ad trackers, or deliberate forwarding of project data outside the Zoho pages you open and the API endpoint you configure.
-
-However, your effective data flow still depends on your own setup. If you point the extension to a remote API server, that server will receive the requests sent to it. You are responsible for operating and trusting the API service you configure.
 
 ## Configuration
 
