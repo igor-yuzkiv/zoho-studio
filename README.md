@@ -2,8 +2,9 @@
 
 ## ⚠️ Important Notice
 
-This project is an independent tool and is not affiliated with, endorsed by, or supported by Zoho.
-Use this tool only in environments you are authorized to access and in accordance with your organization's policies.
+This project is an independent, non-commercial developer tool and is not affiliated with, endorsed by, or supported by Zoho.
+
+It is maintained as a personal initiative and may evolve over time. Use it only in environments you are authorized to access and in accordance with your organization's policies.
 
 ---
 
