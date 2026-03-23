@@ -1,6 +1,6 @@
 # Zoho Studio Chrome Extension
 
-## ⚠️ Important Notice
+## ⚠️ Disclaimer
 
 This project is an independent, non-commercial developer tool and is not affiliated with, endorsed by, or supported by Zoho.
 
