@@ -32,16 +32,7 @@ consistent workflow.
 
 ## 🔒 Security & Privacy
 
-This project follows a **local-first** approach.
-
-The extension operates only within:
-
-- the Zoho pages opened in your browser
-- the API endpoint you explicitly configure
-- the local browser storage used by the extension
-
-Additional notes:
-
+- This project follows a **local-first** approach.
 - **No Hosted Backend:** The extension runs entirely in the browser and communicates only with your active Zoho session and any API endpoints you explicitly configure.
 - **Credential Handling:** It uses browser-level permissions (such as `cookies` and `webRequest`) to operate within your Zoho session and does not store credentials outside of the browser.
 - **Local Storage:** Artifacts and metadata are cached locally using **IndexedDB (Dexie)**.
