@@ -67,6 +67,11 @@ function acceptSecurityRequirements() {
         :close-on-escape="false"
     >
         <div class="space-y-4">
+            <p class="text-sm leading-6 text-red-500 font-bold">
+                This project is an independent, non‑commercial developer tool and is not affiliated with, endorsed by, or supported by Zoho.
+                It is maintained as a personal project and may evolve over time. Use it only in environments you are authorized 
+                to access and in accordance with your organization’s policies.
+            </p>
             <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
                 <b class="text-primary-500">Zoho Studio</b> is a browser extension that adds a developer-oriented
                 workspace next to your Zoho tabs.
