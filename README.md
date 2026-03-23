@@ -97,11 +97,11 @@ The current implementation includes:
 - commit author name and email support
 - ZIP-based artifact upload during commit operations
 
-Important:
+**⚠️ Important:**
 
-- this feature is not standalone and requires a backend API
-- this repository does not ship a complete Git backend for you
-- if you want to use the Git feature, you can implement that backend yourself and connect the extension to it
+- **this feature is not standalone and requires a backend API**
+- **this repository does not ship a complete Git backend for you**
+- **if you want to use the Git feature, you can implement that backend yourself and connect the extension to it**
 
 The frontend currently expects these two backend endpoints:
 
