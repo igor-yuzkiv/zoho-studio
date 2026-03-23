@@ -52,17 +52,15 @@ change or stop working if Zoho updates its UI or backend.
 
 Use this tool only in environments you are authorized to access and in accordance with your organization's policies.
 
-## Privacy And Data Handling
+## 🔒 Security & Accountability
 
 The extension operates only within:
 
 - the Zoho pages opened in your browser
 - the API endpoint you explicitly configure
-
-It is not designed to send data to unrelated third parties and does not include analytics or tracking by default.
-
-Note that if you configure a remote API server, requests and data will be sent to that server. You are responsible for
-operating and trusting the API service you use.
+- No Third-Party Backend: This extension does not come with a hosted backend. It is a client-side tool that communicates exclusively with the Zoho tabs open in your browser and the API endpoint you provide in the settings.
+- Credential Handling: The extension uses standard browser permissions (cookies, webRequest) to interact with Zoho on your behalf. It does not store your Zoho passwords or persistent session tokens outside of your browser's local storage (IndexedDB).
+- Local-First: All crawled metadata and artifacts are stored locally in your browser using Dexie/IndexedDB. No data leaves your machine unless you trigger an "Export" or "Git Commit" action to your own API.
 
 ## Functionality
 

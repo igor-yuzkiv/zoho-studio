@@ -28,7 +28,6 @@ export function createManifest(extraHostPermissions: string[] = []) {
             '*://*.zoho.jp/*',
             '*://*.zoho.com.au/*',
             '*://*.zoho.com.cn/*',
-            '*://localhost/*',
             ...extraHostPermissions.filter((url) => !!url),
         ],
         content_scripts: [
