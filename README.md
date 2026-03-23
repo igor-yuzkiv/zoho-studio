@@ -1,5 +1,12 @@
 # Zoho Studio Chrome Extension
 
+## ⚠️ Important Notice
+
+This project is an independent tool and is not affiliated with, endorsed by, or supported by Zoho.
+Use this tool only in environments you are authorized to access and in accordance with your organization's policies.
+
+---
+
 ![extension_preview.png](extension_preview.png)
 
 **Zoho Studio** is a browser-based development workspace for Zoho services. This repository contains a Chrome
@@ -38,17 +45,6 @@ The project is moving in the direction of:
 - gradual expansion of export, Git, and backend-assisted workflows
 
 The intent is to complement the existing Zoho UI, not replace it.
-
----
-
-## ⚠️ Important Notice
-
-This project is an independent tool and is not affiliated with, endorsed by, or supported by Zoho.
-
-It relies on unofficial and undocumented Zoho web APIs and browser behavior. Functionality may change or stop working
-if Zoho updates its UI or backend.
-
-Use this tool only in environments you are authorized to access and in accordance with your organization's policies.
 
 ---
 
