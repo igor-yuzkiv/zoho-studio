@@ -78,6 +78,12 @@ function acceptSecurityRequirements() {
             <p class="text-sm leading-6 font-bold text-gray-900 dark:text-gray-100">
                 By continuing, you acknowledge how the extension works and accept responsibility for how it is used.
             </p>
+
+            <a href="https://github.com/igor-yuzkiv/zoho-studio" target="_blank" class="hover:underline">
+                <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                    For more details, please refer to our <b class="text-primary-500">documentation</b>.
+                </p>
+            </a>
         </div>
 
         <template #footer>
