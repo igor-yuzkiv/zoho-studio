@@ -68,12 +68,12 @@ function acceptSecurityRequirements() {
     >
         <div class="space-y-4">
             <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
-                <b class="text-primary-500">Zoho Studio</b> is a browser extension that adds a developer-oriented workspace next to your Zoho
-                tabs.
+                <b class="text-primary-500">Zoho Studio</b> is a browser extension that adds a developer-oriented
+                workspace next to your Zoho tabs.
             </p>
             <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
-                It uses your current browser session and may rely on unofficial Zoho APIs. <b>Please use this tool only in
-                environments and with services you are authorized to access.</b>
+                It uses your current browser session and may rely on unofficial Zoho APIs.
+                <b>Please use this tool only in environments and with services you are authorized to access.</b>
             </p>
             <p class="text-sm leading-6 font-bold text-gray-900 dark:text-gray-100">
                 By continuing, you acknowledge how the extension works and accept responsibility for how it is used.
@@ -88,7 +88,7 @@ function acceptSecurityRequirements() {
 
         <template #footer>
             <div class="flex w-full justify-end">
-                <Button label="I agree and accept the risks" size="small" @click="acceptSecurityRequirements" />
+                <Button label="I understand and continue" size="small" @click="acceptSecurityRequirements" />
             </div>
         </template>
     </Dialog>
