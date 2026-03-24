@@ -32,7 +32,7 @@ const itemsForDisplay = computed(() => {
                         <h1 class="font-bold">Zoho Studio</h1>
                     </div>
                     <h3 class="mt-2 text-lg font-medium text-gray-700 dark:text-gray-400">
-                        Development Environment for Zoho
+                        Open-source development environment for Zoho services.
                     </h3>
                 </div>
 
