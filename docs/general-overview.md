@@ -1,8 +1,8 @@
-# Zoho Studio Extension: System Overview
+# Zoho Studio Extension: General Overview
 
 ## Purpose
 
-Zoho Studio is a browser extension that adds a developer-focused workspace next to active Zoho pages. Its role is to detect supported Zoho services already open in the browser, identify the current service context, load service metadata and artifacts, and present them in a consistent UI.
+Zoho Studio is a browser extension that adds a developer-focused workspace next to active Zoho pages. Its job is to detect supported Zoho services already open in the browser, identify the current service context, load service metadata and artifacts, and present them in a consistent UI.
 
 The extension does not replace Zoho pages. It works alongside them and uses the active browser session as its execution context.
 
@@ -15,7 +15,7 @@ At a high level, the system is built around four concepts:
 - **Integrations**: an integration defines how a Zoho product is recognized and how data should be loaded for it.
 - **Capabilities**: a capability represents a functional area of a provider, such as functions, workflows, modules, fields, forms, or webhooks.
 
-This model allows the extension to treat different Zoho products through a shared workflow while still keeping product-specific logic isolated behind integrations and capabilities.
+This model lets the extension treat different Zoho products through a shared workflow while keeping product-specific logic isolated behind integrations and capabilities.
 
 ## Working With Active Zoho Tabs
 
@@ -107,6 +107,27 @@ The cache is provider-scoped. Each provider maintains its own local artifact set
 
 Caching is treated as a runtime optimization, not as the source of truth. The source of truth remains the current Zoho service state reachable through an active matched tab.
 
+## Domain Model
+
+The core domain model is built around three concepts:
+
+- `ServiceProvider`
+- `Capability`
+- `Artifact`
+
+```mermaid
+flowchart LR
+    P[Service Provider] --> C[Capability]
+    C --> A[Artifact]
+    A --> A2[Child Artifact]
+```
+
+In short:
+
+- provider = service context
+- capability = domain area inside that context
+- artifact = normalized data record produced from that domain area
+
 ## Integrations and Providers
 
 An integration describes how the system supports one Zoho product family.
@@ -121,6 +142,46 @@ At the conceptual level, an integration is responsible for:
 A provider is the concrete runtime instance produced by an integration. It represents a single service context that the rest of the system can work with uniformly.
 
 This separation allows the extension to scale by adding new integrations without changing the overall runtime model.
+
+### `ServiceProvider`
+
+```ts
+type ServiceProvider<TMetadata = Record<string, unknown>> = {
+    id: string
+    type: string
+    title: string
+    metadata: TMetadata
+    browserTabId?: number | null
+    lastSyncedAt?: number
+    gitRepository?: string | null
+}
+```
+
+Role:
+
+- identifies one concrete service context
+- scopes capabilities
+- scopes artifact ownership
+
+Notes:
+
+- `id` must be stable
+- `metadata` should contain only provider-specific context
+- one provider represents one sync/storage boundary
+
+`ServiceProvider` is the root domain object. It answers:
+
+> Which exact Zoho service context is the system working with?
+
+Examples:
+
+- one CRM organization
+- one Creator application
+
+Why it exists:
+
+- Zoho product type alone is too broad
+- the system needs a concrete context for sync, capability selection, and data ownership
 
 ## Capability System
 
@@ -144,6 +205,48 @@ Each capability defines:
 
 This allows the system to represent heterogeneous Zoho concepts through one shared abstraction.
 
+### `CapabilityDescriptor`
+
+```ts
+type CapabilityType = 'functions' | 'workflows' | 'modules' | 'fields' | 'forms' | 'webhooks' | string
+
+interface CapabilityDescriptor {
+    type: CapabilityType
+    title: string
+    dependsOn?: CapabilityType
+    adapter: CapabilityAdapterConstructor
+}
+```
+
+Role:
+
+- declares a domain area available for a provider
+- defines how data for that area is loaded
+- may depend on another capability
+
+Examples:
+
+- `modules`
+- `fields`
+- `functions`
+- `forms`
+
+### `ICapabilityAdapter`
+
+```ts
+interface ICapabilityAdapter {
+    readonly serviceProvider: ServiceProvider
+    list?: (pagination: PaginationParams) => PromisePaginatedResult<IArtifact>
+    find?: (artifact: IArtifact) => Promise<IArtifact | null>
+    findByParent?: (parentArtifact: IArtifact) => Promise<IArtifact[]>
+}
+```
+
+Role:
+
+- executes capability-specific loading
+- maps provider context into artifact output
+
 ### Capability Dependencies
 
 Not all capabilities are independent. Some depend on artifacts loaded by another capability.
@@ -154,6 +257,20 @@ For example, a capability may require parent entities to be known before child e
 - dependent capabilities load after their prerequisites are available
 
 This keeps the loading process predictable while preserving a generic runtime model.
+
+`Capability` represents a loadable domain area inside a provider.
+
+Why it exists:
+
+- providers expose different sets of entities
+- loading logic differs by domain
+- some domains depend on others
+
+Rules:
+
+- capability belongs to a provider type
+- capability type should be stable
+- use `dependsOn` only for real domain dependencies
 
 ## Artifact Representation
 
@@ -170,6 +287,87 @@ An artifact is the extension's common representation of a single unit of provide
 
 This representation is important because it gives the rest of the system a common language for storage, browsing, refresh, export, and detail views across different Zoho products.
 
+### `IArtifact`
+
+```ts
+interface IArtifact<TCapabilityType extends CapabilityType = CapabilityType, TOrigin = unknown> {
+    id: string
+    source_id: string
+    capability_type: TCapabilityType
+    parent_id?: string | null
+    provider_id: string
+    display_name: string
+    api_name?: string | null
+    payload: Record<string, unknown>
+    origin: TOrigin
+}
+```
+
+Role:
+
+- normalized record used by the system
+- persistent unit for storage and sync
+- common format across different Zoho services
+
+`Artifact` is the central data entity.
+
+It is the normalized result of loading provider-specific data through a capability.
+
+Why it is central:
+
+- storage works with artifacts
+- sync works with artifacts
+- parent-child relations are expressed through artifacts
+- different Zoho services become comparable only after mapping into artifacts
+
+Typical artifact contents:
+
+- stable ID
+- provider ID
+- capability type
+- normalized display fields
+- typed payload
+- original source record
+
+## How They Work Together
+
+Sequence:
+
+1. resolve a `ServiceProvider`
+2. get provider `CapabilityDescriptor[]`
+3. run the capability adapter
+4. map raw service data into `IArtifact`
+5. store and query artifacts by provider, capability, and parent
+
+Formula:
+
+```text
+provider -> capability -> artifact
+```
+
+## Artifact Identity
+
+Artifact IDs should be derived from domain context, not only from remote IDs.
+
+Recommended shape:
+
+```text
+provider_id + capability_type + domain key
+```
+
+Examples:
+
+```text
+zoho-crm::<ctx>:modules:Leads
+zoho-crm::<ctx>:fields:Leads:Email
+```
+
+Why:
+
+- remote IDs may not be globally unique
+- child artifacts often need composite IDs
+- stable IDs simplify sync and storage
+
 ## Summary
 
 The extension operates as a local browser-side runtime that:
@@ -181,4 +379,4 @@ The extension operates as a local browser-side runtime that:
 - stores artifacts locally in IndexedDB
 - presents a consistent developer workspace with refreshable cached state
 
-The result is a system where tabs provide live context, integrations provide product knowledge, capabilities provide domain behavior, and local storage provides continuity between interactions.
+The result is a system where tabs provide live context, integrations provide product knowledge, capabilities provide domain behavior, artifacts provide the shared storage model, and local storage provides continuity between interactions.
