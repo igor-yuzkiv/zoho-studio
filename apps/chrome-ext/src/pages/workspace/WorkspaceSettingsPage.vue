@@ -96,7 +96,7 @@ watch(
     <div class="app-card flex h-full w-full overflow-hidden">
         <div v-if="provider" class="container mx-auto flex h-full flex-col overflow-hidden p-2 xl:max-w-4xl">
             <div class="flex items-center justify-between border-b">
-                <h1 class="text-3xl font-bold">{{ provider.title }} Provider Settings</h1>
+                <h1 class="text-3xl"><span class="font-bold">{{ provider.title }}</span> Settings</h1>
             </div>
 
             <div class="mt-2 flex h-full w-full flex-col gap-4 overflow-auto">

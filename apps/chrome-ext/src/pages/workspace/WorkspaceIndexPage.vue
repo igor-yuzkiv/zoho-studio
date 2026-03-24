@@ -36,7 +36,7 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
             command: () => {
                 if (providerId.value) {
                     router.push({
-                        name: AppRouteName.workspaceProviderSettings,
+                        name: AppRouteName.workspaceSettings,
                         params: { providerId: providerId.value },
                     })
                 }

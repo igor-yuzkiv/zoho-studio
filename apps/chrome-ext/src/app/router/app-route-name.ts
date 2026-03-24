@@ -1,9 +1,8 @@
 export const AppRouteName = {
     home: 'home',
     error: 'error',
+    gitConfig: 'git.config',
     workspaceIndex: 'workspace.index',
     workspaceArtifact: 'workspace.artifact',
-    workspaceProviderSettings: 'workspace.provider.settings',
-
-    gitConfig: 'git.config',
+    workspaceSettings: 'workspace.settings',
 }

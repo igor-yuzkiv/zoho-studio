@@ -29,7 +29,12 @@ export const router = createRouter({
             meta: { hideSidebarMenu: true, layout: 'workspace' },
             component: () => import('../../pages/workspace/WorkspaceIndexPage.vue'),
         },
-
+        {
+            name: AppRouteName.workspaceSettings,
+            path: '/workspace/:providerId/settings',
+            meta: { hideSidebarMenu: true, layout: 'workspace' },
+            component: () => import('../../pages/workspace/WorkspaceSettingsPage.vue'),
+        },
         {
             name: AppRouteName.workspaceArtifact,
             path: '/workspace/:providerId/capabilities/:capabilityType/:artifactId?',
@@ -38,13 +43,6 @@ export const router = createRouter({
                 default: () => import('../../pages/workspace/artifact/ArtifactDetailPage.vue'),
                 menu: () => import('../../pages/workspace/artifact/ArtifactMenuPage.vue'),
             },
-        },
-
-        {
-            name: AppRouteName.workspaceProviderSettings,
-            path: '/workspace/:providerId/settings',
-            meta: { hideSidebarMenu: true, layout: 'workspace' },
-            component: () => import('../../pages/workspace/ProviderSettingsPage.vue'),
         },
 
         ...gitRoutes,
