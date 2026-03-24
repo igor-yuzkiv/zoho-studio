@@ -137,11 +137,11 @@ The extension reads environment variables from `apps/chrome-ext/.env`. Use `apps
 template.
 
 | Variable                       | Description                                                                                               | Default                                      |
-| :----------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
-| `VITE_API_BASE_URL`            | Base URL for API requests                                                                                 | `http://127.0.0.1:8000/api`                  |
-| `VITE_API_PROXY_TARGET`        | Proxy target used in local development                                                                    | `http://127.0.0.1:8000`                      |
+| :----------------------------- |:----------------------------------------------------------------------------------------------------------| :------------------------------------------- |
 | `VITE_API_HOST_PERMISSION_URL` | Chrome host permissions for your API. Supports one or multiple patterns separated by commas or new lines. | `*://127.0.0.1/*,*://localhost/*`            |
 | `VITE_GITHUB_REPO_URL`         | Repository URL used for issue/report links in the UI                                                      | `https://github.com/igor-yuzkiv/zoho-studio` |
+| `VITE_API_BASE_URL`            | Optional base URL for API requests.                                                                       | `http://127.0.0.1:8000/api`                  |
+| `VITE_API_PROXY_TARGET`        | Optional proxy target used in local development                                                           | `http://127.0.0.1:8000`                      |
 | `VITE_FEATURE_GIT`             | Enables beta Git functionality                                                                            | `false`                                      |
 
 If your API runs on a different host, port, or domain, update both `VITE_API_BASE_URL` and
