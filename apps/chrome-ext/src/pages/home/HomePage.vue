@@ -28,8 +28,8 @@ const itemsForDisplay = computed(() => {
             <div class="flex h-3/4 flex-col p-3">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-x-2 text-4xl">
-                        <Icon icon="logos:zoho" />
-                        <h1 class="font-bold">Zoho Studio</h1>
+                        <img src="/logo.png" />
+                        <h1><span class="font-bold">Zoho Studio</span> Chrome Extension</h1>
                     </div>
                     <h3 class="mt-2 text-lg font-medium text-gray-700 dark:text-gray-400">
                         Open-source development environment for Zoho services.
