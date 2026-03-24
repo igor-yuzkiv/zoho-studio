@@ -6,9 +6,9 @@ const gitRoutes: RouteRecordRaw[] = isGitFeatureEnabled
     ? [
           {
               name: AppRouteName.gitConfig,
-              path: '/settings/git',
+              path: '/git/config',
               meta: { hideSidebarMenu: true, layout: 'default' },
-              component: () => import('../../pages/settings/GitSettingsPage.vue'),
+              component: () => import('../../pages/git/GitConfigPage.vue'),
           },
       ]
     : []

@@ -15,12 +15,25 @@ const { provider } = useCurrentProvider()
 const providersStore = useProvidersRuntimeStore()
 const gitConfig = useGitConfigStore()
 
+const gitMenuItem = isGitFeatureEnabled
+    ? [
+          {
+              label: 'Git',
+              items: [
+                  { label: 'Config', route: { name: AppRouteName.gitConfig } },
+                  // { label: 'Commit', disabled: !provider.value },
+              ],
+          },
+      ]
+    : []
+
 const menuItems = computed<AppMenuItem[]>(() => {
     const items: AppMenuItem[] = [
         {
             label: 'Home',
             route: { name: AppRouteName.home },
         },
+        ...gitMenuItem,
         {
             label: 'Services',
             items: providersStore.providersList.map((p) => {
@@ -33,13 +46,7 @@ const menuItems = computed<AppMenuItem[]>(() => {
     ]
 
     if (isGitFeatureEnabled) {
-        items.push({
-            label: 'Git',
-            items: [
-                { label: 'Config', route: { name: AppRouteName.gitConfig } },
-                // { label: 'Commit', disabled: !provider.value },
-            ],
-        })
+        items.push()
     }
 
     return items

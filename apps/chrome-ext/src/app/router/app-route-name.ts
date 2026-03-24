@@ -5,5 +5,5 @@ export const AppRouteName = {
     workspaceArtifact: 'workspace.artifact',
     workspaceProviderSettings: 'workspace.provider.settings',
 
-    gitConfig: 'settings.git.config',
+    gitConfig: 'git.config',
 }
