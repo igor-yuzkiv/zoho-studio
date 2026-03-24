@@ -217,23 +217,3 @@ The production output is generated in `apps/chrome-ext/dist`. The development se
 7. Open the extension from the Chrome toolbar or side panel.
 
 When a supported Zoho service is open, it should appear in the extension's service list.
-
-### 5. Typical Local Setup
-
-1. Install dependencies with `npm install`.
-2. Copy `apps/chrome-ext/.env.example` to `apps/chrome-ext/.env`.
-3. Start your API service on `127.0.0.1:8000`.
-4. Run `npx nx build chrome-ext`.
-5. Load `apps/chrome-ext/dist` as an unpacked extension in Chrome.
-6. Open a Zoho CRM or Zoho Creator page in a browser tab.
-7. Open the extension side panel and start working.
-
----
-
-## 🧰 Troubleshooting
-
-- If the extension cannot reach the API, verify `apps/chrome-ext/.env` and confirm the API server is running.
-- If a Zoho service does not appear in the UI, make sure the relevant Zoho page is open in another tab.
-- If you change environment variables, rebuild the extension before reloading it in Chrome.
-- If the unpacked extension does not refresh, reload it from `chrome://extensions/`.
-- If Zoho changes its internal behavior, unsupported integrations may require code updates.
