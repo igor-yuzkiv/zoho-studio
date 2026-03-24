@@ -13,6 +13,10 @@ export type ServiceProvider<TMetadata = Record<string, unknown>> = {
     browserTabId?: Maybe<BrowserTabId>
     lastSyncedAt?: number
     gitRepository?: string | null
+    autoSyncEnabled?: boolean
+    cacheTtlInMs?: number
 }
 
 export type ServiceProviderFromBrowserTabResolver = (browserTab: BrowserTab) => PromiseResult<ServiceProvider>
+
+export type UpdateProviderDto = Omit<ServiceProvider, 'id' | 'type' | 'metadata'>

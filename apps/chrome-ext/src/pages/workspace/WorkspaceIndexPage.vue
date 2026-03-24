@@ -2,29 +2,27 @@
 import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
 import { useProvidersRuntimeStore } from '../../store'
 import { Icon } from '@iconify/vue'
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import Menu from 'primevue/menu'
 import type { MenuItem } from 'primevue/menuitem'
-import Inplace from 'primevue/inplace'
-import InputText from 'primevue/inputtext'
-import InputGroup from 'primevue/inputgroup'
-import InputGroupAddon from 'primevue/inputgroupaddon'
-import { IconButton } from '@zoho-studio/ui-kit'
 import { useConfirm, useToast } from '@zoho-studio/ui-kit'
 import { useCommitProviderArtifacts } from '../../composables'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import { ZodError } from 'zod'
 import { CommitProviderArtifactsDialog } from '../../components/provider'
 import { isGitFeatureEnabled } from '../../feature-flags.ts'
+import { AppRouteName } from '../../app/router'
+import { useRouter } from 'vue-router'
+import Message from 'primevue/message'
 
 const logger = useConsoleLogger('WorkspaceIndexPage')
 const toast = useToast()
 const confirm = useConfirm()
+const router = useRouter()
 
 const providersStore = useProvidersRuntimeStore()
-const { providerId, providerManifest, provider, isOnline, updateProviderTitle, isCachingInProgress } =
-    useCurrentProvider()
-const providerTitle = ref<string>(provider.value?.title ?? 'Unknown Provider')
+const { providerId, providerManifest, provider, isOnline, isCachingInProgress } = useCurrentProvider()
+
 const { refreshProviderCache } = useProviderCacheManager()
 
 const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
@@ -33,6 +31,18 @@ const commitDialog = useCommitProviderArtifacts()
 
 const actionsMenuItems = computed<MenuItem[]>(() => {
     const items: MenuItem[] = [
+        {
+            label: 'Settings',
+            command: () => {
+                if (providerId.value) {
+                    router.push({
+                        name: AppRouteName.workspaceProviderSettings,
+                        params: { providerId: providerId.value },
+                    })
+                }
+            },
+            icon: 'mdi:cog',
+        },
         {
             label: 'Refresh Cache',
             icon: isCachingInProgress.value ? 'line-md:loading-loop' : 'tdesign:clear-filled',
@@ -126,77 +136,23 @@ async function handleGitCommit() {
         }
     }
 }
-
-function resetProviderTitle(closeInplace?: () => void) {
-    providerTitle.value = provider.value?.title ?? 'Unknown Provider'
-    if (closeInplace) {
-        closeInplace()
-    }
-}
-
-function saveProviderTitle(closeInplace?: () => void) {
-    const newTitle = providerTitle.value.trim()
-    if (!provider.value || !newTitle || newTitle === provider.value.title) {
-        return
-    }
-
-    updateProviderTitle(newTitle)
-    if (closeInplace) {
-        closeInplace()
-    }
-}
-
-watch(provider, () => resetProviderTitle())
 </script>
 
 <template>
     <div class="app-card flex h-full w-full items-center justify-center">
         <div v-if="providerManifest && provider" class="container mx-auto flex flex-col p-3 xl:max-w-3xl">
             <div class="flex w-full flex-col">
+                <Message v-if="!provider.autoSyncEnabled" severity="warn" class="my-3">
+                    <template #icon>
+                        <Icon icon="ph:warning-circle-bold" class="h-6 w-6" />
+                    </template>
+                    Auto-sync is disabled for this provider. Artifacts will not be updated automatically.
+                </Message>
+
                 <h3 class="text-gray-700 dark:text-gray-400">Service Provider</h3>
                 <div class="flex w-full items-center gap-x-2 text-2xl">
                     <Icon :icon="providerManifest.icon" />
-                    <Inplace class="w-full" unstyled>
-                        <template #display>
-                            <div class="group flex cursor-pointer items-center gap-x-2 hover:underline">
-                                <h1 class="font-bold">{{ provider.title }}</h1>
-                                <Icon
-                                    class="text-gray-500 opacity-0 group-hover:opacity-100"
-                                    icon="material-symbols:edit"
-                                />
-                            </div>
-                        </template>
-
-                        <template #content="{ closeCallback }">
-                            <InputGroup>
-                                <InputGroupAddon>
-                                    <IconButton
-                                        @click="resetProviderTitle(closeCallback)"
-                                        icon="ic:baseline-close"
-                                        size="small"
-                                        text
-                                        severity="secondary"
-                                        class="p-0"
-                                        rounded
-                                    />
-                                </InputGroupAddon>
-
-                                <InputText v-model="providerTitle" class="w-full" size="small" />
-
-                                <InputGroupAddon>
-                                    <IconButton
-                                        icon="material-symbols:check-rounded"
-                                        size="small"
-                                        text
-                                        class="p-0"
-                                        severity="success"
-                                        rounded
-                                        @click="saveProviderTitle(closeCallback)"
-                                    />
-                                </InputGroupAddon>
-                            </InputGroup>
-                        </template>
-                    </Inplace>
+                    <h1 class="font-bold">{{ provider.title }}</h1>
                 </div>
 
                 <Menu :model="actionsMenuItems" class="mt-2 border-none bg-transparent">
@@ -204,10 +160,6 @@ watch(provider, () => resetProviderTitle())
                         <Icon :icon="item?.icon ?? 'icon-park-outline:dot'" />
                     </template>
                 </Menu>
-
-                <div class="app-card mt-4 p-1">
-                    <pre>{{ provider }}</pre>
-                </div>
             </div>
         </div>
 

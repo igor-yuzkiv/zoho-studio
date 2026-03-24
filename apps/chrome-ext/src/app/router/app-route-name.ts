@@ -3,6 +3,7 @@ export const AppRouteName = {
     error: 'error',
     workspaceIndex: 'workspace.index',
     workspaceArtifact: 'workspace.artifact',
+    workspaceProviderSettings: 'workspace.provider.settings',
 
     gitConfig: 'settings.git.config',
 }

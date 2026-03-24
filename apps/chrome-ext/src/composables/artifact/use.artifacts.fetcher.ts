@@ -1,7 +1,7 @@
 import { CapabilityDescriptor, IArtifact, ICapabilityAdapter, ServiceProvider } from '@zoho-studio/core'
 import { PaginationParams, sleep, useConsoleLogger } from '@zoho-studio/utils'
 
-export function useArtifactsFetcher(fetchDelay = 100) {
+export function useArtifactsFetcher(fetchDelay = 200) {
     const logger = useConsoleLogger('useArtifactsFetcher')
 
     async function recursiveFetchArtifacts(

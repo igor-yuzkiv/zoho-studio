@@ -6,6 +6,7 @@ import {
     type IIntegrationManifest,
     ServiceProvider,
     ServiceProviderId,
+    UpdateProviderDto,
 } from '@zoho-studio/core'
 import type { Maybe } from '@zoho-studio/utils'
 import { computed } from 'vue'
@@ -18,7 +19,6 @@ export function useCurrentProvider() {
     const providerId = useRouteParams<ServiceProviderId>('providerId')
     const capabilities = useCapabilitiesManager()
     const isCachingInProgress = computed<boolean>(() => providersStore.isProviderCacheInProgress(providerId.value))
-
 
     const provider = computed<Maybe<ServiceProvider>>(() => {
         if (!providerId.value || !providersStore.providersMap.has(providerId.value)) {
@@ -46,6 +46,17 @@ export function useCurrentProvider() {
         return format(new Date(provider.value.lastSyncedAt), 'PPpp')
     })
 
+    const nextSyncDueAtFormatted = computed(() => {
+        if (!provider.value?.lastSyncedAt || !provider.value?.autoSyncEnabled) {
+            return null
+        }
+
+        const ttl = provider.value.cacheTtlInMs || 0
+        const nextSyncDueAt = new Date(provider.value.lastSyncedAt + ttl)
+
+        return format(nextSyncDueAt, 'PPpp')
+    })
+
     const providerCapabilities = computed<CapabilityDescriptor[]>(() => {
         if (!provider.value) {
             return []
@@ -62,12 +73,12 @@ export function useCurrentProvider() {
         return capabilities.findProviderCapability(provider.value, capabilityType)
     }
 
-    function updateProviderTitle(newTitle: string) {
+    function updateProvider(updateData: Partial<UpdateProviderDto>) {
         if (!provider.value) {
             return
         }
 
-        providersStore.updateProvider(provider.value.id, { title: newTitle })
+        providersStore.updateProvider(provider.value.id, updateData)
     }
 
     return {
@@ -79,6 +90,7 @@ export function useCurrentProvider() {
         providerCapabilities,
         findProviderCapability,
         lastSyncedAtFormatted,
-        updateProviderTitle,
+        nextSyncDueAtFormatted,
+        updateProvider,
     }
 }

@@ -1,6 +1,6 @@
 import { integrationsRegistry } from '../integrations.registry.ts'
 import { type Serializer, useStorage } from '@vueuse/core'
-import { BrowserTab, BrowserTabId, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
+import { BrowserTab, BrowserTabId, ServiceProvider, ServiceProviderId, UpdateProviderDto } from '@zoho-studio/core'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -80,7 +80,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         cachedProviders.value = Array.from(next.values())
     }
 
-    function updateProvider(id: ServiceProviderId, data: Partial<ServiceProvider>) {
+    function updateProvider(id: ServiceProviderId, data: Partial<UpdateProviderDto>) {
         const existing = providersMap.value.get(id)
         if (!existing) {
             logger.warn(`Trying to update non-existing provider with id "${id}"`)

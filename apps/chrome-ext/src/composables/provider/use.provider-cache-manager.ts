@@ -15,7 +15,9 @@ export function useProviderCacheManager() {
     function isCacheStale(provider: ServiceProvider) {
         if (!provider.lastSyncedAt) return true
 
-        return Date.now() - provider.lastSyncedAt > PROVIDER_CACHE_TTL_MS
+        const ttl = provider.cacheTtlInMs || PROVIDER_CACHE_TTL_MS
+
+        return Date.now() - provider.lastSyncedAt > ttl
     }
 
     async function isSyncRequired(provider: ServiceProvider) {

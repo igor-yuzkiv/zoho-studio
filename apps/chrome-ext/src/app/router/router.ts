@@ -40,6 +40,13 @@ export const router = createRouter({
             },
         },
 
+        {
+            name: AppRouteName.workspaceProviderSettings,
+            path: '/workspace/:providerId/settings',
+            meta: { hideSidebarMenu: true, layout: 'workspace' },
+            component: () => import('../../pages/workspace/ProviderSettingsPage.vue'),
+        },
+
         ...gitRoutes,
 
         {

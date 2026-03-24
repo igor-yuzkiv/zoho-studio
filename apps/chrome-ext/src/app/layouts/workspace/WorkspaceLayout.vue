@@ -19,8 +19,15 @@ const router = useRouter()
 
 const { showLeftSidebar } = storeToRefs(useAppStateStore())
 
-const { providerId, provider, providerManifest, providerCapabilities, lastSyncedAtFormatted, isCachingInProgress } =
-    useCurrentProvider()
+const {
+    providerId,
+    provider,
+    providerManifest,
+    providerCapabilities,
+    lastSyncedAtFormatted,
+    nextSyncDueAtFormatted,
+    isCachingInProgress,
+} = useCurrentProvider()
 const { ensureSyncArtifacts } = useProviderCacheManager()
 
 onMounted(() => {
@@ -32,14 +39,16 @@ onMounted(() => {
         return
     }
 
-    ensureSyncArtifacts(provider.value).catch((error) => {
-        logger.error('Failed to sync provider artifacts on mount', error)
+    if (provider.value.autoSyncEnabled) {
+        ensureSyncArtifacts(provider.value).catch((error) => {
+            logger.error('Failed to sync provider artifacts on mount', error)
 
-        router.push({
-            name: AppRouteName.error,
-            query: { code: 500, message: 'Failed to sync provider artifacts. Please try again.' },
+            router.push({
+                name: AppRouteName.error,
+                query: { code: 500, message: 'Failed to sync provider artifacts. Please try again.' },
+            })
         })
-    })
+    }
 })
 </script>
 
@@ -97,7 +106,14 @@ onMounted(() => {
                     <Icon icon="line-md:loading-loop" />
                     <span>Caching...</span>
                 </div>
-                <div v-else class="text-sm text-gray-500">Last synced: {{ lastSyncedAtFormatted }}</div>
+                <div v-else class="flex gap-x-2 text-sm text-gray-500">
+                    <span v-if="lastSyncedAtFormatted" class="border-r px-2">
+                        Last synced at: {{ lastSyncedAtFormatted }}
+                    </span>
+                    <span v-if="nextSyncDueAtFormatted" class="border-r px-2">
+                        Next sync due at: {{ nextSyncDueAtFormatted }}
+                    </span>
+                </div>
             </template>
         </AppFooter>
     </div>
