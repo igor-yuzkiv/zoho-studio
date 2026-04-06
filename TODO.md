@@ -1,0 +1,2 @@
+- Global Search
+- Notes/Docs

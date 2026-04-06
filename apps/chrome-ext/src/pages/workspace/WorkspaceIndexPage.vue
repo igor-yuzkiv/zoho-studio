@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useArtifactsZipExport, useCurrentProvider, useProviderCacheManager } from '../../composables'
+import { useArtifactsZipExport, useCurrentProvider, useProviderArtifactsCache } from '../../composables'
 import { useProvidersRuntimeStore } from '../../store'
 import { Icon } from '@iconify/vue'
 import { computed } from 'vue'
@@ -23,7 +23,7 @@ const router = useRouter()
 const providersStore = useProvidersRuntimeStore()
 const { providerId, providerManifest, provider, isOnline, isCachingInProgress } = useCurrentProvider()
 
-const { refreshProviderCache } = useProviderCacheManager()
+const { refreshArtifactsCache } = useProviderArtifactsCache()
 
 const { exportProviderArtifacts, isExporting } = useArtifactsZipExport()
 
@@ -88,7 +88,7 @@ async function handleRefreshProviderCache() {
         message: 'This will clear and re-sync all artifacts for this provider. Are you sure you want to continue?',
         accept: async () => {
             if (provider.value) {
-                refreshProviderCache(provider.value)
+                refreshArtifactsCache(provider.value)
                     .then(() => {
                         toast.success({ detail: 'Provider cache refreshed successfully.' })
                     })

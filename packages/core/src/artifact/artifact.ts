@@ -41,3 +41,11 @@ export type ArtifactDetailViewConfig = {
     }
     viewModes: ViewModeOption[]
 }
+
+export interface IArtifactSearchDocument {
+    id: ArtifactId
+    display_name: string
+    capability_type: CapabilityType
+    provider_id: ServiceProviderId
+    content: string
+}

@@ -2,7 +2,7 @@
 import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
 import { useRoute, useRouter } from 'vue-router'
-import { useCurrentProvider, useProviderCacheManager } from '../../../composables'
+import { useCurrentProvider, useProviderArtifactsCache } from '../../../composables'
 import { ProviderCapabilitiesMenu } from '../../../components/provider'
 import { AppFooter } from '../../shell/app-footer'
 import { AppTopMenu } from '../../shell/app-top-menu'
@@ -28,7 +28,7 @@ const {
     nextSyncDueAtFormatted,
     isCachingInProgress,
 } = useCurrentProvider()
-const { ensureSyncArtifacts } = useProviderCacheManager()
+const { syncArtifactsIfNeeded } = useProviderArtifactsCache()
 
 onMounted(() => {
     if (!provider.value) {
@@ -40,7 +40,7 @@ onMounted(() => {
     }
 
     if (provider.value.autoSyncEnabled) {
-        ensureSyncArtifacts(provider.value).catch((error) => {
+        syncArtifactsIfNeeded(provider.value).catch((error) => {
             logger.error('Failed to sync provider artifacts on mount', error)
 
             router.push({

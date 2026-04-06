@@ -12,7 +12,7 @@ export function useArtifactsSync() {
     const fetcher = useArtifactsFetcher()
     const isSyncing = ref(false)
 
-    async function syncAllProviderArtifacts(provider: ServiceProvider) {
+    async function syncAllProviderArtifacts(provider: ServiceProvider): Promise<IArtifact[]> {
         try {
             isSyncing.value = true
 
@@ -22,10 +22,14 @@ export function useArtifactsSync() {
             const phase1Artifacts = await fetcher.fetchProviderArtifacts(provider, independent)
             await artifactsStorage.bulkUpsert(phase1Artifacts)
 
-            if (dependent.length > 0) {
-                const phase2Artifacts = await fetcher.fetchProviderArtifacts(provider, dependent)
-                await artifactsStorage.bulkUpsert(phase2Artifacts)
+            if (dependent.length <= 0) {
+                return phase1Artifacts
             }
+
+            const phase2Artifacts = await fetcher.fetchProviderArtifacts(provider, dependent)
+            await artifactsStorage.bulkUpsert(phase2Artifacts)
+
+            return phase1Artifacts.concat(phase2Artifacts)
         } finally {
             isSyncing.value = false
         }
