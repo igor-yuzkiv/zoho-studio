@@ -148,8 +148,20 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
             )
             const next = await resolveFromBrowserTabs(Array.from(browserTabs.values()), appProfile, prev)
 
+            const changedProviders: ServiceProvider[] = []
+            for (const [id, provider] of next.entries()) {
+                const current = providersMap.value.get(id)
+                if (!current || current.browserTabId !== provider.browserTabId) {
+                    changedProviders.push(provider)
+                }
+            }
+
+            if (changedProviders.length === 0) {
+                return
+            }
+
             providersMap.value = next
-            await upsertManyProviders(next.values())
+            await upsertManyProviders(changedProviders)
         } catch (error) {
             logger.error('Failed to reconcile providers with browser tabs', error)
         }
