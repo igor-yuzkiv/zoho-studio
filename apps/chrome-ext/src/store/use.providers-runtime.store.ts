@@ -78,13 +78,14 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     const providersCacheInProgressMap = ref<Map<ServiceProviderId, boolean>>(new Map())
     const providersStorage = container.resolve<IProvidersStorage>(ProvidersStorageToken)
 
-    async function loadStoredProviders(appProfile: AppProfile): Promise<ServiceProvider[]> {
+    async function loadStoredProviders(): Promise<ServiceProvider[]> {
         const providers: ServiceProvider[] = []
         let pagination = { ...PROVIDERS_LIST_PAGINATION }
 
         while (true) {
             const response = await providersStorage.list(pagination)
-            providers.push(...response.data.filter((provider) => provider.app_profile.id === appProfile.id))
+            // providers.push(...response.data.filter((provider) => provider.app_profile.id === appProfile.id))
+            providers.push(...response.data)
 
             if (!response.meta.has_more) {
                 return providers
@@ -121,7 +122,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
                 return
             }
 
-            const storedProviders = await loadStoredProviders(appProfile)
+            const storedProviders = await loadStoredProviders()
 
             providersMap.value = new Map<ServiceProviderId, ServiceProvider>(
                 storedProviders.map((provider) => [provider.id, provider])
