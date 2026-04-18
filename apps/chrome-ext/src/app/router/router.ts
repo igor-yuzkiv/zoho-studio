@@ -1,6 +1,9 @@
 import { AppRouteName } from './app-route-name.ts'
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 import { isGitFeatureEnabled } from '../../feature-flags.ts'
+import { useAppStore, useSecurityRequirementsStore } from '../../store'
+
+const welcomeRouteNames = new Set([AppRouteName.welcome, AppRouteName.welcomeProfileSetup])
 
 const gitRoutes: RouteRecordRaw[] = isGitFeatureEnabled
     ? [
@@ -20,6 +23,18 @@ export const router = createRouter({
             path: '/',
             name: AppRouteName.home,
             component: () => import('../../pages/home/HomePage.vue'),
+            meta: { hideSidebarMenu: true, layout: 'default' },
+        },
+        {
+            path: '/welcome',
+            name: AppRouteName.welcome,
+            component: () => import('../../pages/welcome/WelcomePage.vue'),
+            meta: { hideSidebarMenu: true, layout: 'default' },
+        },
+        {
+            path: '/welcome/profile-setup',
+            name: AppRouteName.welcomeProfileSetup,
+            component: () => import('../../pages/welcome/ProfileSetupPage.vue'),
             meta: { hideSidebarMenu: true, layout: 'default' },
         },
 
@@ -59,4 +74,29 @@ export const router = createRouter({
             redirect: { name: AppRouteName.error, query: { code: '404', message: 'Page not found' } },
         },
     ],
+})
+
+router.beforeEach((to) => {
+    const appStore = useAppStore()
+    const securityRequirementsStore = useSecurityRequirementsStore()
+    const hasProfile = Boolean(appStore.profileId && appStore.profileName)
+    const hasCompletedWelcomeFlow = securityRequirementsStore.hasAcceptedRequirements && hasProfile
+    const isWelcomeRoute = typeof to.name === 'string' && welcomeRouteNames.has(to.name)
+
+    if (!hasCompletedWelcomeFlow && !isWelcomeRoute) {
+        return { name: AppRouteName.welcome }
+    }
+
+    if (hasCompletedWelcomeFlow && isWelcomeRoute) {
+        return { name: AppRouteName.home }
+    }
+
+    if (
+        to.name === AppRouteName.welcomeProfileSetup &&
+        !securityRequirementsStore.hasAcceptedRequirements
+    ) {
+        return { name: AppRouteName.welcome }
+    }
+
+    return true
 })

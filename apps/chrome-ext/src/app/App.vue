@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import {
+    useAppStore,
+    useBrowserTabsStore,
+    useProvidersRuntimeStore,
+    useSecurityRequirementsStore,
+} from '../store'
 import { AppRouteName } from './router'
-import { useAppStore, useBrowserTabsStore, useProvidersRuntimeStore, useSecurityRequirementsStore } from '../store'
 import { AppLayoutComponentMap } from './layouts'
 import { LoadingOverlay, useAppThemeStore } from '@zoho-studio/ui-kit'
-import Button from 'primevue/button'
 import { storeToRefs } from 'pinia'
 import ConfirmDialog from 'primevue/confirmdialog'
-import Dialog from 'primevue/dialog'
 import Toast from 'primevue/toast'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -20,6 +23,7 @@ const securityRequirementsStore = useSecurityRequirementsStore()
 const appThemeStore = useAppThemeStore()
 
 const { tabsMap } = storeToRefs(tabsStore)
+const { profileId, profileName } = storeToRefs(appState)
 const { hasAcceptedRequirements } = storeToRefs(securityRequirementsStore)
 
 const layoutComponent = computed(() => {
@@ -31,10 +35,6 @@ const layoutComponent = computed(() => {
     return AppLayoutComponentMap.default
 })
 
-function acceptSecurityRequirements() {
-    securityRequirementsStore.acceptRequirements()
-}
-
 watch(
     tabsMap,
     (newData) => {
@@ -44,10 +44,14 @@ watch(
 )
 
 watch(
-    [hasAcceptedRequirements, () => route.name],
-    ([isAccepted, routeName]) => {
-        if (!isAccepted && routeName !== AppRouteName.home) {
-            router.replace({ name: AppRouteName.home })
+    [hasAcceptedRequirements, profileId, profileName, () => route.name],
+    ([isAccepted, currentProfileId, currentProfileName, routeName]) => {
+        const hasProfile = Boolean(currentProfileId && currentProfileName)
+        const isWelcomeRoute =
+            routeName === AppRouteName.welcome || routeName === AppRouteName.welcomeProfileSetup
+
+        if ((!isAccepted || !hasProfile) && !isWelcomeRoute) {
+            void router.replace({ name: AppRouteName.welcome })
         }
     },
     { immediate: true }
@@ -67,48 +71,6 @@ void initializeApp()
     <LoadingOverlay v-if="appState.loadingOverlay" />
     <Toast />
     <ConfirmDialog />
-    <Dialog
-        :visible="!hasAcceptedRequirements"
-        modal
-        header="Welcome to Zoho Studio"
-        class="w-[92vw] max-w-xl"
-        content-class="overflow-hidden"
-        :draggable="false"
-        :closable="false"
-        :dismissable-mask="false"
-        :close-on-escape="false"
-    >
-        <div class="space-y-4">
-            <p class="text-sm leading-6 font-bold text-red-500">
-                This project is an independent, non‑commercial developer tool and is not affiliated with, endorsed by,
-                or supported by Zoho. It is maintained as a personal project and may evolve over time. Use it only in
-                environments you are authorized to access and in accordance with your organization’s policies.
-            </p>
-            <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
-                <b class="text-primary-500">Zoho Studio</b> is a browser extension that adds a developer-oriented
-                workspace next to your Zoho tabs.
-            </p>
-            <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
-                It uses your current browser session and may rely on unofficial Zoho APIs.
-                <b>Please use this tool only in environments and with services you are authorized to access.</b>
-            </p>
-            <p class="text-sm leading-6 font-bold text-gray-900 dark:text-gray-100">
-                By continuing, you acknowledge how the extension works and accept responsibility for how it is used.
-            </p>
-
-            <a href="https://github.com/igor-yuzkiv/zoho-studio" target="_blank" class="hover:underline">
-                <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
-                    For more details, please refer to our <b class="text-primary-500">documentation</b>.
-                </p>
-            </a>
-        </div>
-
-        <template #footer>
-            <div class="flex w-full justify-end">
-                <Button label="I understand and continue" size="small" @click="acceptSecurityRequirements" />
-            </div>
-        </template>
-    </Dialog>
 </template>
 
 <style scoped></style>
