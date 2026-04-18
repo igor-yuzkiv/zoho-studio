@@ -17,7 +17,11 @@ export interface IArtifactsStorage {
         capabilityType: string
     ): Promise<IArtifact<T>[]>
 
+    countByProviderIdAndCapabilityTypes(providerId: string, capabilityTypes: CapabilityType[]): Promise<number>
+
     countByProviderId(providerId: string): Promise<number>
+
+    deleteByProviderIdAndCapabilityTypes(providerId: string, capabilityTypes: CapabilityType[]): Promise<number>
 
     deleteByProviderId(providerId: string): Promise<number>
 }

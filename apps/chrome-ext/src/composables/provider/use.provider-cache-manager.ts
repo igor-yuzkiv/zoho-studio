@@ -4,6 +4,7 @@ import { useArtifactsSync, useArtifactsStorage } from '../artifact'
 import { useProvidersRuntimeStore } from '../../store'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ArtifactsQueryKeys, PROVIDER_CACHE_TTL_MS } from '../../config.ts'
+import { useCapabilitiesManager } from '../capability'
 
 export function useProviderCacheManager() {
     const logger = useConsoleLogger('useProviderCacheManager')
@@ -11,6 +12,7 @@ export function useProviderCacheManager() {
     const { syncAllProviderArtifacts } = useArtifactsSync()
     const providersStore = useProvidersRuntimeStore()
     const queryClient = useQueryClient()
+    const capabilitiesManager = useCapabilitiesManager()
 
     function isCacheStale(provider: ServiceProvider) {
         if (!provider.lastSyncedAt) return true
@@ -21,10 +23,30 @@ export function useProviderCacheManager() {
     }
 
     async function isSyncRequired(provider: ServiceProvider) {
-        const count = await artifactsStorage.countByProviderId(provider.id)
+        const statefulCapabilities = capabilitiesManager.getStatefulProviderCapabilities(provider)
+        const statelessCapabilities = capabilitiesManager.getStatelessProviderCapabilities(provider)
         const cacheStale = isCacheStale(provider)
 
-        return count <= 0 || cacheStale
+        const [statefulArtifactsCount, statelessArtifactsCount] = await Promise.all([
+            artifactsStorage.countByProviderIdAndCapabilityTypes(
+                provider.id,
+                statefulCapabilities.map((capability) => capability.type)
+            ),
+            artifactsStorage.countByProviderIdAndCapabilityTypes(
+                provider.id,
+                statelessCapabilities.map((capability) => capability.type)
+            ),
+        ])
+
+        if (statelessArtifactsCount > 0) {
+            return true
+        }
+
+        if (!statefulCapabilities.length) {
+            return false
+        }
+
+        return statefulArtifactsCount <= 0 || cacheStale
     }
 
     async function invalidateProviderQueries(providerId: string) {

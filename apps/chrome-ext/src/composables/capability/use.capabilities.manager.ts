@@ -3,6 +3,14 @@ import { integrationsRegistry } from '../../integrations.registry.ts'
 import { Maybe } from '@zoho-studio/utils'
 
 export function useCapabilitiesManager() {
+    function getStatefulCapabilities(capabilities: CapabilityDescriptor[]): CapabilityDescriptor[] {
+        return capabilities.filter((capability) => !capability.stateless)
+    }
+
+    function getStatelessCapabilities(capabilities: CapabilityDescriptor[]): CapabilityDescriptor[] {
+        return capabilities.filter((capability) => capability.stateless)
+    }
+
     function getProviderCapabilities(provider: ServiceProvider): CapabilityDescriptor[] {
         const providerManifest = integrationsRegistry.getManifest(provider.type)
         if (!providerManifest) {
@@ -21,6 +29,14 @@ export function useCapabilitiesManager() {
         return capabilities.find((cap) => cap.type === capabilityType)
     }
 
+    function getStatefulProviderCapabilities(provider: ServiceProvider): CapabilityDescriptor[] {
+        return getStatefulCapabilities(getProviderCapabilities(provider))
+    }
+
+    function getStatelessProviderCapabilities(provider: ServiceProvider): CapabilityDescriptor[] {
+        return getStatelessCapabilities(getProviderCapabilities(provider))
+    }
+
     function splitCapabilitiesByDependency(caps: CapabilityDescriptor[]): {
         independent: CapabilityDescriptor[]
         dependent: CapabilityDescriptor[]
@@ -28,7 +44,7 @@ export function useCapabilitiesManager() {
         const independent: CapabilityDescriptor[] = []
         const dependent: CapabilityDescriptor[] = []
 
-        for (const cap of caps) {
+        for (const cap of getStatefulCapabilities(caps)) {
             if (cap.dependsOn) {
                 dependent.push(cap)
             } else {
@@ -42,6 +58,10 @@ export function useCapabilitiesManager() {
     return {
         getProviderCapabilities,
         findProviderCapability,
+        getStatefulCapabilities,
+        getStatelessCapabilities,
+        getStatefulProviderCapabilities,
+        getStatelessProviderCapabilities,
         splitCapabilitiesByDependency,
     }
 }

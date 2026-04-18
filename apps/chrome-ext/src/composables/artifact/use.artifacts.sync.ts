@@ -12,19 +12,43 @@ export function useArtifactsSync() {
     const fetcher = useArtifactsFetcher()
     const isSyncing = ref(false)
 
+    async function purgeStatelessProviderArtifacts(provider: ServiceProvider) {
+        const statelessCapabilities = capabilitiesManager.getStatelessProviderCapabilities(provider)
+
+        if (!statelessCapabilities.length) {
+            return 0
+        }
+
+        return artifactsStorage.deleteByProviderIdAndCapabilityTypes(
+            provider.id,
+            statelessCapabilities.map((capability) => capability.type)
+        )
+    }
+
     async function syncAllProviderArtifacts(provider: ServiceProvider) {
         try {
             isSyncing.value = true
 
-            const providerCapabilities = capabilitiesManager.getProviderCapabilities(provider)
+            await purgeStatelessProviderArtifacts(provider)
+
+            const providerCapabilities = capabilitiesManager.getStatefulProviderCapabilities(provider)
+
+            if (!providerCapabilities.length) {
+                return
+            }
+
             const { independent, dependent } = capabilitiesManager.splitCapabilitiesByDependency(providerCapabilities)
 
             const phase1Artifacts = await fetcher.fetchProviderArtifacts(provider, independent)
-            await artifactsStorage.bulkUpsert(phase1Artifacts)
+            if (phase1Artifacts.length) {
+                await artifactsStorage.bulkUpsert(phase1Artifacts)
+            }
 
             if (dependent.length > 0) {
                 const phase2Artifacts = await fetcher.fetchProviderArtifacts(provider, dependent)
-                await artifactsStorage.bulkUpsert(phase2Artifacts)
+                if (phase2Artifacts.length) {
+                    await artifactsStorage.bulkUpsert(phase2Artifacts)
+                }
             }
         } finally {
             isSyncing.value = false
@@ -34,6 +58,8 @@ export function useArtifactsSync() {
     async function syncOneProviderArtifact(provider: ServiceProvider, artifact: IArtifact) {
         try {
             isSyncing.value = true
+
+            await purgeStatelessProviderArtifacts(provider)
 
             const providerCapabilities = capabilitiesManager.getProviderCapabilities(provider)
             const capability = providerCapabilities.find((cap) => cap.type === artifact.capability_type)
@@ -45,7 +71,16 @@ export function useArtifactsSync() {
                 return
             }
 
-            const childCapabilities = providerCapabilities.filter((cap) => cap.dependsOn === artifact.capability_type)
+            if (capability.stateless) {
+                logger.info(
+                    `Capability ${capability.type} is stateless for provider ${provider.id}, skipping artifact sync`
+                )
+                return
+            }
+
+            const childCapabilities = providerCapabilities.filter(
+                (cap) => cap.dependsOn === artifact.capability_type && !cap.stateless
+            )
 
             const newArtifact = await fetcher.findOneArtifact(provider, capability, artifact)
             const artifactsToUpsert = newArtifact ? [newArtifact] : []

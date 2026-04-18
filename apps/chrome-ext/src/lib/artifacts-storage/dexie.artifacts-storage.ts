@@ -55,8 +55,36 @@ export class DexieArtifactsStorage implements IArtifactsStorage {
         return result as IArtifact<T>[]
     }
 
+    async countByProviderIdAndCapabilityTypes(providerId: string, capabilityTypes: CapabilityType[]): Promise<number> {
+        if (!capabilityTypes.length) {
+            return 0
+        }
+
+        return artifactsDexieDB.records
+            .where('provider_id')
+            .equals(providerId)
+            .filter((artifact) => capabilityTypes.includes(artifact.capability_type))
+            .count()
+    }
+
     async countByProviderId(providerId: string): Promise<number> {
         return artifactsDexieDB.records.where('provider_id').equals(providerId).count()
+    }
+
+    async deleteByProviderIdAndCapabilityTypes(providerId: string, capabilityTypes: CapabilityType[]): Promise<number> {
+        if (!capabilityTypes.length) {
+            return 0
+        }
+
+        const recordIds = await artifactsDexieDB.records
+            .where('provider_id')
+            .equals(providerId)
+            .filter((artifact) => capabilityTypes.includes(artifact.capability_type))
+            .primaryKeys()
+
+        await artifactsDexieDB.records.bulkDelete(recordIds as string[])
+
+        return recordIds.length
     }
 
     async deleteByProviderId(providerId: string): Promise<number> {

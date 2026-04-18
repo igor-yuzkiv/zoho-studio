@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 export const useAppStateStore = defineStore('app.state', () => {
     const loadingOverlay = ref(false)
-    const isLeftSidebarCollapsed = ref(true)
+    const isLeftSidebarCollapsed = ref(false)
 
     const showLoadingOverlay = () => (loadingOverlay.value = true)
     const hideLoadingOverlay = () => (loadingOverlay.value = false)
