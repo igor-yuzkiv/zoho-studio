@@ -1,3 +1,4 @@
+export * from './app-profile'
 export * from './request'
 export * from './browser'
 export * from './integration'

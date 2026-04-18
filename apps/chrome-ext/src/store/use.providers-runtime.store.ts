@@ -1,5 +1,6 @@
 import { integrationsRegistry } from '../integrations.registry.ts'
 import {
+    AppProfile,
     BrowserTab,
     BrowserTabId,
     type IProvidersStorage,
@@ -12,6 +13,7 @@ import { type PaginationParams, useConsoleLogger } from '@zoho-studio/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { container } from 'tsyringe'
+import { useAppStore } from './use.app.store.ts'
 
 const logger = useConsoleLogger('useProvidersRuntimeStore')
 const PROVIDERS_LIST_PAGINATION: PaginationParams = {
@@ -19,15 +21,30 @@ const PROVIDERS_LIST_PAGINATION: PaginationParams = {
     per_page: 100,
 }
 
+function getCurrentProfile(): AppProfile | null {
+    const appStore = useAppStore()
+    const profile = appStore.getProfile()
+
+    if (!profile?.id || !profile?.name) {
+        return null
+    }
+
+    return profile
+}
+
 async function resolveFromBrowserTabs(
     browserTabs: Array<BrowserTab>,
+    appProfile: AppProfile,
     prev = new Map<ServiceProviderId, ServiceProvider>()
 ): Promise<Map<ServiceProviderId, ServiceProvider>> {
     const result = new Map<ServiceProviderId, ServiceProvider>(prev)
 
     for (const manifest of integrationsRegistry.list()) {
         for (const tab of browserTabs) {
-            const resolution = await manifest.resolveFromBrowserTab(tab)
+            const resolution = await manifest.resolveFromBrowserTab({
+                browserTab: tab,
+                appProfile,
+            })
             if (!resolution.ok) {
                 continue
             }
@@ -47,13 +64,13 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     const providersCacheInProgressMap = ref<Map<ServiceProviderId, boolean>>(new Map())
     const providersStorage = container.resolve<IProvidersStorage>(ProvidersStorageToken)
 
-    async function loadStoredProviders(): Promise<ServiceProvider[]> {
+    async function loadStoredProviders(appProfile: AppProfile): Promise<ServiceProvider[]> {
         const providers: ServiceProvider[] = []
         let pagination = { ...PROVIDERS_LIST_PAGINATION }
 
         while (true) {
             const response = await providersStorage.list(pagination)
-            providers.push(...response.data)
+            providers.push(...response.data.filter((provider) => provider.app_profile.id === appProfile.id))
 
             if (!response.meta.has_more) {
                 return providers
@@ -84,7 +101,13 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
 
     async function initialize() {
         try {
-            const storedProviders = await loadStoredProviders()
+            const appProfile = getCurrentProfile()
+            if (!appProfile) {
+                providersMap.value = new Map()
+                return
+            }
+
+            const storedProviders = await loadStoredProviders(appProfile)
 
             providersMap.value = new Map<ServiceProviderId, ServiceProvider>(
                 storedProviders.map((provider) => [provider.id, provider])
@@ -96,13 +119,19 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
 
     async function handleBrowserTabsChange(browserTabs: Map<BrowserTabId, BrowserTab>) {
         try {
+            const appProfile = getCurrentProfile()
+            if (!appProfile) {
+                providersMap.value = new Map()
+                return
+            }
+
             const prev = new Map<ServiceProviderId, ServiceProvider>(
                 Array.from(providersMap.value.entries()).map(([id, provider]) => [
                     id,
                     { ...provider, browserTabId: undefined },
                 ])
             )
-            const next = await resolveFromBrowserTabs(Array.from(browserTabs.values()), prev)
+            const next = await resolveFromBrowserTabs(Array.from(browserTabs.values()), appProfile, prev)
 
             providersMap.value = next
             await upsertManyProviders(next.values())

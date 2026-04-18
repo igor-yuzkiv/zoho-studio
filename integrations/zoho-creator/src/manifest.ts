@@ -1,4 +1,4 @@
-import type { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
+import type { IIntegrationManifest, ResolveServiceProviderContext, ServiceProvider } from '@zoho-studio/core'
 import type { PromiseResult } from '@zoho-studio/utils'
 import { resolveCreatorServiceProviderMetadataFromUrl, makeZohoCreatorServiceProviderId } from './utils'
 import { CreatorFormsDescriptor } from './capabilities/forms'
@@ -10,7 +10,10 @@ export const ZohoCreatorIntegrationManifest: IIntegrationManifest = {
     capabilities: [
         CreatorFormsDescriptor
     ],
-    async resolveFromBrowserTab(browserTab: BrowserTab): PromiseResult<ServiceProvider> {
+    async resolveFromBrowserTab({
+        browserTab,
+        appProfile,
+    }: ResolveServiceProviderContext): PromiseResult<ServiceProvider> {
         if (!browserTab.url) {
             return {
                 ok: false,
@@ -32,6 +35,7 @@ export const ZohoCreatorIntegrationManifest: IIntegrationManifest = {
                 id: makeZohoCreatorServiceProviderId(metadata),
                 type: 'zoho-creator',
                 title: `Zoho Creator - ${metadata.appLinkName}`,
+                app_profile: appProfile,
                 metadata,
                 browserTabId: browserTab.id,
                 lastSyncedAt: undefined,

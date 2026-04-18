@@ -3,7 +3,7 @@ import {
     makeZohoCrmServiceProviderTitle,
     resolveCrmServiceProviderMetadataFromUrl,
 } from './interanal/utils.ts'
-import type { BrowserTab, IIntegrationManifest, ServiceProvider } from '@zoho-studio/core'
+import type { IIntegrationManifest, ResolveServiceProviderContext, ServiceProvider } from '@zoho-studio/core'
 import type { PromiseResult } from '@zoho-studio/utils'
 
 import {
@@ -25,7 +25,10 @@ export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
         CrmModulesDescriptor,
         CrmFieldsDescriptor,
     ],
-    async resolveFromBrowserTab(browserTab: BrowserTab): PromiseResult<ServiceProvider> {
+    async resolveFromBrowserTab({
+        browserTab,
+        appProfile,
+    }: ResolveServiceProviderContext): PromiseResult<ServiceProvider> {
         if (!browserTab.url) {
             return {
                 ok: false,
@@ -47,6 +50,7 @@ export const ZohoCrmIntegrationManifest: IIntegrationManifest = {
                 id: makeZohoCrmServiceProviderId(metadata),
                 type: 'zoho-crm',
                 title: makeZohoCrmServiceProviderTitle(metadata),
+                app_profile: appProfile,
                 metadata,
                 browserTabId: browserTab.id,
                 lastSyncedAt: undefined,

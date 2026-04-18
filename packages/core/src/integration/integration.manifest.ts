@@ -1,4 +1,4 @@
-import type { ServiceProviderFromBrowserTabResolver, ServiceProviderType } from '../provider'
+import type { ServiceProviderResolver, ServiceProviderType } from '../provider'
 import type { CapabilityDescriptor } from '../capability'
 
 export interface IIntegrationManifest {
@@ -8,7 +8,7 @@ export interface IIntegrationManifest {
 
     icon: string
 
-    resolveFromBrowserTab: ServiceProviderFromBrowserTabResolver
+    resolveFromBrowserTab: ServiceProviderResolver
 
     capabilities: CapabilityDescriptor[]
 }

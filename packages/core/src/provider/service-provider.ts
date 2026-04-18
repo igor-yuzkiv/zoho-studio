@@ -1,5 +1,6 @@
 import { BrowserTab, BrowserTabId } from '../browser'
 import { Maybe, PromiseResult } from '@zoho-studio/utils'
+import type { AppProfile } from '../app-profile'
 
 export type ServiceProviderId = string
 
@@ -9,6 +10,7 @@ export type ServiceProvider<TMetadata = Record<string, unknown>> = {
     id: ServiceProviderId
     type: ServiceProviderType
     title: string
+    app_profile: AppProfile
     metadata: TMetadata
     browserTabId?: Maybe<BrowserTabId>
     lastSyncedAt?: number
@@ -17,6 +19,11 @@ export type ServiceProvider<TMetadata = Record<string, unknown>> = {
     cacheTtlInMs?: number
 }
 
-export type ServiceProviderFromBrowserTabResolver = (browserTab: BrowserTab) => PromiseResult<ServiceProvider>
+export type ResolveServiceProviderContext = {
+    browserTab: BrowserTab
+    appProfile: AppProfile
+}
+
+export type ServiceProviderResolver = (ctx: ResolveServiceProviderContext) => PromiseResult<ServiceProvider>
 
 export type UpdateProviderDto = Omit<ServiceProvider, 'id' | 'type' | 'metadata'>

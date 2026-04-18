@@ -9,14 +9,49 @@ import { computed } from 'vue'
 const providersStore = useProvidersRuntimeStore()
 const { providersList } = storeToRefs(providersStore)
 
-const itemsForDisplay = computed(() => {
-    return providersList.value.map((provider) => {
-        return {
+const providerGroups = computed(() => {
+    const groups = new Map<
+        string,
+        {
+            profileId: string
+            profileName: string
+            providers: Array<{
+                id: string
+                title: string
+                icon: string
+                isOnline: boolean
+                type: string
+            }>
+        }
+    >()
+
+    for (const provider of providersList.value) {
+        const existingGroup = groups.get(provider.app_profile.id)
+
+        const item = {
             id: provider.id,
             title: provider.title,
             icon: integrationsRegistry.getManifest(provider.type)?.icon || 'mdi:application',
             isOnline: Boolean(provider.browserTabId),
             type: provider.type,
+        }
+
+        if (existingGroup) {
+            existingGroup.providers.push(item)
+            continue
+        }
+
+        groups.set(provider.app_profile.id, {
+            profileId: provider.app_profile.id,
+            profileName: provider.app_profile.name,
+            providers: [item],
+        })
+    }
+
+    return Array.from(groups.values()).map((group) => {
+        return {
+            ...group,
+            providers: group.providers.sort((left, right) => left.title.localeCompare(right.title)),
         }
     })
 })
@@ -43,19 +78,41 @@ const itemsForDisplay = computed(() => {
                         To make a service appear in the list, simply open any Zoho service in a neighboring browser tab.
                     </div>
 
-                    <div class="mt-3 grid grid-cols-2 gap-2">
-                        <div v-for="provider in itemsForDisplay" :key="provider.id">
-                            <router-link
-                                :to="{ name: AppRouteName.workspaceHome, params: { providerId: provider.id } }"
-                                class="flex cursor-pointer items-center gap-x-2 rounded px-2 hover:bg-gray-200 dark:hover:bg-gray-700"
-                                :class="{
-                                    'text-gray-500': !provider.isOnline,
-                                }"
-                            >
-                                <Icon :icon="provider.icon" class="h-5 w-5" />
-                                <div>{{ provider.title }}</div>
-                                <div class="text-gray-500">({{ provider.type }})</div>
-                            </router-link>
+                    <div class="mt-4 flex flex-col gap-4">
+                        <div v-for="group in providerGroups" :key="group.profileId" class="rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+                            <div class="mb-3 flex items-center justify-between gap-3">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                                        {{ group.profileName }}
+                                    </h4>
+                                    <p class="text-xs text-gray-500">
+                                        {{ group.profileId }}
+                                    </p>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    {{ group.providers.length }} services
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div v-for="provider in group.providers" :key="provider.id">
+                                    <router-link
+                                        :to="{ name: AppRouteName.workspaceHome, params: { providerId: provider.id } }"
+                                        class="flex cursor-pointer items-center gap-x-2 rounded px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                        :class="{
+                                            'text-gray-500': !provider.isOnline,
+                                        }"
+                                    >
+                                        <Icon :icon="provider.icon" class="h-5 w-5" />
+                                        <div>{{ provider.title }}</div>
+                                        <div class="text-gray-500">({{ provider.type }})</div>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="providerGroups.length === 0" class="rounded-lg border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700">
+                            No services found for the current app profile yet.
                         </div>
                     </div>
                 </div>

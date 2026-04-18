@@ -1,12 +1,8 @@
 import { type Serializer, useStorage } from '@vueuse/core'
 import { useConsoleLogger } from '@zoho-studio/utils'
+import type { AppProfile } from '@zoho-studio/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-
-type AppProfile = {
-    id: string
-    name: string
-}
 
 const APP_PROFILE_STORAGE_KEY = 'profile'
 const logger = useConsoleLogger('useAppStore')
