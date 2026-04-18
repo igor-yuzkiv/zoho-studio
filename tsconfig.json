@@ -29,6 +29,9 @@
         },
         {
             "path": "./packages/local-data-storage"
+        },
+        {
+            "path": "./packages/remote-data-storage"
         }
     ]
 }
