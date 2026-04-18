@@ -13,10 +13,8 @@ function joinUrl(base: string, path: string): string {
 const baseURL =
     isExtensionContext && rawBaseUrl.startsWith('/') && proxyTarget ? joinUrl(proxyTarget, rawBaseUrl) : rawBaseUrl
 
-export const apiClient = axios.create({
+export const remoteApiClient = axios.create({
     baseURL,
-    //withCredentials: true,
-    //withXSRFToken: true,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json',

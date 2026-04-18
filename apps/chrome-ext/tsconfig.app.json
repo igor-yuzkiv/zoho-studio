@@ -33,6 +33,9 @@
             "path": "../../integrations/zoho-crm/tsconfig.lib.json"
         },
         {
+            "path": "../../packages/remote-data-storage/tsconfig.lib.json"
+        },
+        {
             "path": "../../packages/local-data-storage/tsconfig.lib.json"
         },
         {

@@ -10,6 +10,9 @@
             "path": "../../integrations/zoho-crm"
         },
         {
+            "path": "../../packages/remote-data-storage"
+        },
+        {
             "path": "../../packages/local-data-storage"
         },
         {
