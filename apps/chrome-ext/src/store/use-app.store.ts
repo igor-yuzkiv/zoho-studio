@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useAppStateStore = defineStore('app.state', () => {
+export const useAppStore = defineStore('app.state', () => {
     const loadingOverlay = ref(false)
     const isLeftSidebarCollapsed = ref(false)
 

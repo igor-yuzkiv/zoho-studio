@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IconButton, ToggleThemeButton, useAppThemeStore } from '@zoho-studio/ui-kit'
 import { storeToRefs } from 'pinia'
-import { useAppStateStore } from '../../../../store'
+import { useAppStore } from '../../../../store'
 
 const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
     ? `${import.meta.env.VITE_GITHUB_REPO_URL}/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+description+of+the+issue`
@@ -9,7 +9,7 @@ const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
 
 const appTheme = useAppThemeStore()
 
-const { isLeftSidebarCollapsed } = storeToRefs(useAppStateStore())
+const { isLeftSidebarCollapsed } = storeToRefs(useAppStore())
 
 function fullScreen() {
     chrome.tabs.create({ url: chrome.runtime.getURL(`index.html${window.location.hash || ''}`) })

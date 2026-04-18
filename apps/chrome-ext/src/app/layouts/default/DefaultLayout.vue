@@ -5,11 +5,11 @@ import { useRoute } from 'vue-router'
 import { AppFooter } from '../../shell/app-footer'
 import { AppTopMenu } from '../../shell/app-top-menu'
 import { storeToRefs } from 'pinia'
-import { useAppStateStore } from '../../../store'
+import { useAppStore } from '../../../store'
 
 const route = useRoute()
 
-const { isLeftSidebarCollapsed } = storeToRefs(useAppStateStore())
+const { isLeftSidebarCollapsed } = storeToRefs(useAppStore())
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AppRouteName } from './router'
-import { useAppStateStore, useBrowserTabsStore, useProvidersRuntimeStore, useSecurityRequirementsStore } from '../store'
+import { useAppStore, useBrowserTabsStore, useProvidersRuntimeStore, useSecurityRequirementsStore } from '../store'
 import { AppLayoutComponentMap } from './layouts'
 import { LoadingOverlay, useAppThemeStore } from '@zoho-studio/ui-kit'
 import Button from 'primevue/button'
@@ -13,7 +13,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
-const appState = useAppStateStore()
+const appState = useAppStore()
 const tabsStore = useBrowserTabsStore()
 const providersStore = useProvidersRuntimeStore()
 const securityRequirementsStore = useSecurityRequirementsStore()

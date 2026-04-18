@@ -11,13 +11,13 @@ import { AppRouteName } from '../../router'
 import { Icon } from '@iconify/vue'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import { storeToRefs } from 'pinia'
-import { useAppStateStore } from '../../../store'
+import { useAppStore } from '../../../store'
 
 const logger = useConsoleLogger('WorkspaceLayout')
 const route = useRoute()
 const router = useRouter()
 
-const { isLeftSidebarCollapsed } = storeToRefs(useAppStateStore())
+const { isLeftSidebarCollapsed } = storeToRefs(useAppStore())
 
 const {
     providerId,
