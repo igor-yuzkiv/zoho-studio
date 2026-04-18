@@ -28,7 +28,7 @@
             "path": "./integrations/zoho-creator"
         },
         {
-            "path": "./packages/dexie-artifacts-storage"
+            "path": "./packages/local-data-storage"
         }
     ]
 }

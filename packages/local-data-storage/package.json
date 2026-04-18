@@ -1,5 +1,5 @@
 {
-    "name": "dexie-artifacts-storage",
+    "name": "local-data-storage",
     "version": "0.0.1",
     "private": true,
     "type": "module",
@@ -15,8 +15,5 @@
             "default": "./dist/index.js"
         }
     },
-    "dependencies": {
-        "dexie": "^4.2.1",
-        "tslib": "^2.3.0"
-    }
+    "dependencies": {}
 }

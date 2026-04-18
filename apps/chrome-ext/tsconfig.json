@@ -10,7 +10,7 @@
             "path": "../../integrations/zoho-crm"
         },
         {
-            "path": "../../packages/utils"
+            "path": "../../packages/local-data-storage"
         },
         {
             "path": "../../packages/export-zip"
@@ -19,10 +19,10 @@
             "path": "../../packages/core"
         },
         {
-            "path": "../../packages/dexie-artifacts-storage"
+            "path": "../../packages/ui-kit"
         },
         {
-            "path": "../../packages/ui-kit"
+            "path": "../../packages/utils"
         },
         {
             "path": "./tsconfig.app.json"
