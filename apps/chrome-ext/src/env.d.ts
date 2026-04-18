@@ -6,4 +6,5 @@ interface ImportMetaEnv {
     readonly VITE_API_HOST_PERMISSION_URL: string
     readonly VITE_GITHUB_REPO_URL: string
     readonly VITE_FEATURE_GIT?: string
+    readonly VITE_STORAGE_STRATEGY?: 'local' | 'remote'
 }

@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { CreateGitRepositoryRequest, IGitRepository } from '../../types'
-import { createGitRepository } from '../../api'
+import { remoteApiClient } from '@zoho-studio/remote-data-storage'
 import { useGitConfigStore } from '../../store'
 import { useConsoleLogger } from '@zoho-studio/utils'
 import { storeToRefs } from 'pinia'
@@ -45,7 +45,9 @@ export function useAddGitRepository() {
                 },
             })
 
-            const response = await createGitRepository(payload)
+            const response = await remoteApiClient
+                .post<IGitRepository>('git/repositories', payload)
+                .then((r) => r.data)
             if (!response?.name) {
                 logger.error('Invalid response from server:', response)
                 throw new Error('Failed to create Git repository: Invalid response from server.')

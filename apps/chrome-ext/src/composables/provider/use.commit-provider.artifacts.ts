@@ -9,7 +9,7 @@ import { useArtifactsZipExport } from '../artifact'
 import { CommitGitRepositoryRequest, CommitGitRepositoryResponse } from '../../types'
 import { useGitConfigStore } from '../../store'
 import { storeToRefs } from 'pinia'
-import { commitIntoGitRepository } from '../../api'
+import { remoteApiClient } from '@zoho-studio/remote-data-storage'
 
 const FILTER_FIELDS = ['display_name', 'api_name']
 
@@ -95,7 +95,20 @@ export function useCommitProviderArtifacts() {
                 zipFile,
             })
 
-            return await commitIntoGitRepository(requestPayload)
+            const formData = new FormData()
+            formData.append('file', requestPayload.zipFile, 'file.zip')
+            formData.append('message', requestPayload.message)
+            formData.append('repository', requestPayload.repository)
+            formData.append('author[name]', requestPayload.author.name)
+            formData.append('author[email]', requestPayload.author.email)
+
+            return await remoteApiClient
+                .post<CommitGitRepositoryResponse>(
+                    `git/repositories/${requestPayload.repository}/commit`,
+                    formData,
+                    { headers: { 'Content-Type': 'multipart/form-data' } }
+                )
+                .then((r) => r.data)
         } finally {
             isPending.value = false
         }
