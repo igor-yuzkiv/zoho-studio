@@ -2,9 +2,21 @@ import type { CapabilityType, IArtifact, IArtifactsStorage } from '@zoho-studio/
 
 import { remoteApiClient } from './remote-api-client.js'
 
+const BULK_CHUNK_SIZE = 50
+const BULK_CONCURRENCY = 6
+
 export class RemoteArtifactsStorage implements IArtifactsStorage {
     async bulkUpsert(artifacts: IArtifact[]): Promise<boolean> {
-        await remoteApiClient.post('api/v1/artifacts/bulk', { artifacts })
+        const chunks: IArtifact[][] = []
+        for (let i = 0; i < artifacts.length; i += BULK_CHUNK_SIZE) {
+            chunks.push(artifacts.slice(i, i + BULK_CHUNK_SIZE))
+        }
+
+        for (let i = 0; i < chunks.length; i += BULK_CONCURRENCY) {
+            const batch = chunks.slice(i, i + BULK_CONCURRENCY)
+            await Promise.all(batch.map((chunk) => remoteApiClient.post('api/v1/artifacts/bulk', { artifacts: chunk })))
+        }
+
         return true
     }
 
