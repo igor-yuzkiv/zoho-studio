@@ -39,7 +39,7 @@ const menuItems = computed<AppMenuItem[]>(() => {
             items: providersStore.providersList.map((p) => {
                 return {
                     label: p.title,
-                    route: { name: AppRouteName.workspaceIndex, params: { providerId: p.id } },
+                    route: { name: AppRouteName.workspaceHome, params: { providerId: p.id } },
                 }
             }),
         },

@@ -28,7 +28,7 @@ const itemsForDisplay = computed(() => {
             <div class="flex h-3/4 flex-col p-3">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-x-2 text-4xl">
-                        <img src="/logo.png" />
+                        <img src="/logo.png" alt="logo"/>
                         <h1><span class="font-bold">Zoho Studio</span> Chrome Extension</h1>
                     </div>
                     <h3 class="mt-2 text-lg font-medium text-gray-700 dark:text-gray-400">
@@ -46,7 +46,7 @@ const itemsForDisplay = computed(() => {
                     <div class="mt-3 grid grid-cols-2 gap-2">
                         <div v-for="provider in itemsForDisplay" :key="provider.id">
                             <router-link
-                                :to="{ name: AppRouteName.workspaceIndex, params: { providerId: provider.id } }"
+                                :to="{ name: AppRouteName.workspaceHome, params: { providerId: provider.id } }"
                                 class="flex cursor-pointer items-center gap-x-2 rounded px-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                                 :class="{
                                     'text-gray-500': !provider.isOnline,

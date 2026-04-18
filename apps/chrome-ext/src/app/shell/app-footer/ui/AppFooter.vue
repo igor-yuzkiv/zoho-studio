@@ -9,7 +9,7 @@ const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
 
 const appTheme = useAppThemeStore()
 
-const { showLeftSidebar } = storeToRefs(useAppStateStore())
+const { isLeftSidebarCollapsed } = storeToRefs(useAppStateStore())
 
 function fullScreen() {
     chrome.tabs.create({ url: chrome.runtime.getURL(`index.html${window.location.hash || ''}`) })
@@ -37,11 +37,18 @@ function fullScreen() {
                 class="p-0"
                 text
                 size="small"
-                @click="showLeftSidebar = !showLeftSidebar"
-                :icon="showLeftSidebar ? 'mingcute:layout-top-fill' : 'mingcute:layout-11-fill'"
+                @click="isLeftSidebarCollapsed = !isLeftSidebarCollapsed"
+                :icon="isLeftSidebarCollapsed ? 'mingcute:layout-11-fill' : 'mingcute:layout-top-fill'"
                 title="Toggle Left Sidebar"
             />
-            <IconButton class="p-0" text size="small" @click="fullScreen" icon="mingcute:fullscreen-fill" title="Open in Full Screen" />
+            <IconButton
+                class="p-0"
+                text
+                size="small"
+                @click="fullScreen"
+                icon="mingcute:fullscreen-fill"
+                title="Open in Full Screen"
+            />
             <ToggleThemeButton :is-dark="appTheme.isDark" @click="appTheme.toggle" />
         </div>
     </footer>

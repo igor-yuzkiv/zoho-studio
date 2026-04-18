@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { useCurrentProvider } from '../../../composables'
 import { useProviderCapabilityArtifactsQuery } from '../../../queries'
-import { ArtifactExplorerMenu } from '../../../components/artifact/artifacts-explorer'
+import { ArtifactExplorerMenu } from '../../../components/artifacts-explorer'
 import { AppRouteName } from '../../../app/router'
 import { useRouteParams } from '@vueuse/router'
 import type { CapabilityType, IArtifact } from '@zoho-studio/core'
@@ -34,7 +34,7 @@ const menuConfig = computed(() => artifactMenuConfigMap[capabilityType.value])
 
 function onSelect(artifact: IArtifact) {
     router.push({
-        name: AppRouteName.workspaceArtifact,
+        name: AppRouteName.workspaceCapability,
         params: { providerId: providerId.value, capabilityType: capabilityType.value, artifactId: artifact.id },
     })
 }

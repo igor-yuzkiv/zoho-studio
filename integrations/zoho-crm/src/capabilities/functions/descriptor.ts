@@ -36,6 +36,7 @@ export const CrmFunctionsDescriptor: CapabilityDescriptor = {
     title: 'Zoho CRM Functions',
     icon: 'material-symbols:function',
     adapter: CrmFunctionsAdapter,
+    indexView: defineAsyncComponent(() => import('./ui/functions-index-view/CrmFunctionsIndexView.vue')),
     toExportZip,
 
     artifactDetailViewSettings: {

@@ -9,7 +9,7 @@ import { useAppStateStore } from '../../../store'
 
 const route = useRoute()
 
-const { showLeftSidebar } = storeToRefs(useAppStateStore())
+const { isLeftSidebarCollapsed } = storeToRefs(useAppStateStore())
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const { showLeftSidebar } = storeToRefs(useAppStateStore())
                 :pt="{ gutter: { class: 'bg-transparent' } }"
             >
                 <SplitterPanel
-                    v-if="!route.meta?.hideSidebarMenu && showLeftSidebar"
+                    v-if="!route.meta?.hideSidebarMenu && isLeftSidebarCollapsed"
                     class="flex h-full w-full overflow-hidden"
                     :size="5"
                     style="min-width: 10rem; max-width: 50rem"

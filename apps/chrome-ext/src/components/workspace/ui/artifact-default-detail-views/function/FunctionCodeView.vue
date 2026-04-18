@@ -12,13 +12,8 @@ const appTheme = useAppThemeStore()
 const script = computed(() => {
     return props.artifact.payload.script ?? ''
 })
-
 </script>
 
 <template>
-    <vue-monaco-editor
-        language="javascript"
-        :value="script"
-        :theme="appTheme.isDark ? 'vs-dark' : 'vs'"
-    />
+    <vue-monaco-editor language="javascript" :value="script" :theme="appTheme.isDark ? 'vs-dark' : 'vs'" />
 </template>

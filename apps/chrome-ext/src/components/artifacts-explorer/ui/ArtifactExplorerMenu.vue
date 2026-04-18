@@ -6,7 +6,7 @@ import { Icon } from '@iconify/vue'
 import { get } from 'lodash'
 import { onKeyStroke, useFocusWithin } from '@vueuse/core'
 import InputText from 'primevue/inputtext'
-import { objectMatchesSearch } from '../../../../utils'
+import { objectMatchesSearch } from '../../../utils'
 
 // TODO: add filtering support based on artifact properties (e.g. name, description, tags)
 
@@ -40,7 +40,7 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-    'header': () => any
+    header: () => any
     'item-icon': (props: { artifact: IArtifact<TCapabilityType> }) => any
 }>()
 
@@ -152,7 +152,7 @@ onKeyStroke('ArrowUp', (e) => {
         </div>
 
         <template v-if="filteredItems.length">
-            <div v-if="groupedItems" class="flex flex-col gap-y-2 overflow-auto w-full h-full">
+            <div v-if="groupedItems" class="flex h-full w-full flex-col gap-y-2 overflow-auto">
                 <section v-for="group in groupedItems" :key="group.key" class="px-1">
                     <button
                         type="button"
@@ -185,7 +185,7 @@ onKeyStroke('ArrowUp', (e) => {
                 </section>
             </div>
 
-            <div v-else class="flex flex-col overflow-auto w-full h-full">
+            <div v-else class="flex h-full w-full flex-col overflow-auto">
                 <ArtifactExplorerMenuItem
                     v-for="artifact in filteredItems"
                     :key="artifact.id"

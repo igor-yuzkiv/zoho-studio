@@ -18,7 +18,7 @@ export function useArtifactByIdQuery<T extends CapabilityType = CapabilityType>(
 
     return {
         isPending,
-        data,
+        data: data,
         refetch,
     }
 }

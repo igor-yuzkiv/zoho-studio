@@ -17,7 +17,7 @@ const logger = useConsoleLogger('WorkspaceLayout')
 const route = useRoute()
 const router = useRouter()
 
-const { showLeftSidebar } = storeToRefs(useAppStateStore())
+const { isLeftSidebarCollapsed } = storeToRefs(useAppStateStore())
 
 const {
     providerId,
@@ -68,7 +68,7 @@ onMounted(() => {
                     <div v-if="provider && providerManifest" class="flex flex-col border-b py-1">
                         <router-link
                             v-tooltip="{ value: provider.title }"
-                            :to="{ name: AppRouteName.workspaceIndex, params: { providerId } }"
+                            :to="{ name: AppRouteName.workspaceHome, params: { providerId } }"
                             class="hover:bg-selection flex cursor-pointer items-center justify-center rounded-lg p-2"
                             active-class="bg-orange-500 text-white"
                         >
@@ -83,7 +83,7 @@ onMounted(() => {
                 :pt="{ gutter: { class: 'bg-transparent' } }"
             >
                 <SplitterPanel
-                    v-show="showLeftSidebar"
+                    v-show="!isLeftSidebarCollapsed"
                     v-if="!route.meta?.hideSidebarMenu"
                     class="flex h-full w-full overflow-hidden"
                     :size="5"

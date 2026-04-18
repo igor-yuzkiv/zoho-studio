@@ -2,7 +2,7 @@
 import type { IArtifact } from '@zoho-studio/core'
 import { JsonViewer } from '@zoho-studio/ui-kit'
 import { computed } from 'vue'
-import { useArtifactsByParentIdQuery } from '../../../../../../queries'
+import { useArtifactsByParentIdQuery } from '../../../../../queries'
 
 const props = defineProps<{
     artifact: IArtifact<'modules'>

@@ -24,10 +24,10 @@ export const router = createRouter({
         },
 
         {
-            name: AppRouteName.workspaceIndex,
+            name: AppRouteName.workspaceHome,
             path: '/workspace/:providerId',
             meta: { hideSidebarMenu: true, layout: 'workspace' },
-            component: () => import('../../pages/workspace/WorkspaceIndexPage.vue'),
+            component: () => import('../../pages/workspace/WorkspaceHomePage.vue'),
         },
         {
             name: AppRouteName.workspaceSettings,
@@ -36,12 +36,12 @@ export const router = createRouter({
             component: () => import('../../pages/workspace/WorkspaceSettingsPage.vue'),
         },
         {
-            name: AppRouteName.workspaceArtifact,
+            name: AppRouteName.workspaceCapability,
             path: '/workspace/:providerId/capabilities/:capabilityType/:artifactId?',
             meta: { hideSidebarMenu: false, layout: 'workspace' },
             components: {
-                default: () => import('../../pages/workspace/artifact/ArtifactDetailPage.vue'),
-                menu: () => import('../../pages/workspace/artifact/ArtifactMenuPage.vue'),
+                default: () => import('../../pages/workspace/capability/CapabilityContentPage.vue'),
+                menu: () => import('../../pages/workspace/capability/CapabilitySidebarMenuPage.vue'),
             },
         },
 

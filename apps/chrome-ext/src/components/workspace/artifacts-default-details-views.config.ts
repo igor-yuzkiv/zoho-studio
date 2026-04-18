@@ -15,13 +15,17 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType | string, Ar
                 label: 'Code',
                 value: '__default_code',
                 icon: 'mdi:code',
-                component: defineAsyncComponent(() => import('./ui/defaults/function/FunctionCodeView.vue')),
+                component: defineAsyncComponent(
+                    () => import('./ui/artifact-default-detail-views/function/FunctionCodeView.vue')
+                ),
             },
             {
                 label: 'Metadata',
                 value: '__default_json_metadata',
                 icon: 'si:json-duotone',
-                component: defineAsyncComponent(() => import('./ui/defaults/function/FunctionMetadataJsonView.vue')),
+                component: defineAsyncComponent(
+                    () => import('./ui/artifact-default-detail-views/function/FunctionMetadataJsonView.vue')
+                ),
             },
         ],
     },
@@ -34,13 +38,17 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType | string, Ar
                 label: 'Table',
                 value: '__default_json_table',
                 icon: 'material-symbols:table-sharp',
-                component: defineAsyncComponent(() => import('./ui/defaults/module/ModuleTableView.vue')),
+                component: defineAsyncComponent(
+                    () => import('./ui/artifact-default-detail-views/module/ModuleTableView.vue')
+                ),
             },
             {
                 label: 'Metadata',
                 value: '__default_json_json_metadata',
                 icon: 'si:json-duotone',
-                component: defineAsyncComponent(() => import('./ui/defaults/module/ModuleMetadataJsonView.vue')),
+                component: defineAsyncComponent(
+                    () => import('./ui/artifact-default-detail-views/module/ModuleMetadataJsonView.vue')
+                ),
             },
         ],
     },
@@ -54,7 +62,9 @@ export const artifactDetailConfigMap: Partial<Record<CapabilityType | string, Ar
                 label: 'Metadata',
                 value: '__default_json_metadata',
                 icon: 'si:json-duotone',
-                component: defineAsyncComponent(() => import('./ui/defaults/workflow/WorkflowMetadataJsonView.vue')),
+                component: defineAsyncComponent(
+                    () => import('./ui/artifact-default-detail-views/workflow/WorkflowMetadataJsonView.vue')
+                ),
             },
         ],
     },
