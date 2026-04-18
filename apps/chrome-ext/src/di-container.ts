@@ -1,8 +1,8 @@
 import { container } from 'tsyringe'
 
 import { BrowserServiceToken, ArtifactStorageToken } from '@zoho-studio/core'
+import { DexieArtifactsStorage } from '@zoho-studio/dexie-artifacts-storage'
 import { ChromeBrowserServiceImpl } from './lib/browser'
-import { DexieArtifactsStorage } from './lib/artifacts-storage'
 
 container.register(BrowserServiceToken, {
     useClass: ChromeBrowserServiceImpl,

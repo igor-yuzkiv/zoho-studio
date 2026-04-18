@@ -19,6 +19,9 @@
             "path": "../../packages/core"
         },
         {
+            "path": "../../packages/dexie-artifacts-storage"
+        },
+        {
             "path": "../../packages/ui-kit"
         },
         {

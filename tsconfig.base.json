@@ -25,6 +25,7 @@
         "paths": {
             "@zoho-studio/chrome-ext": ["apps/chrome-ext/src/index.ts"],
             "@zoho-studio/core": ["packages/core/src/index.ts"],
+            "@zoho-studio/dexie-artifacts-storage": ["packages/dexie-artifacts-storage/src/index.ts"],
             "@zoho-studio/ui-kit": ["packages/ui-kit/src/index.ts"],
             "@zoho-studio/utils": ["packages/utils/src/index.ts"],
             "@zoho-studio/export-zip": ["packages/export-zip/src/index.ts"],

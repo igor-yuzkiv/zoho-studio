@@ -1,0 +1,19 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "types": ["vite/client"],
+        "rootDir": "src",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"],
+    "references": [
+        {
+            "path": "../core/tsconfig.lib.json"
+        }
+    ]
+}

@@ -1,7 +1,8 @@
 import Dexie, { type EntityTable } from 'dexie'
-import { IArtifact } from '@zoho-studio/core'
 
-export class ArtifactsDexieDb extends Dexie {
+import { type IArtifact } from '@zoho-studio/core'
+
+class ArtifactsDexieDb extends Dexie {
     records!: EntityTable<IArtifact, 'id'>
 
     constructor() {

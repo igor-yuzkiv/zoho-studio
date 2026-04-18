@@ -42,6 +42,9 @@
             "path": "../../packages/core/tsconfig.lib.json"
         },
         {
+            "path": "../../packages/dexie-artifacts-storage/tsconfig.lib.json"
+        },
+        {
             "path": "../../packages/ui-kit/tsconfig.lib.json"
         }
     ]

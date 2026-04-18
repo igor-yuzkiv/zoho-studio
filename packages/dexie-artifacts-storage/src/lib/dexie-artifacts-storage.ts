@@ -1,5 +1,6 @@
 import type { CapabilityType, IArtifact, IArtifactsStorage } from '@zoho-studio/core'
-import { artifactsDexieDB } from './artifacts.dexie-db.ts'
+
+import { artifactsDexieDB } from './artifacts.dexie-db.js'
 
 export class DexieArtifactsStorage implements IArtifactsStorage {
     async bulkUpsert(artifacts: IArtifact[]): Promise<boolean> {
