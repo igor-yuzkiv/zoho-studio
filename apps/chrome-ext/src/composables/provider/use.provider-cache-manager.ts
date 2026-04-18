@@ -98,7 +98,7 @@ export function useProviderCacheManager() {
         }
     }
 
-    async function refreshProviderCache(provider: ServiceProvider): Promise<void> {
+    async function refreshProviderCache(provider: ServiceProvider, force = false): Promise<void> {
         if (providersStore.isProviderCacheInProgress(provider.id)) {
             logger.warn(
                 'Cache operation is already in progress for provider',
@@ -110,7 +110,11 @@ export function useProviderCacheManager() {
 
         try {
             providersStore.toggleProviderCacheInProgress(provider.id, true)
-            await artifactsStorage.deleteByProviderId(provider.id)
+
+            if (force) {
+                await clearProviderCache(provider.id)
+            }
+
             await syncAllProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
 
