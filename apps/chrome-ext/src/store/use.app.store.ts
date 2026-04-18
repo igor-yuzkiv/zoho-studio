@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 const APP_PROFILE_STORAGE_KEY = 'profile'
+const SECURITY_REQUIREMENTS_STORAGE_KEY = 'security-requirements.accepted'
 const logger = useConsoleLogger('useAppStore')
 
 const LocalStorageProfileSerializer: Serializer<AppProfile | null> = {
@@ -40,6 +41,7 @@ export const useAppStore = defineStore('app.state', () => {
     const profile = useStorage<AppProfile | null>(APP_PROFILE_STORAGE_KEY, null, undefined, {
         serializer: LocalStorageProfileSerializer,
     })
+    const hasAcceptedRequirements = useStorage<boolean>(SECURITY_REQUIREMENTS_STORAGE_KEY, false)
 
     const profileId = computed(() => profile.value?.id ?? null)
     const profileName = computed(() => profile.value?.name ?? null)
@@ -54,6 +56,9 @@ export const useAppStore = defineStore('app.state', () => {
         }
     }
     const getProfile = () => profile.value
+    const acceptRequirements = () => {
+        hasAcceptedRequirements.value = true
+    }
 
     return {
         loadingOverlay,
@@ -65,5 +70,7 @@ export const useAppStore = defineStore('app.state', () => {
         profileName,
         setProfile,
         getProfile,
+        hasAcceptedRequirements,
+        acceptRequirements,
     }
 })

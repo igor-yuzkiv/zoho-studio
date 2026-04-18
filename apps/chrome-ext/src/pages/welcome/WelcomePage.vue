@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { AppRouteName } from '../../app/router'
-import { useSecurityRequirementsStore } from '../../store'
+import { useAppStore } from '../../store'
 import Button from 'primevue/button'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const securityRequirementsStore = useSecurityRequirementsStore()
+const appStore = useAppStore()
 
 function handleContinue() {
-    securityRequirementsStore.acceptRequirements()
+    appStore.acceptRequirements()
 
     void router.push({ name: AppRouteName.welcomeProfileSetup })
 }

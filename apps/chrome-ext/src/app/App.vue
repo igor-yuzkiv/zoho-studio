@@ -3,7 +3,6 @@ import {
     useAppStore,
     useBrowserTabsStore,
     useProvidersRuntimeStore,
-    useSecurityRequirementsStore,
 } from '../store'
 import { AppRouteName } from './router'
 import { AppLayoutComponentMap } from './layouts'
@@ -19,12 +18,10 @@ const router = useRouter()
 const appState = useAppStore()
 const tabsStore = useBrowserTabsStore()
 const providersStore = useProvidersRuntimeStore()
-const securityRequirementsStore = useSecurityRequirementsStore()
 const appThemeStore = useAppThemeStore()
 
 const { tabsMap } = storeToRefs(tabsStore)
-const { profileId, profileName } = storeToRefs(appState)
-const { hasAcceptedRequirements } = storeToRefs(securityRequirementsStore)
+const { profileId, profileName, hasAcceptedRequirements } = storeToRefs(appState)
 
 const layoutComponent = computed(() => {
     const layoutName = route.meta?.layout

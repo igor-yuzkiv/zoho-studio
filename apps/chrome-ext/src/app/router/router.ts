@@ -1,7 +1,7 @@
 import { AppRouteName } from './app-route-name.ts'
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 import { isGitFeatureEnabled } from '../../feature-flags.ts'
-import { useAppStore, useSecurityRequirementsStore } from '../../store'
+import { useAppStore } from '../../store'
 
 const welcomeRouteNames = new Set([AppRouteName.welcome, AppRouteName.welcomeProfileSetup])
 
@@ -78,9 +78,8 @@ export const router = createRouter({
 
 router.beforeEach((to) => {
     const appStore = useAppStore()
-    const securityRequirementsStore = useSecurityRequirementsStore()
     const hasProfile = Boolean(appStore.profileId && appStore.profileName)
-    const hasCompletedWelcomeFlow = securityRequirementsStore.hasAcceptedRequirements && hasProfile
+    const hasCompletedWelcomeFlow = appStore.hasAcceptedRequirements && hasProfile
     const isWelcomeRoute = typeof to.name === 'string' && welcomeRouteNames.has(to.name)
 
     if (!hasCompletedWelcomeFlow && !isWelcomeRoute) {
@@ -91,10 +90,7 @@ router.beforeEach((to) => {
         return { name: AppRouteName.home }
     }
 
-    if (
-        to.name === AppRouteName.welcomeProfileSetup &&
-        !securityRequirementsStore.hasAcceptedRequirements
-    ) {
+    if (to.name === AppRouteName.welcomeProfileSetup && !appStore.hasAcceptedRequirements) {
         return { name: AppRouteName.welcome }
     }
 
