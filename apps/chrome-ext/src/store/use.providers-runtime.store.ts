@@ -38,9 +38,11 @@ async function resolveFromBrowserTabs(
     prev = new Map<ServiceProviderId, ServiceProvider>()
 ): Promise<Map<ServiceProviderId, ServiceProvider>> {
     const result = new Map<ServiceProviderId, ServiceProvider>(prev)
+    const orderedTabs = [...browserTabs].sort((left, right) => Number(right.is_active) - Number(left.is_active))
+    const tabsById = new Map<BrowserTabId, BrowserTab>(browserTabs.map((tab) => [tab.id, tab]))
 
     for (const manifest of integrationsRegistry.list()) {
-        for (const tab of browserTabs) {
+        for (const tab of orderedTabs) {
             const resolution = await manifest.resolveFromBrowserTab({
                 browserTab: tab,
                 appProfile,
@@ -49,9 +51,21 @@ async function resolveFromBrowserTabs(
                 continue
             }
 
-            const instance = result.get(resolution.value.id) || resolution.value
-            instance.browserTabId = tab.id
-            result.set(instance.id, instance)
+            const existing = result.get(resolution.value.id)
+            if (!existing) {
+                resolution.value.browserTabId = tab.id
+                result.set(resolution.value.id, resolution.value)
+                continue
+            }
+
+            const currentTab = existing.browserTabId ? tabsById.get(existing.browserTabId) : null
+            const shouldPreferCurrentTab = !currentTab?.is_active || tab.is_active
+
+            if (shouldPreferCurrentTab) {
+                existing.browserTabId = tab.id
+            }
+
+            result.set(existing.id, existing)
         }
     }
 
