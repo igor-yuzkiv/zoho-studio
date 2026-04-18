@@ -7,6 +7,7 @@ export function mapChromeTabToBrowserTab(t: chrome.tabs.Tab): BrowserTab | null 
         id: t.id,
         title: t.title || '',
         url: t.url || '',
+        is_active: Boolean(t.active),
     }
 }
 
