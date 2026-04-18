@@ -2,10 +2,13 @@
 import { IconButton, ToggleThemeButton, useAppThemeStore } from '@zoho-studio/ui-kit'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '../../../../store'
+import { Icon } from '@iconify/vue'
 
 const reportIssueUrl = import.meta.env.VITE_GITHUB_REPO_URL
     ? `${import.meta.env.VITE_GITHUB_REPO_URL}/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+description+of+the+issue`
     : null
+
+const storageStrategy = import.meta.env.VITE_STORAGE_STRATEGY
 
 const appTheme = useAppThemeStore()
 
@@ -18,7 +21,12 @@ function fullScreen() {
 
 <template>
     <footer class="flex w-full justify-between px-2">
-        <div class="flex items-center gap-x-1">
+        <div class="flex items-center gap-x-2">
+            <div class="flex items-center gap-x-1 border-r text-sm text-gray-500 px-2">
+                <Icon icon="clarity:storage-solid" />
+                Storage: {{ storageStrategy }}
+            </div>
+
             <slot name="start"></slot>
         </div>
         <div class="flex items-center justify-end gap-x-2">

@@ -63,7 +63,7 @@ const providerGroups = computed(() => {
             <div class="flex h-3/4 flex-col p-3">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-x-2 text-4xl">
-                        <img src="/logo.png" alt="logo"/>
+                        <img src="/logo.png" alt="logo" />
                         <h1><span class="font-bold">Zoho Studio</span> Chrome Extension</h1>
                     </div>
                     <h3 class="mt-2 text-lg font-medium text-gray-700 dark:text-gray-400">
@@ -79,7 +79,7 @@ const providerGroups = computed(() => {
                     </div>
 
                     <div class="mt-4 flex flex-col gap-4">
-                        <div v-for="group in providerGroups" :key="group.profileId" class="rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+                        <div v-for="group in providerGroups" :key="group.profileId" class="rounded-lg border p-3">
                             <div class="mb-3 flex items-center justify-between gap-3">
                                 <div>
                                     <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -89,9 +89,7 @@ const providerGroups = computed(() => {
                                         {{ group.profileId }}
                                     </p>
                                 </div>
-                                <div class="text-sm text-gray-500">
-                                    {{ group.providers.length }} services
-                                </div>
+                                <div class="text-sm text-gray-500">{{ group.providers.length }} services</div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-2">
@@ -99,19 +97,29 @@ const providerGroups = computed(() => {
                                     <router-link
                                         :to="{ name: AppRouteName.workspaceHome, params: { providerId: provider.id } }"
                                         class="flex cursor-pointer items-center gap-x-2 rounded px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-700"
-                                        :class="{
-                                            'text-gray-500': !provider.isOnline,
-                                        }"
                                     >
-                                        <Icon :icon="provider.icon" class="h-5 w-5" />
+                                        <Icon
+                                            :icon="
+                                                provider.isOnline
+                                                    ? 'fluent:plug-connected-32-filled'
+                                                    : 'tabler:plug-connected-x'
+                                            "
+                                            class="h-5 w-5"
+                                            :class="{
+                                                'text-gray-500': !provider.isOnline,
+                                            }"
+                                        />
                                         <div>{{ provider.title }}</div>
-                                        <div class="text-gray-500">({{ provider.type }})</div>
+                                        <div>({{ provider.type }})</div>
                                     </router-link>
                                 </div>
                             </div>
                         </div>
 
-                        <div v-if="providerGroups.length === 0" class="rounded-lg border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700">
+                        <div
+                            v-if="providerGroups.length === 0"
+                            class="rounded-lg border border-dashed p-4 text-sm text-gray-500"
+                        >
                             No services found for the current app profile yet.
                         </div>
                     </div>

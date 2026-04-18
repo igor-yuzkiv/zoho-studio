@@ -102,11 +102,11 @@ onMounted(() => {
 
         <AppFooter>
             <template #start>
-                <div v-if="isCachingInProgress" class="flex items-center gap-x-1 text-sm text-gray-500">
+                <div v-if="isCachingInProgress" class="flex items-center gap-x-1 border-r px-2 text-sm text-gray-500">
                     <Icon icon="line-md:loading-loop" />
                     <span>Caching...</span>
                 </div>
-                <div v-else class="flex gap-x-2 text-sm text-gray-500">
+                <div v-else class="flex gap-x-1 text-sm text-gray-500">
                     <span v-if="lastSyncedAtFormatted" class="border-r px-2">
                         Last synced at: {{ lastSyncedAtFormatted }}
                     </span>
