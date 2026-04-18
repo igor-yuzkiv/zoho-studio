@@ -17,6 +17,7 @@ const appState = useAppStateStore()
 const tabsStore = useBrowserTabsStore()
 const providersStore = useProvidersRuntimeStore()
 const securityRequirementsStore = useSecurityRequirementsStore()
+const appThemeStore = useAppThemeStore()
 
 const { tabsMap } = storeToRefs(tabsStore)
 const { hasAcceptedRequirements } = storeToRefs(securityRequirementsStore)
@@ -30,11 +31,22 @@ const layoutComponent = computed(() => {
     return AppLayoutComponentMap.default
 })
 
-providersStore.initialize()
-tabsStore.initialize()
-useAppThemeStore().initialize()
+appThemeStore.initialize()
 
-watch(tabsMap, (newData) => providersStore.handleBrowserTabsChange(newData), { immediate: true })
+async function initializeApp() {
+    await providersStore.initialize()
+    await tabsStore.initialize()
+
+    watch(
+        tabsMap,
+        (newData) => {
+            void providersStore.handleBrowserTabsChange(newData)
+        },
+        { immediate: true }
+    )
+}
+
+void initializeApp()
 watch(
     [hasAcceptedRequirements, () => route.name],
     ([isAccepted, routeName]) => {
@@ -67,10 +79,10 @@ function acceptSecurityRequirements() {
         :close-on-escape="false"
     >
         <div class="space-y-4">
-            <p class="text-sm leading-6 text-red-500 font-bold">
-                This project is an independent, non‑commercial developer tool and is not affiliated with, endorsed by, or supported by Zoho.
-                It is maintained as a personal project and may evolve over time. Use it only in environments you are authorized
-                to access and in accordance with your organization’s policies.
+            <p class="text-sm leading-6 font-bold text-red-500">
+                This project is an independent, non‑commercial developer tool and is not affiliated with, endorsed by,
+                or supported by Zoho. It is maintained as a personal project and may evolve over time. Use it only in
+                environments you are authorized to access and in accordance with your organization’s policies.
             </p>
             <p class="text-sm leading-6 text-gray-700 dark:text-gray-300">
                 <b class="text-primary-500">Zoho Studio</b> is a browser extension that adds a developer-oriented

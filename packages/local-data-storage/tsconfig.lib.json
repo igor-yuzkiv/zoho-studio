@@ -2,7 +2,7 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "outDir": "dist",
-        "types": ["node" ,"vite/client"],
+        "types": ["node", "vite/client"],
         "rootDir": "src",
         "module": "esnext",
         "moduleResolution": "bundler",
@@ -13,6 +13,9 @@
     "references": [
         {
             "path": "../core/tsconfig.lib.json"
+        },
+        {
+            "path": "../utils/tsconfig.lib.json"
         }
     ]
 }

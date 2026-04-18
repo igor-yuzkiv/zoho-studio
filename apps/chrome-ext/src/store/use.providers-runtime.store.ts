@@ -1,30 +1,22 @@
 import { integrationsRegistry } from '../integrations.registry.ts'
-import { type Serializer, useStorage } from '@vueuse/core'
-import { BrowserTab, BrowserTabId, ServiceProvider, ServiceProviderId, UpdateProviderDto } from '@zoho-studio/core'
-import { useConsoleLogger } from '@zoho-studio/utils'
+import {
+    BrowserTab,
+    BrowserTabId,
+    type IProvidersStorage,
+    ProvidersStorageToken,
+    ServiceProvider,
+    ServiceProviderId,
+    UpdateProviderDto,
+} from '@zoho-studio/core'
+import { type PaginationParams, useConsoleLogger } from '@zoho-studio/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { container } from 'tsyringe'
 
 const logger = useConsoleLogger('useProvidersRuntimeStore')
-
-const LocalStorageSerializer: Serializer<ServiceProvider[]> = {
-    read(raw) {
-        try {
-            const parsed = JSON.parse(raw || '[]')
-            return Array.isArray(parsed) ? parsed : []
-        } catch (error) {
-            logger.error('Failed to parse service providers from localStorage:', error)
-            return []
-        }
-    },
-    write(value) {
-        return JSON.stringify(
-            value.map((sp) => ({
-                ...sp,
-                tabId: undefined,
-            }))
-        )
-    },
+const PROVIDERS_LIST_PAGINATION: PaginationParams = {
+    page: 1,
+    per_page: 100,
 }
 
 async function resolveFromBrowserTabs(
@@ -52,35 +44,74 @@ async function resolveFromBrowserTabs(
 export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     const providersMap = ref<Map<ServiceProviderId, ServiceProvider>>(new Map())
     const providersList = computed(() => Array.from(providersMap.value.values()))
-    const cachedProviders = useStorage('service-providers', [], undefined, { serializer: LocalStorageSerializer })
-
     const providersCacheInProgressMap = ref<Map<ServiceProviderId, boolean>>(new Map())
+    const providersStorage = container.resolve<IProvidersStorage>(ProvidersStorageToken)
 
-    function initialize() {
-        if (!cachedProviders.value.length) {
-            return
+    async function loadStoredProviders(): Promise<ServiceProvider[]> {
+        const providers: ServiceProvider[] = []
+        let pagination = { ...PROVIDERS_LIST_PAGINATION }
+
+        while (true) {
+            const response = await providersStorage.list(pagination)
+            providers.push(...response.data)
+
+            if (!response.meta.has_more) {
+                return providers
+            }
+
+            pagination = { ...pagination, page: pagination.page + 1 }
         }
+    }
 
-        providersMap.value = new Map<ServiceProviderId, ServiceProvider>(
-            cachedProviders.value.map((provider) => [provider.id, { ...provider, browserTabId: undefined }])
-        )
+    async function upsertProvider(provider: ServiceProvider): Promise<void> {
+        try {
+            await providersStorage.upsert(provider)
+        } catch (error) {
+            logger.error('Failed to persist provider', provider.id, error)
+        }
+    }
+
+    async function upsertManyProviders(providers: Iterable<ServiceProvider>): Promise<void> {
+        const entries = Array.from(providers)
+        const results = await Promise.allSettled(entries.map((provider) => providersStorage.upsert(provider)))
+
+        for (const [index, result] of results.entries()) {
+            if (result.status === 'rejected') {
+                logger.error('Failed to persist provider', entries[index]?.id, result.reason)
+            }
+        }
+    }
+
+    async function initialize() {
+        try {
+            const storedProviders = await loadStoredProviders()
+
+            providersMap.value = new Map<ServiceProviderId, ServiceProvider>(
+                storedProviders.map((provider) => [provider.id, provider])
+            )
+        } catch (error) {
+            logger.error('Failed to initialize stored providers', error)
+        }
     }
 
     async function handleBrowserTabsChange(browserTabs: Map<BrowserTabId, BrowserTab>) {
-        const prev = new Map(providersMap.value)
-        const next = await resolveFromBrowserTabs(Array.from(browserTabs.values()), prev)
+        try {
+            const prev = new Map<ServiceProviderId, ServiceProvider>(
+                Array.from(providersMap.value.entries()).map(([id, provider]) => [
+                    id,
+                    { ...provider, browserTabId: undefined },
+                ])
+            )
+            const next = await resolveFromBrowserTabs(Array.from(browserTabs.values()), prev)
 
-        for (const sp of next.values()) {
-            if (sp.browserTabId && !browserTabs.has(sp.browserTabId)) {
-                sp.browserTabId = undefined
-            }
+            providersMap.value = next
+            await upsertManyProviders(next.values())
+        } catch (error) {
+            logger.error('Failed to reconcile providers with browser tabs', error)
         }
-
-        providersMap.value = next
-        cachedProviders.value = Array.from(next.values())
     }
 
-    function updateProvider(id: ServiceProviderId, data: Partial<UpdateProviderDto>) {
+    async function updateProvider(id: ServiceProviderId, data: Partial<UpdateProviderDto>) {
         const existing = providersMap.value.get(id)
         if (!existing) {
             logger.warn(`Trying to update non-existing provider with id "${id}"`)
@@ -91,11 +122,11 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         const next = new Map(providersMap.value)
         next.set(id, updated)
         providersMap.value = next
-        cachedProviders.value = Array.from(next.values())
+        await upsertProvider(updated)
     }
 
-    function updateProviderLastSyncedAt(providerId: ServiceProviderId, timestamp: number) {
-        updateProvider(providerId, { lastSyncedAt: timestamp })
+    async function updateProviderLastSyncedAt(providerId: ServiceProviderId, timestamp: number) {
+        await updateProvider(providerId, { lastSyncedAt: timestamp })
     }
 
     function toggleProviderCacheInProgress(providerId: ServiceProviderId, inProgress: boolean) {

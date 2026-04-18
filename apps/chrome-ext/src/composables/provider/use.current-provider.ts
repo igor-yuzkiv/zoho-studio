@@ -73,12 +73,12 @@ export function useCurrentProvider() {
         return capabilities.findProviderCapability(provider.value, capabilityType)
     }
 
-    function updateProvider(updateData: Partial<UpdateProviderDto>) {
+    async function updateProvider(updateData: Partial<UpdateProviderDto>) {
         if (!provider.value) {
             return
         }
 
-        providersStore.updateProvider(provider.value.id, updateData)
+        await providersStore.updateProvider(provider.value.id, updateData)
     }
 
     return {

@@ -111,7 +111,7 @@ async function handleGitCommit() {
     try {
         await commitDialog.commit()
 
-        providersStore.updateProvider(providerId.value, { gitRepository: commitDialog.repository.value })
+        await providersStore.updateProvider(providerId.value, { gitRepository: commitDialog.repository.value })
 
         toast.success({ detail: 'Committed successfully.' })
 

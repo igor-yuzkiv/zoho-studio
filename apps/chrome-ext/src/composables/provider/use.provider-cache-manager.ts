@@ -78,7 +78,7 @@ export function useProviderCacheManager() {
 
             await syncAllProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
-            providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
+            await providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
         } finally {
             providersStore.toggleProviderCacheInProgress(provider.id, false)
         }
@@ -114,7 +114,7 @@ export function useProviderCacheManager() {
             await syncAllProviderArtifacts(provider)
             await invalidateProviderQueries(provider.id)
 
-            providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
+            await providersStore.updateProviderLastSyncedAt(provider.id, Date.now())
         } finally {
             providersStore.toggleProviderCacheInProgress(provider.id, false)
         }

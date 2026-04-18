@@ -1,7 +1,7 @@
 import { container } from 'tsyringe'
 
-import { BrowserServiceToken, ArtifactStorageToken } from '@zoho-studio/core'
-import { DexieArtifactsStorage } from '@zoho-studio/local-data-storage'
+import { ArtifactStorageToken, BrowserServiceToken, ProvidersStorageToken } from '@zoho-studio/core'
+import { DexieArtifactsStorage, LocalStorageProvidersStorage } from '@zoho-studio/local-data-storage'
 import { ChromeBrowserServiceImpl } from './lib/browser'
 
 container.register(BrowserServiceToken, {
@@ -10,4 +10,8 @@ container.register(BrowserServiceToken, {
 
 container.register(ArtifactStorageToken, {
     useClass: DexieArtifactsStorage,
+})
+
+container.register(ProvidersStorageToken, {
+    useClass: LocalStorageProvidersStorage,
 })

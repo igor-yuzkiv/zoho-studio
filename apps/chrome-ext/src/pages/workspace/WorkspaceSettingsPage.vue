@@ -55,7 +55,7 @@ async function saveProviderSettings() {
             cacheTtlInMs: validatedData.cacheTtlInHours * 60 * 60 * 1000,
         }
 
-        updateProvider(payload)
+        await updateProvider(payload)
 
         await router.push({ name: AppRouteName.workspaceHome, params: { providerId: provider.value?.id } })
     } catch (error) {
