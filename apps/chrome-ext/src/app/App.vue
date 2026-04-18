@@ -31,22 +31,18 @@ const layoutComponent = computed(() => {
     return AppLayoutComponentMap.default
 })
 
-appThemeStore.initialize()
-
-async function initializeApp() {
-    await providersStore.initialize()
-    await tabsStore.initialize()
-
-    watch(
-        tabsMap,
-        (newData) => {
-            void providersStore.handleBrowserTabsChange(newData)
-        },
-        { immediate: true }
-    )
+function acceptSecurityRequirements() {
+    securityRequirementsStore.acceptRequirements()
 }
 
-void initializeApp()
+watch(
+    tabsMap,
+    (newData) => {
+        void providersStore.handleBrowserTabsChange(newData)
+    },
+    { immediate: true }
+)
+
 watch(
     [hasAcceptedRequirements, () => route.name],
     ([isAccepted, routeName]) => {
@@ -57,9 +53,13 @@ watch(
     { immediate: true }
 )
 
-function acceptSecurityRequirements() {
-    securityRequirementsStore.acceptRequirements()
+async function initializeApp() {
+    appThemeStore.initialize()
+    await providersStore.initialize()
+    await tabsStore.initialize()
 }
+
+void initializeApp()
 </script>
 
 <template>
