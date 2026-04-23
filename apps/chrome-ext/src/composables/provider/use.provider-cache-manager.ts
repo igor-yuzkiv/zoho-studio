@@ -84,20 +84,6 @@ export function useProviderCacheManager() {
         }
     }
 
-    async function clearProviderCache(providerId: string): Promise<void> {
-        if (providersStore.isProviderCacheInProgress(providerId)) {
-            logger.warn('Cache operation is already in progress for provider', providerId, ', skipping sync request.')
-            return
-        }
-
-        try {
-            providersStore.toggleProviderCacheInProgress(providerId, true)
-            await Promise.all([artifactsStorage.deleteByProviderId(providerId), invalidateProviderQueries(providerId)])
-        } finally {
-            providersStore.toggleProviderCacheInProgress(providerId, false)
-        }
-    }
-
     async function refreshProviderCache(provider: ServiceProvider, force = false): Promise<void> {
         if (providersStore.isProviderCacheInProgress(provider.id)) {
             logger.warn(
@@ -112,7 +98,10 @@ export function useProviderCacheManager() {
             providersStore.toggleProviderCacheInProgress(provider.id, true)
 
             if (force) {
-                await clearProviderCache(provider.id)
+                await Promise.all([
+                    artifactsStorage.deleteByProviderId(providerId),
+                    invalidateProviderQueries(providerId),
+                ])
             }
 
             await syncAllProviderArtifacts(provider)
@@ -126,7 +115,6 @@ export function useProviderCacheManager() {
 
     return {
         ensureSyncArtifacts,
-        clearProviderCache,
         refreshProviderCache,
     }
 }
