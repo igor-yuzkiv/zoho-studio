@@ -99,8 +99,8 @@ export function useProviderCacheManager() {
 
             if (force) {
                 await Promise.all([
-                    artifactsStorage.deleteByProviderId(providerId),
-                    invalidateProviderQueries(providerId),
+                    artifactsStorage.deleteByProviderId(provider.id),
+                    invalidateProviderQueries(provider.id),
                 ])
             }
 
