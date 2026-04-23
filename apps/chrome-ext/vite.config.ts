@@ -20,7 +20,17 @@ function parseHostPermissions(value: string | undefined): string[] {
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '')
-    const manifest = createManifest(parseHostPermissions(env.VITE_API_HOST_PERMISSION_URL))
+    console.log({
+        name: env.VITE_APP_NAME,
+        version: env.VITE_APP_VERSION,
+        extraHostPermissions: parseHostPermissions(env.VITE_API_HOST_PERMISSION_URL),
+    });
+
+    const manifest = createManifest({
+        appName: env.VITE_APP_NAME,
+        appVersion: env.VITE_APP_VERSION,
+        extraHostPermissions: parseHostPermissions(env.VITE_API_HOST_PERMISSION_URL),
+    })
 
     return {
         root: __dirname,

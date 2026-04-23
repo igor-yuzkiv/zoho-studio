@@ -1,11 +1,17 @@
 import { defineManifest } from '@crxjs/vite-plugin'
 
-export function createManifest(extraHostPermissions: string[] = []) {
+type CreateManifestParams = {
+    appName: string
+    appVersion: string
+    extraHostPermissions: string[]
+}
+
+export function createManifest(params: CreateManifestParams) {
     return defineManifest({
         manifest_version: 3,
-        name: 'ZohoStudioIDE V3',
-        description: 'ZohoStudioIDE V3',
-        version: '0.1.0',
+        name: params.appName,
+        description: params.appName,
+        version: params.appVersion,
         permissions: ['scripting', 'activeTab', 'sidePanel', 'cookies', 'webRequest'],
         icons: {
             '16': 'logo.png',
@@ -13,7 +19,7 @@ export function createManifest(extraHostPermissions: string[] = []) {
             '128': 'logo.png',
         },
         action: {
-            default_title: 'ZohoStudioIDE V3',
+            default_title: params.appName,
         },
         side_panel: {
             default_path: 'index.html',
@@ -29,7 +35,7 @@ export function createManifest(extraHostPermissions: string[] = []) {
             '*://*.zoho.com.au/*',
             '*://*.zoho.com.cn/*',
             '*://localhost/*',
-            ...extraHostPermissions.filter((url) => !!url),
+            ...params.extraHostPermissions.filter((url) => !!url),
         ],
         content_scripts: [
             {
@@ -45,5 +51,4 @@ export function createManifest(extraHostPermissions: string[] = []) {
             },
         ],
     })
-
 }
