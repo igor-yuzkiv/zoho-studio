@@ -6,6 +6,8 @@ import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
+const APP_NAME = import.meta.env.VITE_APP_NAME || 'Zoho Studio'
+
 const appStore = useAppStore()
 const providersStore = useProvidersRuntimeStore()
 const { profileId } = storeToRefs(appStore)
@@ -77,7 +79,7 @@ const providerGroups = computed(() => {
                 <div class="flex flex-col">
                     <div class="flex items-center gap-x-2 text-4xl">
                         <img src="/logo.png" alt="logo" />
-                        <h1><span class="font-bold">Zoho Studio</span> Chrome Extension</h1>
+                        <h1><span class="font-bold">{{ APP_NAME }}</span> Chrome Extension</h1>
                     </div>
                     <h3 class="mt-2 text-lg font-medium text-gray-700 dark:text-gray-400">
                         Open-source development environment for Zoho services.
