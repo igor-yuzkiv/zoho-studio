@@ -31,9 +31,7 @@ function handleSelect() {
         @click="handleSelect"
     >
         <span class="flex h-4 w-4 items-center justify-center">
-            <slot name="icon">
-                <Icon v-if="icon" :icon="icon" class="h-4 w-4" />
-            </slot>
+            <Icon v-if="icon" :icon="icon" class="h-4 w-4" />
         </span>
 
         <span class="truncate">{{ artifact.display_name }}</span>

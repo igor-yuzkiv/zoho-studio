@@ -7,17 +7,14 @@ import { AppRouteName } from '../../../app/router'
 import { useRouteParams } from '@vueuse/router'
 import type { CapabilityType, IArtifact } from '@zoho-studio/core'
 import { computed } from 'vue'
-import type { Component } from 'vue'
-import { FunctionIcon } from '../../../components/function/function-icon'
 
 type ArtifactMenuConfig = {
     groupBy: string
     icon?: string
-    iconComponent?: Component
 }
 
 const artifactMenuConfigMap: Partial<Record<CapabilityType, ArtifactMenuConfig>> = {
-    functions: { groupBy: 'payload.type', iconComponent: FunctionIcon },
+    functions: { groupBy: 'payload.type', icon: 'mdi:function' },
     modules: { groupBy: 'payload.module_type', icon: 'streamline-sharp:module' },
     workflows: { groupBy: 'payload.module_api_name', icon: 'mdi:workflow' },
     webhooks: { groupBy: 'payload.module_api_name', icon: 'material-symbols:webhook' },
@@ -47,9 +44,5 @@ function onSelect(artifact: IArtifact) {
         :group-by="menuConfig?.groupBy"
         :icon="menuConfig?.icon"
         @select="onSelect"
-    >
-        <template v-if="menuConfig?.iconComponent" #item-icon="{ artifact }">
-            <component :is="menuConfig.iconComponent" :type="(artifact.payload as any).type" />
-        </template>
-    </ArtifactExplorerMenu>
+    />
 </template>

@@ -39,10 +39,7 @@ const emit = defineEmits<{
     (e: 'select', artifact: IArtifact<TCapabilityType>): void
 }>()
 
-defineSlots<{
-    header: () => any
-    'item-icon': (props: { artifact: IArtifact<TCapabilityType> }) => any
-}>()
+defineSlots<{ header: () => any }>()
 
 const collapsedGroups = ref<Record<string, boolean>>({})
 const listContainer = useTemplateRef('list-container')
@@ -176,11 +173,7 @@ onKeyStroke('ArrowUp', (e) => {
                             :active="artifact.id === activeId"
                             :icon="icon"
                             @select="handleSelect"
-                        >
-                            <template v-if="$slots['item-icon']" #icon>
-                                <slot name="item-icon" :artifact="artifact" />
-                            </template>
-                        </ArtifactExplorerMenuItem>
+                        />
                     </div>
                 </section>
             </div>
@@ -193,11 +186,7 @@ onKeyStroke('ArrowUp', (e) => {
                     :active="artifact.id === activeId"
                     :icon="icon"
                     @select="handleSelect"
-                >
-                    <template v-if="$slots['item-icon']" #icon>
-                        <slot name="item-icon" :artifact="artifact" />
-                    </template>
-                </ArtifactExplorerMenuItem>
+                />
             </div>
         </template>
 
