@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { integrationsRegistry } from '../../integrations.registry.ts'
-import { useProvidersRuntimeStore } from '../../store'
+import { useAppStore, useProvidersRuntimeStore } from '../../store'
 import { AppRouteName } from '../../app/router'
 import { Icon } from '@iconify/vue'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
+const appStore = useAppStore()
 const providersStore = useProvidersRuntimeStore()
+const { profileId } = storeToRefs(appStore)
 const { providersList } = storeToRefs(providersStore)
 
 const providerGroups = computed(() => {
@@ -48,12 +50,23 @@ const providerGroups = computed(() => {
         })
     }
 
-    return Array.from(groups.values()).map((group) => {
-        return {
-            ...group,
-            providers: group.providers.sort((left, right) => left.title.localeCompare(right.title)),
-        }
-    })
+    return Array.from(groups.values())
+        .map((group) => {
+            return {
+                ...group,
+                providers: group.providers.sort((left, right) => left.title.localeCompare(right.title)),
+            }
+        })
+        .sort((left, right) => {
+            const leftIsCurrentProfile = left.profileId === profileId.value
+            const rightIsCurrentProfile = right.profileId === profileId.value
+
+            if (leftIsCurrentProfile !== rightIsCurrentProfile) {
+                return leftIsCurrentProfile ? -1 : 1
+            }
+
+            return left.profileName.localeCompare(right.profileName)
+        })
 })
 </script>
 

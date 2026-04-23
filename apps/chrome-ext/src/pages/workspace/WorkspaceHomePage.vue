@@ -47,7 +47,13 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
             label: 'Refresh Cache',
             icon: isCachingInProgress.value ? 'line-md:loading-loop' : 'tdesign:clear-filled',
             disabled: isCachingInProgress.value,
-            command: () => handleRefreshProviderCache(),
+            command: () => handleRefreshProviderCache(false),
+        },
+        {
+            label: 'Reset Cache',
+            icon: isCachingInProgress.value ? 'line-md:loading-loop' : 'tdesign:clear-filled',
+            disabled: isCachingInProgress.value,
+            command: () => handleRefreshProviderCache(true),
         },
         {
             label: 'Export ZIP',
@@ -72,7 +78,7 @@ const actionsMenuItems = computed<MenuItem[]>(() => {
     return items
 })
 
-async function handleRefreshProviderCache() {
+async function handleRefreshProviderCache(force = false) {
     if (isCachingInProgress.value) {
         toast.info({ detail: 'Cache refresh is already in progress. Please wait for it to complete.' })
         return
@@ -83,12 +89,16 @@ async function handleRefreshProviderCache() {
         return
     }
 
+    const confirmMessage = force
+        ? 'This will clear and re-sync all artifacts for this provider. Are you sure you want to continue?'
+        : 'This will refresh the cache for this provider. Are you sure you want to continue?'
+
     confirm.require({
         header: 'Refresh Cache',
-        message: 'This will clear and re-sync all artifacts for this provider. Are you sure you want to continue?',
+        message: confirmMessage,
         accept: async () => {
             if (provider.value) {
-                refreshProviderCache(provider.value)
+                refreshProviderCache(provider.value, force)
                     .then(() => {
                         toast.success({ detail: 'Provider cache refreshed successfully.' })
                     })
