@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { IArtifact } from '@zoho-studio/core'
 import Dialog from 'primevue/dialog'
-import { ArtifactExplorerMenu } from '../../artifacts-explorer'
+import { ArtifactExplorerMenu } from '../artifacts-explorer'
 import InputText from 'primevue/inputtext'
-import { useGitConfigStore } from '../../../store'
+import { useGitConfigStore } from '../../store'
 import { storeToRefs } from 'pinia'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
