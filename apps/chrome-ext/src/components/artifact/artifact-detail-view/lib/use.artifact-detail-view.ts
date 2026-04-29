@@ -1,7 +1,7 @@
 import { MaybeRef, ComputedRef, computed, toValue, ref } from 'vue'
 import { Maybe, useConsoleLogger } from '@zoho-studio/utils'
 import { ArtifactDetailViewConfig, CapabilityDescriptor, type IArtifact } from '@zoho-studio/core'
-import { artifactDetailConfigMap } from '../artifacts-default-details-views.config.ts'
+import { artifactDetailConfigMap } from './artifacts-default-details-views.config.ts'
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
 
 type MaybeRefOrGetter<T> = MaybeRef<T> | ComputedRef<T>

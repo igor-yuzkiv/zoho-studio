@@ -6,7 +6,7 @@ import { Icon } from '@iconify/vue'
 import { get } from 'lodash'
 import { onKeyStroke, useFocusWithin } from '@vueuse/core'
 import InputText from 'primevue/inputtext'
-import { objectMatchesSearch } from '../../../utils'
+import { objectMatchesSearch } from '../../../../utils'
 
 // TODO: add filtering support based on artifact properties (e.g. name, description, tags)
 
