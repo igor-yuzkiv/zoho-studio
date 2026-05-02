@@ -27,6 +27,7 @@ const {
     lastSyncedAtFormatted,
     nextSyncDueAtFormatted,
     isCachingInProgress,
+    isOnline,
 } = useCurrentProvider()
 const { ensureSyncArtifacts } = useProviderCacheManager()
 
@@ -54,7 +55,21 @@ onMounted(() => {
 
 <template>
     <div class="bg-secondary relative flex h-screen w-full flex-col overflow-hidden">
-        <AppTopMenu />
+        <AppTopMenu>
+            <template #end>
+                <div v-if="provider" class="flex items-center gap-x-1 border-r px-2">
+                    <Icon
+                        :icon="isOnline ? 'fluent:plug-connected-32-filled' : 'tabler:plug-connected-x'"
+                        class="h-5 w-5"
+                        :class="{
+                            'text-gray-500': !isOnline,
+                        }"
+                    />
+                    <div>{{ provider.app_profile.name }}</div>
+                    <div class="font-bold text-gray-600 dark:text-gray-400">{{ provider.title }}</div>
+                </div>
+            </template>
+        </AppTopMenu>
 
         <main
             class="flex h-full w-full overflow-hidden pr-2"

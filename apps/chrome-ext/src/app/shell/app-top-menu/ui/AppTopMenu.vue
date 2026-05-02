@@ -82,7 +82,7 @@ const menuItems = computed<AppMenuItem[]>(() => {
             <span class="w-full truncate text-center">{{ provider?.title ?? 'Search' }}</span>
         </div>
 
-        <div class="flex items-center justify-end gap-x-1 pr-3">
+        <div class="flex items-center justify-end gap-x-2 pr-3">
             <slot name="end" />
             <div
                 class="flex items-center gap-x-1"

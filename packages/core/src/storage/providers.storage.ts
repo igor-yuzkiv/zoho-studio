@@ -1,4 +1,4 @@
-import type { ServiceProvider } from '../../provider'
+import type { ServiceProvider } from '../provider'
 import type { PaginationParams, PagingResponse } from '@zoho-studio/utils'
 
 export interface IProvidersStorage {
