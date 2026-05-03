@@ -32,6 +32,9 @@
         },
         {
             "path": "./packages/remote-data-storage"
+        },
+        {
+            "path": "./apps/cli"
         }
     ]
 }
