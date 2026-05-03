@@ -111,15 +111,15 @@
                     "build"
                 ],
                 "options": {
-                    "buildTarget": "cli:build",
+                    "buildTarget": "zoho-studio-cli:build",
                     "runBuildTargetDependencies": false
                 },
                 "configurations": {
                     "development": {
-                        "buildTarget": "cli:build:development"
+                        "buildTarget": "zoho-studio-cli:build:development"
                     },
                     "production": {
-                        "buildTarget": "cli:build:production"
+                        "buildTarget": "zoho-studio-cli:build:production"
                     }
                 }
             }
