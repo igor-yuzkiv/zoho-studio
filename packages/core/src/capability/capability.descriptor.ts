@@ -11,18 +11,13 @@ export interface CapabilityDescriptor {
     type: CapabilityType
     title: string
     icon: string
-
     hideInMenu?: boolean
     stateless?: boolean
-
-    indexView?: string | Component
-
-    artifactDetailViewSettings?: Partial<ArtifactDetailViewConfig>
-
     dependsOn?: CapabilityType
     adapter: CapabilityAdapterConstructor
-
     getArtifactServiceUrl?: (provider: ServiceProvider, artifact: IArtifact) => Maybe<string>
-
     toExportZip?: (artifact: IArtifact) => ExportZipItem[]
+
+    indexView?: string | Component
+    artifactDetailViewSettings?: Partial<ArtifactDetailViewConfig>
 }

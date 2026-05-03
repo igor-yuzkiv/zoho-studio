@@ -4,7 +4,7 @@ import { ZohoCrmWebhook, CrmServiceProviderMetadata, ZohoCrmWebhookFailEntry } f
 import Button from 'primevue/button'
 import { CrmWebhooksApiService } from '../api.ts'
 import { ref, watch } from 'vue'
-import { PagingResponseMeta, useConsoleLogger } from '@zoho-studio/utils'
+import { PagingResponseMeta } from '@zoho-studio/utils'
 import { useToast } from '@zoho-studio/ui-kit'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -23,7 +23,6 @@ const props = defineProps<{
     provider: ServiceProvider<CrmServiceProviderMetadata>
 }>()
 
-const logger = useConsoleLogger('[ZohoCrm|CrmWebhookFailuresView]')
 const toast = useToast()
 const apiService = new CrmWebhooksApiService(props.provider)
 
@@ -48,7 +47,7 @@ async function loadWebhookFailuresPage() {
         const response = await apiService.fetchWebhookFailures(requestPayload)
 
         if (!response.ok) {
-            logger.error('Failed to load webhook failures', { response, requestPayload })
+            console.error('Failed to load webhook failures', { response, requestPayload })
             toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load webhook failures.' })
             return
         }
@@ -61,7 +60,7 @@ async function loadWebhookFailuresPage() {
             total: response.meta.total,
         }
     } catch (error) {
-        logger.error('Error while loading webhook failures', { error })
+        console.error('Error while loading webhook failures', { error })
         toast.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while loading webhook failures.' })
     } finally {
         isLoading.value = false

@@ -1,5 +1,5 @@
 import { MaybeRef, ComputedRef, computed, toValue, ref } from 'vue'
-import { Maybe, useConsoleLogger } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/utils'
 import { ArtifactDetailViewConfig, CapabilityDescriptor, type IArtifact } from '@zoho-studio/core'
 import { artifactDetailConfigMap } from './artifacts-default-details-views.config.ts'
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
@@ -7,8 +7,6 @@ import type { ViewModeOption } from '@zoho-studio/ui-kit'
 type MaybeRefOrGetter<T> = MaybeRef<T> | ComputedRef<T>
 
 export function useArtifactDetailView(capabilityDescriptor: MaybeRefOrGetter<Maybe<CapabilityDescriptor>>) {
-    const logger = useConsoleLogger('useArtifactDetailView')
-
     const currentViewMode = ref<string>('')
 
     const viewConfig = computed((): ArtifactDetailViewConfig | undefined => {
@@ -21,7 +19,7 @@ export function useArtifactDetailView(capabilityDescriptor: MaybeRefOrGetter<May
         const artifactConfig = descriptor?.artifactDetailViewSettings
 
         if (!defaultConfig && !artifactConfig) {
-            logger.warn(`No artifact detail view config found for capability type: ${descriptor.type}`)
+            console.warn(`No artifact detail view config found for capability type: ${descriptor.type}`)
             return undefined
         }
 

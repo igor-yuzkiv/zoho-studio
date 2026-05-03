@@ -1,13 +1,10 @@
 import { type Serializer, useStorage } from '@vueuse/core'
-import { useConsoleLogger } from '@zoho-studio/utils'
 import type { AppProfile } from '@zoho-studio/core'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 const APP_PROFILE_STORAGE_KEY = 'profile'
 const SECURITY_REQUIREMENTS_STORAGE_KEY = 'security-requirements.accepted'
-const logger = useConsoleLogger('useAppStore')
-
 const LocalStorageProfileSerializer: Serializer<AppProfile | null> = {
     read(raw) {
         if (!raw) {
@@ -26,7 +23,7 @@ const LocalStorageProfileSerializer: Serializer<AppProfile | null> = {
                 name: parsed.name,
             }
         } catch (error) {
-            logger.error('Failed to parse profile from localStorage:', error)
+            console.error('Failed to parse profile from localStorage:', error)
             return null
         }
     },
