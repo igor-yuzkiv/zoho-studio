@@ -1,8 +1,11 @@
 {
-    "name": "cli",
+    "name": "zoho-studio-cli",
     "version": "0.0.1",
     "private": true,
     "type": "module",
+    "bin": {
+        "zoho-studio-cli": "dist/main.js"
+    },
     "nx": {
         "targets": {
             "build": {
@@ -40,6 +43,30 @@
                             }
                         }
                     }
+                }
+            },
+            "dev": {
+                "executor": "nx:run-commands",
+                "options": {
+                    "commands": [
+                        "npx esbuild apps/cli/src/main.tsx --bundle --platform=node --outfile=apps/cli/dist/main.js --format=esm --watch",
+                        "node --watch apps/cli/dist/main.js"
+                    ],
+                    "parallel": true
+                }
+            },
+            "init": {
+                "dependsOn": [
+                    "build"
+                ],
+                "executor": "nx:run-commands",
+                "options": {
+                    "commands": [
+                        "chmod +x dist/main.js",
+                        "npm link"
+                    ],
+                    "cwd": "apps/cli",
+                    "parallel": false
                 }
             },
             "prune-lockfile": {
