@@ -7,4 +7,5 @@ export const AppRouteName = {
     workspaceCapability: 'workspace.capability',
     workspaceHome: 'workspace.home',
     workspaceSettings: 'workspace.settings',
+    cliAdapter: 'cli.adapter',
 }

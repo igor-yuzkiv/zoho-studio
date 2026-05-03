@@ -43,6 +43,10 @@ const menuItems = computed<AppMenuItem[]>(() => {
                 }
             }),
         },
+        {
+            label: 'CLI',
+            route: { name: AppRouteName.cliAdapter },
+        },
     ]
 
     if (isGitFeatureEnabled) {

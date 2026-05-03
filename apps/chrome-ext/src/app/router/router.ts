@@ -63,6 +63,13 @@ export const router = createRouter({
         ...gitRoutes,
 
         {
+            path: '/cli',
+            name: AppRouteName.cliAdapter,
+            component: () => import('../../pages/cli-adapter/CliAdapterPage.vue'),
+            meta: { hideSidebarMenu: true, layout: 'default' },
+        },
+
+        {
             name: AppRouteName.error,
             path: '/error',
             meta: { hideSidebarMenu: true, layout: 'default' },
