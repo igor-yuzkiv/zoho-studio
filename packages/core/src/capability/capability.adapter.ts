@@ -1,6 +1,6 @@
 import type { IArtifact } from '../artifact'
 import type { ServiceProvider } from '../provider'
-import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
+import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/shared-types'
 
 export interface ICapabilityAdapter {
     readonly serviceProvider: ServiceProvider

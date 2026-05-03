@@ -4,7 +4,7 @@ import { ZohoCrmWebhook, CrmServiceProviderMetadata, ZohoCrmWebhookFailEntry } f
 import Button from 'primevue/button'
 import { CrmWebhooksApiService } from '../api.ts'
 import { ref, watch } from 'vue'
-import { PagingResponseMeta } from '@zoho-studio/utils'
+import { PagingResponseMeta } from '@zoho-studio/shared-types'
 import { useToast } from '@zoho-studio/ui-kit'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'

@@ -1,6 +1,6 @@
 import type { ServiceProviderType } from '../provider'
 import type { IIntegrationManifest } from './integration.manifest.ts'
-import type { Maybe } from '@zoho-studio/utils'
+import type { Maybe } from '@zoho-studio/shared-types'
 
 export interface IIntegrationsRegistry {
     add(manifest: IIntegrationManifest): void

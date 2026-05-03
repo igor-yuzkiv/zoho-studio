@@ -1,5 +1,5 @@
 import { MaybeRef, ComputedRef, computed, toValue, ref } from 'vue'
-import { Maybe } from '@zoho-studio/utils'
+import type { Maybe } from '@zoho-studio/shared-types'
 import { ArtifactDetailViewConfig, CapabilityDescriptor, type IArtifact } from '@zoho-studio/core'
 import { artifactDetailConfigMap } from './artifacts-default-details-views.config.ts'
 import type { ViewModeOption } from '@zoho-studio/ui-kit'

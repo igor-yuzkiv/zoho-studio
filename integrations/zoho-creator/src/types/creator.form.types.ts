@@ -1,4 +1,4 @@
-import type { IEntity } from '@zoho-studio/utils'
+import type { IEntity } from '@zoho-studio/shared-types'
 
 export type ZohoCreatorFormField = {
     componentType: string

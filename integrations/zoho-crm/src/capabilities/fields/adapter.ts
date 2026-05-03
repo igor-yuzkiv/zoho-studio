@@ -7,7 +7,8 @@ import {
     ServiceProviderId,
 } from '@zoho-studio/core'
 import { BaseCapabilityAdapter } from '@zoho-studio/core'
-import { PaginationParams, PromisePaginatedResult, sleep } from '@zoho-studio/utils'
+import type { PaginationParams, PromisePaginatedResult, } from '@zoho-studio/shared-types'
+import { sleep } from '@zoho-studio/shared-utils'
 import type { ZohoCrmModule } from '../../types'
 import { CrmFieldsApiService } from './api.ts'
 import { container } from 'tsyringe'

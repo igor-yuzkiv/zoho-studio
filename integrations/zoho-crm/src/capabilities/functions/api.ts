@@ -1,5 +1,5 @@
 import { BaseCrmApiService } from '../../interanal/base-crm-api.service.ts'
-import { PaginationParams, PromisePaginatedResult, Result } from '@zoho-studio/utils'
+import { PaginationParams, PromisePaginatedResult, Result } from '@zoho-studio/shared-types'
 import {
     CrmFunctionLog,
     CrmFunctionLogDetailsRequestParams,

@@ -3,7 +3,7 @@ import { computed, MaybeRef, toValue } from 'vue'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import { ArtifactsQueryKeys } from '../config.ts'
 import { useArtifactsStorage } from '../composables'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 
 export function useProviderArtifactsQuery(providerId: MaybeRef<Maybe<ServiceProviderId>>) {
     const artifactsStorage = useArtifactsStorage()

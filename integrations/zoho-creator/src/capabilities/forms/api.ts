@@ -1,6 +1,6 @@
 import { BaseCreatorApiService } from '../../base-creator-api.service.ts'
 import type { CreatorMetaInfoResponse, ZohoCreatorForm } from '../../types'
-import type { Result } from '@zoho-studio/utils'
+import type { Result } from '@zoho-studio/shared-types'
 
 type FormsMetaInfoHttpResponse = {
     apps?: CreatorMetaInfoResponse['apps']

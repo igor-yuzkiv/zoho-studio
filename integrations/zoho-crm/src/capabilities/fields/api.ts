@@ -1,6 +1,6 @@
 import { BaseCrmApiService } from '../../interanal/base-crm-api.service.ts'
 import type { ZohoCrmModuleField } from '../../types'
-import type { Result } from '@zoho-studio/utils'
+import type { Result } from '@zoho-studio/shared-types'
 
 type FieldsListResponse = {
     fields: ZohoCrmModuleField[]

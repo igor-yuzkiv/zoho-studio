@@ -1,6 +1,6 @@
 import { CapabilityDescriptor, CapabilityType, ServiceProvider } from '@zoho-studio/core'
 import { integrationsRegistry } from '../../integrations.registry.ts'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 
 export function useCapabilitiesManager() {
     function getStatefulCapabilities(capabilities: CapabilityDescriptor[]): CapabilityDescriptor[] {

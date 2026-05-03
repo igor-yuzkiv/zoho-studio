@@ -1,5 +1,5 @@
 import type { IProvidersStorage, ServiceProvider } from '@zoho-studio/core'
-import type { PaginationParams, PagingResponse } from '@zoho-studio/utils'
+import type { PaginationParams, PagingResponse } from '@zoho-studio/shared-types'
 
 import { remoteApiClient } from './remote-api-client.js'
 

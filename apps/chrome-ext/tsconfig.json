@@ -4,28 +4,34 @@
     "include": ["vite.config.ts", "chrome/manifest.config.ts"],
     "references": [
         {
+            "path": "../../packages/utils"
+        },
+        {
             "path": "../../integrations/zoho-creator"
         },
         {
             "path": "../../integrations/zoho-crm"
         },
         {
-            "path": "../../packages/remote-data-storage"
-        },
-        {
             "path": "../../packages/local-data-storage"
         },
         {
+            "path": "../../packages/remote-data-storage"
+        },
+        {
+            "path": "../../packages/shared-utils"
+        },
+        {
             "path": "../../packages/export-zip"
+        },
+        {
+            "path": "../../packages/shared-types"
         },
         {
             "path": "../../packages/core"
         },
         {
             "path": "../../packages/ui-kit"
-        },
-        {
-            "path": "../../packages/utils"
         },
         {
             "path": "./tsconfig.app.json"

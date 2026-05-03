@@ -1,5 +1,6 @@
 import { CapabilityDescriptor, IArtifact, ICapabilityAdapter, ServiceProvider } from '@zoho-studio/core'
-import { PaginationParams, sleep } from '@zoho-studio/utils'
+import type { PaginationParams } from '@zoho-studio/shared-types'
+import { sleep } from '@zoho-studio/shared-utils'
 
 export function useArtifactsFetcher(fetchDelay = 200) {
 

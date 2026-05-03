@@ -8,7 +8,7 @@ import {
     ServiceProviderId,
     UpdateProviderDto,
 } from '@zoho-studio/core'
-import type { Maybe } from '@zoho-studio/utils'
+import type { Maybe } from '@zoho-studio/shared-types'
 import { computed } from 'vue'
 import { useCapabilitiesManager } from '../capability'
 import { integrationsRegistry } from '../../integrations.registry.ts'

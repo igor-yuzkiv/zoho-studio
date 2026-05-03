@@ -6,7 +6,7 @@ import type {
     WorkflowArtifactPayload,
 } from '../capability'
 import type { ServiceProviderId } from '../provider'
-import type { IEntity, Maybe } from '@zoho-studio/utils'
+import type { IEntity, Maybe } from '@zoho-studio/shared-types'
 import type { ViewModeOption } from '@zoho-studio/ui-kit'
 
 export type ArtifactId = string

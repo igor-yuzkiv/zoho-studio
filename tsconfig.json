@@ -32,6 +32,12 @@
         },
         {
             "path": "./packages/remote-data-storage"
+        },
+        {
+            "path": "./packages/shared-utils"
+        },
+        {
+            "path": "./packages/shared-types"
         }
     ]
 }

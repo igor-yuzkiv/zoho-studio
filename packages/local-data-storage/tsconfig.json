@@ -4,10 +4,10 @@
     "include": [],
     "references": [
         {
-            "path": "../core"
+            "path": "../shared-types"
         },
         {
-            "path": "../utils"
+            "path": "../core"
         },
         {
             "path": "./tsconfig.lib.json"

@@ -1,7 +1,7 @@
 import { mapCrmFunctionToArtifact, mapManyCrmFunctionsToArtifact } from './mapper.ts'
 import { IArtifact, ServiceProvider } from '@zoho-studio/core'
 import { BaseCapabilityAdapter } from '@zoho-studio/core'
-import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
+import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/shared-types'
 import { CrmFunctionsApiService } from './api.ts'
 
 export class CrmFunctionsAdapter extends BaseCapabilityAdapter {

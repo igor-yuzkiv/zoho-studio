@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { type IArtifact, ServiceProvider, ServiceProviderId } from '@zoho-studio/core'
 import { useProviderArtifactsQuery } from '../../queries'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 import { objectMatchesSearch } from '../../utils'
 
 import * as zod from 'zod'

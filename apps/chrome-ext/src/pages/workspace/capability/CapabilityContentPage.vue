@@ -8,7 +8,7 @@ import { useArtifactDetailView } from '../../../components/artifact'
 import { useClipboard } from '@vueuse/core'
 import { useQueryClient } from '@tanstack/vue-query'
 import { useArtifactByIdQuery } from '../../../queries'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 import { ArtifactsQueryKeys } from '../../../config.ts'
 import { IconButton, PageHeader, ViewModeComponent, ViewModeSelect } from '@zoho-studio/ui-kit'
 

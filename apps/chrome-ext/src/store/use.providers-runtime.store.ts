@@ -9,7 +9,7 @@ import {
     ServiceProviderId,
     UpdateProviderDto,
 } from '@zoho-studio/core'
-import { type PaginationParams } from '@zoho-studio/utils'
+import { type PaginationParams } from '@zoho-studio/shared-types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { container } from 'tsyringe'
