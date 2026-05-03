@@ -3,7 +3,7 @@ import { useRouteParams } from '@vueuse/router'
 import { useArtifactsSync, useCurrentProvider } from '../../../composables'
 import { computed, watch } from 'vue'
 import { type CapabilityType } from '@zoho-studio/core'
-import { WorkspaceCapabilityIndexView } from '../../../components/workspace'
+import { NoDataMessage } from '@zoho-studio/ui-kit'
 import { useArtifactDetailView } from '../../../components/artifact'
 import { useClipboard } from '@vueuse/core'
 import { useQueryClient } from '@tanstack/vue-query'
@@ -116,6 +116,11 @@ watch(
             </div>
         </div>
 
-        <WorkspaceCapabilityIndexView v-else :provider="provider" :capability-descriptor="capabilityDescriptor" />
+        <NoDataMessage
+            v-else
+            class="app-card flex h-full w-full flex-col overflow-hidden"
+            title="Artifact Not Found"
+            message="The requested artifact could not be found. It may have been removed or is inaccessible."
+        />
     </div>
 </template>
