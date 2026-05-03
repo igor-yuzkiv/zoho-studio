@@ -4,16 +4,13 @@
     "include": [],
     "references": [
         {
-            "path": "../../packages/shared-types"
-        },
-        {
             "path": "../../packages/ui-kit"
         },
         {
             "path": "../../packages/shared-utils"
         },
         {
-            "path": "../../packages/utils"
+            "path": "../../packages/shared-types"
         },
         {
             "path": "../../packages/core"

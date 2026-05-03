@@ -15,16 +15,13 @@
     "exclude": ["eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"],
     "references": [
         {
-            "path": "../../packages/shared-types/tsconfig.lib.json"
-        },
-        {
             "path": "../../packages/ui-kit/tsconfig.lib.json"
         },
         {
             "path": "../../packages/shared-utils/tsconfig.lib.json"
         },
         {
-            "path": "../../packages/utils/tsconfig.lib.json"
+            "path": "../../packages/shared-types/tsconfig.lib.json"
         },
         {
             "path": "../../packages/core/tsconfig.lib.json"

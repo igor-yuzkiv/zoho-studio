@@ -7,13 +7,10 @@
             "path": "../export-zip"
         },
         {
-            "path": "../shared-types"
-        },
-        {
             "path": "../ui-kit"
         },
         {
-            "path": "../utils"
+            "path": "../shared-types"
         },
         {
             "path": "./tsconfig.lib.json"
