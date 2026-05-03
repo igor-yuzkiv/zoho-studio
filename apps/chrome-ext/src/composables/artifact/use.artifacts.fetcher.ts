@@ -1,8 +1,8 @@
 import { CapabilityDescriptor, IArtifact, ICapabilityAdapter, ServiceProvider } from '@zoho-studio/core'
-import { PaginationParams, sleep, useConsoleLogger } from '@zoho-studio/utils'
+import type { PaginationParams } from '@zoho-studio/shared-types'
+import { sleep } from '@zoho-studio/shared-utils'
 
 export function useArtifactsFetcher(fetchDelay = 200) {
-    const logger = useConsoleLogger('useArtifactsFetcher')
 
     async function recursiveFetchArtifacts(
         adapter: ICapabilityAdapter,
@@ -10,7 +10,7 @@ export function useArtifactsFetcher(fetchDelay = 200) {
         result: IArtifact[] = []
     ): Promise<IArtifact[]> {
         if (typeof adapter.list !== 'function') {
-            logger.warn(`[recursiveFetchArtifacts] Capability adapter does not implement 'list' method.`, {
+            console.warn(`[recursiveFetchArtifacts] Capability adapter does not implement 'list' method.`, {
                 adapter,
                 pagination,
             })
@@ -20,7 +20,7 @@ export function useArtifactsFetcher(fetchDelay = 200) {
         const response = await adapter.list(pagination)
 
         if (!response.ok) {
-            logger.error(`[fetchAllArtifacts] Failed to fetch artifacts from capability port`, {
+            console.error(`[fetchAllArtifacts] Failed to fetch artifacts from capability port`, {
                 response,
                 pagination,
             })
@@ -69,7 +69,7 @@ export function useArtifactsFetcher(fetchDelay = 200) {
         const adapter = new capability.adapter(provider)
 
         if (typeof adapter.findByParent !== 'function') {
-            logger.warn(`[fetchArtifactsByParent] Capability adapter does not implement 'findByParent' method.`, {
+            console.warn(`[fetchArtifactsByParent] Capability adapter does not implement 'findByParent' method.`, {
                 providerId: provider.id,
                 capability,
             })
@@ -87,7 +87,7 @@ export function useArtifactsFetcher(fetchDelay = 200) {
         const adapter = new capability.adapter(provider)
 
         if (typeof adapter.find !== 'function') {
-            logger.warn(`[findOneArtifact] Capability adapter does not implement 'find' method.`, {
+            console.warn(`[findOneArtifact] Capability adapter does not implement 'find' method.`, {
                 providerId: provider.id,
                 capability,
             })

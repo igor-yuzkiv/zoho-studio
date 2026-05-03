@@ -1,5 +1,5 @@
 import { get } from 'lodash'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 
 export function objectMatchesSearch<T extends object>(obj: T, fields: (keyof T | string)[], term: Maybe<string>): boolean {
     if (!term) {

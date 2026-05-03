@@ -10,7 +10,10 @@
             "path": "../../packages/export-zip"
         },
         {
-            "path": "../../packages/utils"
+            "path": "../../packages/shared-utils"
+        },
+        {
+            "path": "../../packages/shared-types"
         },
         {
             "path": "../../packages/core"

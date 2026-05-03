@@ -1,5 +1,5 @@
 import { BaseCrmApiService } from '../../interanal/base-crm-api.service.ts'
-import { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
+import { PaginationParams, PromisePaginatedResult } from '@zoho-studio/shared-types'
 import { ZohoCrmWorkflow } from '../../types'
 
 type WorkflowListResponse = {

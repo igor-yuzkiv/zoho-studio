@@ -1,13 +1,12 @@
 /// <reference types='vitest' />
-import vue from '@vitejs/plugin-vue'
-import * as path from 'path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
+import * as path from 'path'
 
 export default defineConfig(() => ({
     root: __dirname,
-    cacheDir: '../../node_modules/.vite/packages/utils',
-    plugins: [vue(), dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
+    cacheDir: '../../node_modules/.vite/packages/shared-types',
+    plugins: [dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
     // Uncomment this if you are using workers.
     // worker: {
     //  plugins: [],
@@ -24,7 +23,7 @@ export default defineConfig(() => ({
         lib: {
             // Could also be a dictionary or array of multiple entry points.
             entry: 'src/index.ts',
-            name: 'utils',
+            name: 'shared-types',
             fileName: 'index',
             // Change this to the formats you want to support.
             // Don't forget to update your package.json as well.

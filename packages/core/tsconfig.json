@@ -4,13 +4,13 @@
     "include": ["vite.config.ts"],
     "references": [
         {
-            "path": "../ui-kit"
-        },
-        {
             "path": "../export-zip"
         },
         {
-            "path": "../utils"
+            "path": "../ui-kit"
+        },
+        {
+            "path": "../shared-types"
         },
         {
             "path": "./tsconfig.lib.json"

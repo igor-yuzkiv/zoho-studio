@@ -1,5 +1,5 @@
 import type { FieldRef, ModuleRef } from './crm.modules.types.ts'
-import type { IEntity } from '@zoho-studio/utils'
+import type { IEntity } from '@zoho-studio/shared-types'
 
 export interface ZohoCrmWorkflow extends IEntity {
     id: string

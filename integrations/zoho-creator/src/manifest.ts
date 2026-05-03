@@ -1,5 +1,5 @@
 import type { IIntegrationManifest, ResolveServiceProviderContext, ServiceProvider } from '@zoho-studio/core'
-import type { PromiseResult } from '@zoho-studio/utils'
+import type { PromiseResult } from '@zoho-studio/shared-types'
 import { resolveCreatorServiceProviderMetadataFromUrl, makeZohoCreatorServiceProviderId } from './utils'
 import { CreatorFormsDescriptor } from './capabilities/forms'
 

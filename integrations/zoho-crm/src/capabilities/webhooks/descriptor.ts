@@ -2,7 +2,7 @@ import { CapabilityDescriptor, IArtifact, ServiceProvider } from '@zoho-studio/c
 import { ExportZipItem, normalizeFileName } from '@zoho-studio/export-zip'
 import { defineAsyncComponent } from 'vue'
 import { CrmWebhooksAdapter } from './adapter.ts'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 import { resolveCrmUrl } from '../../interanal/utils.ts'
 import { CrmServiceProviderMetadata } from '../../types'
 

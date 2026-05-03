@@ -1,5 +1,5 @@
 import type { ModuleRef } from './crm.modules.types.ts'
-import type { IEntity, Maybe } from '@zoho-studio/utils'
+import type { IEntity, Maybe } from '@zoho-studio/shared-types'
 
 export type ZohoCrmWebhookUserRef = {
     id: string

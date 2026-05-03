@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { IArtifact, ServiceProvider } from '@zoho-studio/core'
-import { useConsoleLogger } from '@zoho-studio/utils'
 import { useToast, NoDataMessage } from '@zoho-studio/ui-kit'
 import { ZohoCrmFunction, CrmFunctionLog, CrmFunctionsLogsPeriod, CrmFunctionLogsResponse } from '../../../../types'
 import { computed, ref, watch } from 'vue'
@@ -23,7 +22,6 @@ const props = defineProps<{
 }>()
 
 const toast = useToast()
-const logger = useConsoleLogger('[ZohoCrm|CrmFunctionLogsView]')
 const apiService = new CrmFunctionsApiService(props.provider)
 
 const isPendingList = ref(false)
@@ -50,8 +48,8 @@ async function loadLogsPage() {
         })
 
         if (!response.ok) {
-            toast.error({ detail: logger.message(`Failed to fetch log: ${response.error}`) })
-            logger.error('Failed to fetch log', response, {
+            toast.error({ detail: `Failed to fetch log: ${response.error}` })
+            console.error('Failed to fetch log', response, {
                 pagination: pagination.value,
                 artifact: props.artifact,
                 provider: props.provider,
@@ -70,9 +68,9 @@ async function loadLogsPage() {
             }
         }
     } catch (error) {
-        toast.error({ detail: logger.message(`Failed to fetch log.`) })
+        toast.error({ detail: 'Failed to fetch log.' })
 
-        logger.error('Failed to fetch log', error, {
+        console.error('Failed to fetch log', error, {
             pagination: pagination.value,
             artifact: props.artifact,
             provider: props.provider,
@@ -120,8 +118,8 @@ async function handleSelectLog(log: CrmFunctionLog) {
         const response = await apiService.functionLogDetails(props.artifact.source_id, log.id, params)
 
         if (!response.ok) {
-            toast.error({ detail: logger.message(`Failed to fetch log details: ${response.error}`) })
-            logger.error('Failed to fetch log', response, {
+            toast.error({ detail: `Failed to fetch log details: ${response.error}` })
+            console.error('Failed to fetch log', response, {
                 log: log,
                 artifact: props.artifact,
                 provider: props.provider,
@@ -138,9 +136,9 @@ async function handleSelectLog(log: CrmFunctionLog) {
         selectedLog.value = logDetails
         logsById.value.set(log.id, logDetails)
     } catch (error) {
-        toast.error({ detail: logger.message(`Failed to fetch log details.`) })
+        toast.error({ detail: 'Failed to fetch log details.' })
 
-        logger.error('Failed to fetch log details', error, {
+        console.error('Failed to fetch log details', error, {
             log: log,
             artifact: props.artifact,
             provider: props.provider,

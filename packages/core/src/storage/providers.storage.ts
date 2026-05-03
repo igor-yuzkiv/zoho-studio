@@ -1,5 +1,5 @@
 import type { ServiceProvider } from '../provider'
-import type { PaginationParams, PagingResponse } from '@zoho-studio/utils'
+import type { PaginationParams, PagingResponse } from '@zoho-studio/shared-types'
 
 export interface IProvidersStorage {
     list<TMetadata = Record<string, unknown>>(

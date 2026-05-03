@@ -1,4 +1,4 @@
-import type { IEntity, Maybe } from '@zoho-studio/utils'
+import type { IEntity, Maybe } from '@zoho-studio/shared-types'
 
 export type ZohoCrmModule = {
     id: string

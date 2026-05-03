@@ -1,5 +1,5 @@
 import { BaseCapabilityAdapter, IArtifact, ServiceProvider } from '@zoho-studio/core'
-import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/utils'
+import type { PaginationParams, PromisePaginatedResult } from '@zoho-studio/shared-types'
 import { CrmWorkflowsApiService } from './api.ts'
 import { mapManyCrmWorkflowsToArtifact } from './mapper.ts'
 

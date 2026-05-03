@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Primitive } from '@zoho-studio/utils'
+import type { Primitive } from '@zoho-studio/shared-types'
 
 defineProps<{
     label?: string

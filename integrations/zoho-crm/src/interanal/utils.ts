@@ -1,6 +1,6 @@
 import type { CrmServiceProviderMetadata } from '../types'
 import { ServiceProvider } from '@zoho-studio/core'
-import type { Maybe } from '@zoho-studio/utils'
+import type { Maybe } from '@zoho-studio/shared-types'
 
 export const ZOHO_CRM_REGULAR_URL_REGEX = /^(https:\/\/crm\.zoho\.[a-z]{2,})\/crm\/org(\d+)\//
 

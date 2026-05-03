@@ -9,13 +9,12 @@ import {
     ServiceProviderId,
     UpdateProviderDto,
 } from '@zoho-studio/core'
-import { type PaginationParams, useConsoleLogger } from '@zoho-studio/utils'
+import { type PaginationParams } from '@zoho-studio/shared-types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { container } from 'tsyringe'
 import { useAppStore } from './use.app.store.ts'
 
-const logger = useConsoleLogger('useProvidersRuntimeStore')
 const PROVIDERS_LIST_PAGINATION: PaginationParams = {
     page: 1,
     per_page: 100,
@@ -99,7 +98,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
         try {
             await providersStorage.upsert(provider)
         } catch (error) {
-            logger.error('Failed to persist provider', provider.id, error)
+            console.error('Failed to persist provider', provider.id, error)
         }
     }
 
@@ -109,7 +108,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
 
         for (const [index, result] of results.entries()) {
             if (result.status === 'rejected') {
-                logger.error('Failed to persist provider', entries[index]?.id, result.reason)
+                console.error('Failed to persist provider', entries[index]?.id, result.reason)
             }
         }
     }
@@ -128,7 +127,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
                 storedProviders.map((provider) => [provider.id, provider])
             )
         } catch (error) {
-            logger.error('Failed to initialize stored providers', error)
+            console.error('Failed to initialize stored providers', error)
         }
     }
 
@@ -163,14 +162,14 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
             providersMap.value = next
             await upsertManyProviders(changedProviders)
         } catch (error) {
-            logger.error('Failed to reconcile providers with browser tabs', error)
+            console.error('Failed to reconcile providers with browser tabs', error)
         }
     }
 
     async function updateProvider(id: ServiceProviderId, data: Partial<UpdateProviderDto>) {
         const existing = providersMap.value.get(id)
         if (!existing) {
-            logger.warn(`Trying to update non-existing provider with id "${id}"`)
+            console.warn(`Trying to update non-existing provider with id "${id}"`)
             return
         }
 
@@ -199,7 +198,7 @@ export const useProvidersRuntimeStore = defineStore('providers.runtime', () => {
     function isOnline(providerId: ServiceProviderId): boolean {
         const provider = providersMap.value.get(providerId)
         if (!provider) {
-            logger.warn(`Trying to check online status of non-existing provider with id "${providerId}"`)
+            console.warn(`Trying to check online status of non-existing provider with id "${providerId}"`)
             return false
         }
 

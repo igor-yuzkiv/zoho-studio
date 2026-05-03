@@ -3,10 +3,7 @@ import { useArtifactsFetcher } from './use.artifacts.fetcher.ts'
 import { ref } from 'vue'
 import { useCapabilitiesManager } from '../capability'
 import { useArtifactsStorage } from './use.artifacts.storage.ts'
-import { useConsoleLogger } from '@zoho-studio/utils'
-
 export function useArtifactsSync() {
-    const logger = useConsoleLogger('useArtifactsSync')
     const artifactsStorage = useArtifactsStorage()
     const capabilitiesManager = useCapabilitiesManager()
     const fetcher = useArtifactsFetcher()
@@ -48,14 +45,14 @@ export function useArtifactsSync() {
             const capability = providerCapabilities.find((cap) => cap.type === artifact.capability_type)
 
             if (!capability) {
-                logger.warn(
+                console.warn(
                     `No capability descriptor found for artifact ${artifact.id} of type ${artifact.capability_type} skipping sync`
                 )
                 return
             }
 
             if (capability.stateless) {
-                logger.info(
+                console.info(
                     `Capability ${capability.type} is stateless for provider ${provider.id}, skipping artifact sync`
                 )
                 return

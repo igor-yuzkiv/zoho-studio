@@ -1,5 +1,5 @@
 import { BrowserTab, BrowserTabId } from '../browser'
-import { Maybe, PromiseResult } from '@zoho-studio/utils'
+import { Maybe, PromiseResult } from '@zoho-studio/shared-types'
 import type { AppProfile } from '../app-profile'
 
 export type ServiceProviderId = string

@@ -1,4 +1,4 @@
-import type { Maybe } from '@zoho-studio/utils'
+import type { Maybe } from '@zoho-studio/shared-types'
 
 export type FunctionType = 'button' | 'standalone' | 'dynamic' | 'automation' | 'scheduler' | 'unknown'
 

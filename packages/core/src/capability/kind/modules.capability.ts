@@ -1,4 +1,4 @@
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 
 export type ModuleArtifactPayload = {
     api_supported: boolean

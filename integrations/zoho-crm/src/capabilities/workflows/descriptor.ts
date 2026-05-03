@@ -1,7 +1,7 @@
 import { CapabilityDescriptor, IArtifact, ServiceProvider } from '@zoho-studio/core'
 import { CrmWorkflowsAdapter } from './adapter.ts'
 import { ExportZipItem, normalizeFileName } from '@zoho-studio/export-zip'
-import { Maybe } from '@zoho-studio/utils'
+import { Maybe } from '@zoho-studio/shared-types'
 import { CrmServiceProviderMetadata } from '../../types'
 import { resolveCrmUrl } from '../../interanal/utils.ts'
 

@@ -13,9 +13,6 @@
             "path": "./packages/ui-kit"
         },
         {
-            "path": "./packages/utils"
-        },
-        {
             "path": "./integrations/zoho-crm"
         },
         {
@@ -34,7 +31,10 @@
             "path": "./packages/remote-data-storage"
         },
         {
-            "path": "./apps/cli"
+            "path": "./packages/shared-utils"
+        },
+        {
+            "path": "./packages/shared-types"
         }
     ]
 }
