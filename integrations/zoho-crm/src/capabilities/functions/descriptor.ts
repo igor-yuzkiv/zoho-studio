@@ -1,4 +1,5 @@
-import { CapabilityDescriptor, IArtifact } from '@zoho-studio/core'
+import type { IArtifact } from '@zoho-studio/core'
+import type { UiCapabilityDescriptor } from '@zoho-studio/ui-kit'
 import { CrmFunctionsAdapter } from './adapter.ts'
 import { ExportZipItem, normalizeFileName } from '@zoho-studio/export-zip'
 import { defineAsyncComponent } from 'vue'
@@ -31,7 +32,7 @@ function toExportZip(artifact: IArtifact): ExportZipItem[] {
     ]
 }
 
-export const CrmFunctionsDescriptor: CapabilityDescriptor = {
+export const CrmFunctionsDescriptor: UiCapabilityDescriptor = {
     type: 'functions',
     title: 'Zoho CRM Functions',
     icon: 'material-symbols:function',

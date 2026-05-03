@@ -7,9 +7,6 @@
             "path": "../export-zip"
         },
         {
-            "path": "../ui-kit"
-        },
-        {
             "path": "../shared-types"
         },
         {

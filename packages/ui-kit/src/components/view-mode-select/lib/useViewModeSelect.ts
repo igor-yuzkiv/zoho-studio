@@ -1,4 +1,4 @@
-import type { ViewModeOption } from '../type.ts'
+import type { ViewModeOption } from '../../../types'
 import { type Component, computed, ref } from 'vue'
 
 export function useViewModeSelect(options: ViewModeOption[], defaultMode: string) {

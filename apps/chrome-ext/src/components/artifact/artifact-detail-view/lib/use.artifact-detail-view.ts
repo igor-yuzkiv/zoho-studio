@@ -1,12 +1,12 @@
 import { MaybeRef, ComputedRef, computed, toValue, ref } from 'vue'
 import type { Maybe } from '@zoho-studio/shared-types'
-import { ArtifactDetailViewConfig, CapabilityDescriptor, type IArtifact } from '@zoho-studio/core'
+import type { IArtifact } from '@zoho-studio/core'
+import type { ArtifactDetailViewConfig, UiCapabilityDescriptor, ViewModeOption } from '@zoho-studio/ui-kit'
 import { artifactDetailConfigMap } from './artifacts-default-details-views.config.ts'
-import type { ViewModeOption } from '@zoho-studio/ui-kit'
 
 type MaybeRefOrGetter<T> = MaybeRef<T> | ComputedRef<T>
 
-export function useArtifactDetailView(capabilityDescriptor: MaybeRefOrGetter<Maybe<CapabilityDescriptor>>) {
+export function useArtifactDetailView(capabilityDescriptor: MaybeRefOrGetter<Maybe<UiCapabilityDescriptor>>) {
     const currentViewMode = ref<string>('')
 
     const viewConfig = computed((): ArtifactDetailViewConfig | undefined => {
