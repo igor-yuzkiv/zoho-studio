@@ -1,8 +1,8 @@
-import { CapabilityDescriptor } from '@zoho-studio/core'
+import type { UiCapabilityDescriptor } from '@zoho-studio/ui-kit'
 import { CreatorFormsAdapter } from './adapter.ts'
 import { defineAsyncComponent } from 'vue'
 
-export const CreatorFormsDescriptor: CapabilityDescriptor = {
+export const CreatorFormsDescriptor: UiCapabilityDescriptor = {
     type: 'forms',
     title: 'Zoho Creator Forms',
     icon: 'fluent:form-20-filled',

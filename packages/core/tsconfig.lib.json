@@ -18,9 +18,6 @@
             "path": "../export-zip/tsconfig.lib.json"
         },
         {
-            "path": "../ui-kit/tsconfig.lib.json"
-        },
-        {
             "path": "../shared-types/tsconfig.lib.json"
         }
     ]

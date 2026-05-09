@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ViewModeOption } from '../type.ts'
+import type { ViewModeOption } from '../../../types'
 import { computed, useAttrs } from 'vue'
 
 defineOptions({

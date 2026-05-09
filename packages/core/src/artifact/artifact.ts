@@ -7,7 +7,6 @@ import type {
 } from '../capability'
 import type { ServiceProviderId } from '../provider'
 import type { IEntity, Maybe } from '@zoho-studio/shared-types'
-import type { ViewModeOption } from '@zoho-studio/ui-kit'
 
 export type ArtifactId = string
 
@@ -32,12 +31,4 @@ export interface IArtifact<
     api_name?: Maybe<string>
     payload: ArtifactPayloadMap[TCapabilityType]
     origin: TOrigin
-}
-
-export type ArtifactDetailViewConfig = {
-    header: {
-        title: string | ((artifact: IArtifact) => string)
-        subtitle?: string | ((artifact: IArtifact) => string)
-    }
-    viewModes: ViewModeOption[]
 }

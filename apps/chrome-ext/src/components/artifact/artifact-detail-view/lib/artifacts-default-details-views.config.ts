@@ -1,4 +1,5 @@
-import type { IArtifact, CapabilityType, ArtifactDetailViewConfig } from '@zoho-studio/core'
+import type { IArtifact, CapabilityType } from '@zoho-studio/core'
+import type { ArtifactDetailViewConfig } from '@zoho-studio/ui-kit'
 import { defineAsyncComponent } from 'vue'
 
 export const artifactDetailConfigMap: Partial<Record<CapabilityType | string, ArtifactDetailViewConfig>> = {

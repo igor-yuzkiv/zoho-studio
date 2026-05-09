@@ -1,4 +1,5 @@
-import { CapabilityDescriptor, IArtifact, ServiceProvider } from '@zoho-studio/core'
+import type { IArtifact, ServiceProvider } from '@zoho-studio/core'
+import type { UiCapabilityDescriptor } from '@zoho-studio/ui-kit'
 import { ExportZipItem, normalizeFileName } from '@zoho-studio/export-zip'
 import { defineAsyncComponent } from 'vue'
 import { CrmWebhooksAdapter } from './adapter.ts'
@@ -19,7 +20,7 @@ function toExportZip(artifact: IArtifact): ExportZipItem[] {
     ]
 }
 
-export const CrmWebhooksDescriptor: CapabilityDescriptor = {
+export const CrmWebhooksDescriptor: UiCapabilityDescriptor = {
     type: 'webhooks',
     title: 'Zoho CRM Webhooks',
     icon: 'material-symbols:webhook',

@@ -1,5 +1,5 @@
 import type { CapabilityAdapterConstructor } from './capability.adapter.ts'
-import { ArtifactDetailViewConfig, IArtifact } from '../artifact'
+import { IArtifact } from '../artifact'
 import { ExportZipItem } from '@zoho-studio/export-zip'
 import { ServiceProvider } from '../provider'
 import { Maybe } from '@zoho-studio/shared-types'
@@ -16,6 +16,4 @@ export interface CapabilityDescriptor {
     adapter: CapabilityAdapterConstructor
     getArtifactServiceUrl?: (provider: ServiceProvider, artifact: IArtifact) => Maybe<string>
     toExportZip?: (artifact: IArtifact) => ExportZipItem[]
-
-    artifactDetailViewSettings?: Partial<ArtifactDetailViewConfig>
 }

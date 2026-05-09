@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ViewModeOption } from '../type.ts'
+import type { ViewModeOption } from '../../../types'
 import { startCase } from 'lodash'
 import { computed } from 'vue'
 import Select from 'primevue/select'
